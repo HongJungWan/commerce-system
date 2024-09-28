@@ -1,0 +1,36 @@
+services:
+  my-db:
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: pwe1234
+      MARIADB_DATABASE: commerce-system
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+    volumes:
+      - ./docker/mysql_data:/var/lib/mysql
+    ports:
+      - 3310:3306
+    networks:
+      - commerce-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  my-api-server:
+    container_name: go-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3031:8080
+    networks:
+      - commerce-network
+    depends_on:
+      - my-db
+
+networks:
+  commerce-network:
+    driver: bridge
