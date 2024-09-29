@@ -44,6 +44,11 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	memberController := controller.NewMemberController(memberInteractor, authInteractor)
 	authController := controller.NewAuthController(authInteractor)
 
+	// 상품 관련 설정
+	productRepo := repository.NewProductRepository(db)
+	productInteractor := usecases.NewProductInteractor(productRepo, db)
+	productController := controller.NewProductController(productInteractor)
+
 	// JWT 미들웨어 설정
 	authMiddleware := middleware.JWTAuthMiddleware()
 
@@ -62,6 +67,12 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	router.DELETE("/members/me", authMiddleware, memberController.DeleteMyAccount)
 	router.GET("/members", authMiddleware, memberController.GetAllMembers)
 	router.GET("/members/stats", authMiddleware, memberController.GetMemberStats)
+
+	// 상품 엔드포인트 설정
+	router.GET("/products", productController.GetProducts)
+	router.POST("/products", authMiddleware, productController.CreateProduct)
+	router.PUT("/products/:product_number/stock", authMiddleware, productController.UpdateStock)
+	router.DELETE("/products/:product_number", authMiddleware, productController.DeleteProduct)
 
 	return service
 }
