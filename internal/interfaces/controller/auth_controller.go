@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type AuthController struct {
@@ -25,10 +26,13 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	// FIXME: 인증 로직 추가 (예: DB에서 사용자 조회 등)
-	// FIXME: ...
+	member, err := ctrl.authUseCase.Authenticate(loginRequest.UserID, loginRequest.Password)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
+	}
 
-	token, err := ctrl.authUseCase.GenerateToken(loginRequest.UserID)
+	token, err := ctrl.authUseCase.GenerateToken(member.UserID, member.IsAdmin)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
