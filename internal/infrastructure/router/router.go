@@ -34,12 +34,17 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	healthCheckInteractor := usecases.NewHealthCheckInteractor()
 	healthCheckController := controller.NewHealthCheckController(healthCheckInteractor)
 
+	// Auth 관련 설정
+	authInteractor := usecases.NewAuthUseCase("commerce-system")
+	authController := controller.NewAuthController(authInteractor)
+
 	// FIXME: 비즈니스 로직 관련 설정하기
 
 	router := service.Group("/api")
 
 	// API 라우트 설정
 	router.GET("/health", healthCheckController.HealthCheck)
+	router.POST("/login", authController.Login)
 
 	return service
 }
