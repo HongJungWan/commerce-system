@@ -13,5 +13,4 @@ type Member struct {
 	JoinedAt     time.Time  `gorm:"not null" json:"joined_at"`
 	LeftAt       *time.Time `json:"left_at"`
 	Left         bool       `gorm:"not null;default:false" json:"left"`
-	Orders       []Order    `gorm:"foreignKey:MemberNumber;references:MemberNumber" json:"orders"`
 }

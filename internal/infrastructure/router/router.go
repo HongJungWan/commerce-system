@@ -25,10 +25,10 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 		ctx.JSON(http.StatusOK, "commerce system")
 	})
 
-	// 데이터베이스 마이그레이션, 일단 막아 두기
+	// 데이터베이스 마이그레이션
 	db.Table("member").AutoMigrate(&domain.Member{})
-	db.Table("order").AutoMigrate(&domain.Order{})
 	db.Table("product").AutoMigrate(&domain.Product{})
+	db.Table("order").AutoMigrate(&domain.Order{})
 
 	// Health Check 관련 설정
 	healthCheckInteractor := usecases.NewHealthCheckInteractor()
