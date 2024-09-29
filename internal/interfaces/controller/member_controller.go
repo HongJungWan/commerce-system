@@ -30,8 +30,12 @@ func (mc *MemberController) Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	token, _ := mc.authUseCase.GenerateToken(member.UserID, member.IsAdmin)
-	c.JSON(http.StatusCreated, gin.H{"message": "회원 가입이 완료되었습니다.", "token": token})
+	token, _ := mc.authUseCase.GenerateToken(&member)
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "회원 가입이 완료되었습니다.",
+		"token":   token,
+		"user":    member,
+	})
 }
 
 func (mc *MemberController) GetMyInfo(c *gin.Context) {
