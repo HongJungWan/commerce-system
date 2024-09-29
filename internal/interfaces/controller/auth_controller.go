@@ -32,7 +32,7 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := ctrl.authUseCase.GenerateToken(member.UserID, member.IsAdmin)
+	token, err := ctrl.authUseCase.GenerateToken(member)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
