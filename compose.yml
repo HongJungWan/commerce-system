@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   my-db:
     image: mariadb:latest
@@ -5,9 +7,7 @@ services:
       MARIADB_ROOT_PASSWORD: pwe1234
       MARIADB_DATABASE: commerce-system
       MARIADB_USER: user
-      MARIADB_PASSWORD: password
-    volumes:
-      - ./docker/mysql_data:/var/lib/mysql
+      MARIADB_PASSWORD: pwe1234
     ports:
       - 3310:3306
     networks:
@@ -19,17 +19,18 @@ services:
       start_period: 30s
       timeout: 5s
 
-  my-api-server:
-    container_name: go-server
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 3031:8080
-    networks:
-      - commerce-network
-    depends_on:
-      - my-db
+#  my-api-server:
+#    container_name: go-server
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 3031:8080
+#    networks:
+#      - commerce-network
+#    depends_on:
+#      my-db:
+#        condition: service_healthy
 
 networks:
   commerce-network:

@@ -1,6 +1,6 @@
 # MariaDB 설정
-mariadb_host = "my-db"
+mariadb_host = "localhost"
 mariadb_user = "user"
 mariadb_password = "pwe1234"
 mariadb_db = "commerce-system"
-mariadb_port = "3306"
+mariadb_port = "3310"
