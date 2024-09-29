@@ -35,6 +35,14 @@ func (r *MemberRepositoryImpl) GetByUserID(userID string) (*domain.Member, error
 	return &member, nil
 }
 
+func (r *MemberRepositoryImpl) GetByMemberNumber(memberNumber string) (*domain.Member, error) {
+	var member domain.Member
+	if err := r.db.Where("member_number = ?", memberNumber).First(&member).Error; err != nil {
+		return nil, err
+	}
+	return &member, nil
+}
+
 func (r *MemberRepositoryImpl) Update(member *domain.Member) error {
 	return r.db.Save(member).Error
 }

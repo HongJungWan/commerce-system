@@ -52,10 +52,23 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// is_admin 추출
-		isAdmin, _ := claims["is_admin"].(bool)
+		// is_admin 추출 (타입 변환 수정)
+		isAdmin := false
+		if val, ok := claims["is_admin"]; ok {
+			fmt.Printf("is_admin type: %T, value: %v\n", val, val)
+			switch v := val.(type) {
+			case bool:
+				isAdmin = v
+			case float64:
+				isAdmin = v != 0
+			case string:
+				isAdmin = v == "true"
+			default:
+				isAdmin = false
+			}
+		}
 
-		// member_number 추출 (추가된 부분)
+		// member_number 추출
 		memberNumber, ok := claims["member_number"].(string)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "유효하지 않은 토큰입니다."})
@@ -66,7 +79,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		// 컨텍스트에 값 설정
 		c.Set("user_id", userID)
 		c.Set("is_admin", isAdmin)
-		c.Set("member_number", memberNumber) // 추가된 부분
+		c.Set("member_number", memberNumber)
 		c.Next()
 	}
 }
