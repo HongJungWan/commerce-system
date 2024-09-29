@@ -14,7 +14,4 @@ type Order struct {
 	TotalPrice    int64      `gorm:"not null" json:"total_price"`
 	Canceled      bool       `gorm:"not null;default:false" json:"canceled"`
 	CanceledAt    *time.Time `json:"canceled_at"`
-
-	Member  Member  `gorm:"foreignKey:MemberNumber;references:MemberNumber" json:"member"`
-	Product Product `gorm:"foreignKey:ProductNumber;references:ProductNumber" json:"product"`
 }
