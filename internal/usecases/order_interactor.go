@@ -28,7 +28,7 @@ func (oi *OrderInteractor) CreateOrder(order *domain.Order) error {
 	}
 
 	// 회원 확인
-	member, err := oi.MemberRepository.GetByUserID(order.MemberNumber)
+	member, err := oi.MemberRepository.GetByMemberNumber(order.MemberNumber)
 	if err != nil || member == nil {
 		return errors.New("유효하지 않은 회원 번호입니다.")
 	}

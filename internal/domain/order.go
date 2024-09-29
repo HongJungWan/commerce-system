@@ -13,7 +13,7 @@ type Order struct {
 	Price         int64      `gorm:"not null" json:"price"`
 	Quantity      int        `gorm:"not null" json:"quantity"`
 	TotalPrice    int64      `gorm:"not null" json:"total_price"`
-	Status        string     `gorm:"not null;default:'ordered'" json:"status"` // ordered, canceled
+	Status        string     `gorm:"not null;default:'ordered'" json:"status"`
 	CanceledAt    *time.Time `json:"canceled_at,omitempty"`
 }
 
