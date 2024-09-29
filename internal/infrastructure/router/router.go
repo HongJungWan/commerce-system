@@ -49,6 +49,11 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	productInteractor := usecases.NewProductInteractor(productRepo, db)
 	productController := controller.NewProductController(productInteractor)
 
+	// 주문 관련 설정
+	orderRepo := repository.NewOrderRepository(db)
+	orderInteractor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
+	orderController := controller.NewOrderController(orderInteractor)
+
 	// JWT 미들웨어 설정
 	authMiddleware := middleware.JWTAuthMiddleware()
 
@@ -73,6 +78,12 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	router.POST("/products", authMiddleware, productController.CreateProduct)
 	router.PUT("/products/:product_number/stock", authMiddleware, productController.UpdateStock)
 	router.DELETE("/products/:product_number", authMiddleware, productController.DeleteProduct)
+
+	// 주문 엔드포인트 설정
+	router.POST("/orders", authMiddleware, orderController.CreateOrder)
+	router.GET("/orders/me", authMiddleware, orderController.GetMyOrders)
+	router.PUT("/orders/:order_number/cancel", authMiddleware, orderController.CancelOrder)
+	router.GET("/orders/stats", authMiddleware, orderController.GetMonthlyStats)
 
 	return service
 }

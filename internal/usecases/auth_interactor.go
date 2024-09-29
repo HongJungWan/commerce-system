@@ -21,11 +21,13 @@ func NewAuthUseCase(secretKey string, memberRepo repository.MemberRepository) *A
 	}
 }
 
-func (uc *AuthUseCase) GenerateToken(userID string, isAdmin bool) (string, error) {
+// member 객체를 받도록 변경
+func (uc *AuthUseCase) GenerateToken(member *domain.Member) (string, error) {
 	claims := jwt.MapClaims{
-		"user_id":  userID,
-		"is_admin": isAdmin,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(),
+		"user_id":       member.UserID,
+		"is_admin":      member.IsAdmin,
+		"member_number": member.MemberNumber,
+		"exp":           time.Now().Add(time.Hour * 24).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(uc.SecretKey))
