@@ -59,12 +59,12 @@ func TestOrderController_GetMyOrders_Success(t *testing.T) {
 	order1 := &domain.Order{
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
-		ProductNumber: 12345,
+		ProductNumber: "P12345",
 	}
 	order2 := &domain.Order{
 		OrderNumber:   "O12346",
 		MemberNumber:  "M12345",
-		ProductNumber: 12346,
+		ProductNumber: "P12346",
 	}
 	_ = orderRepo.Create(order1)
 	_ = orderRepo.Create(order2)
@@ -107,7 +107,7 @@ func TestOrderController_CancelOrder_Success(t *testing.T) {
 		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
-		ProductNumber: 12345,
+		ProductNumber: "P12345",
 		Quantity:      2,
 		IsCanceled:    false,
 	}
@@ -148,7 +148,7 @@ func TestOrderController_GetMonthlyStats_Success(t *testing.T) {
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
-		ProductNumber: 12345,
+		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
 		TotalAmount:   2000,
@@ -159,7 +159,7 @@ func TestOrderController_GetMonthlyStats_Success(t *testing.T) {
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",
-		ProductNumber: 12346,
+		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
 		TotalAmount:   1500,

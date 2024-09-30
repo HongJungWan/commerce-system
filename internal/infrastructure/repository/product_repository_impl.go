@@ -42,6 +42,14 @@ func (r *ProductRepositoryImpl) GetById(id int) (*domain.Product, error) {
 	return &product, nil
 }
 
+func (r *ProductRepositoryImpl) GetByProductNumber(productNumber string) (*domain.Product, error) {
+	var product domain.Product
+	if err := r.db.First(&product, "product_number = ?", productNumber).Error; err != nil {
+		return nil, err
+	}
+	return &product, nil
+}
+
 func (r *ProductRepositoryImpl) Update(product *domain.Product) error {
 	return r.db.Save(product).Error
 }

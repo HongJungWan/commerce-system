@@ -10,7 +10,7 @@ type Order struct {
 	OrderNumber   string     `gorm:"unique;not null" json:"order_number"` // 주문번호
 	OrderDate     time.Time  `gorm:"not null" json:"order_date"`          // 주문일
 	MemberNumber  string     `gorm:"not null" json:"member_number"`       // 회원번호
-	ProductNumber int        `gorm:"not null" json:"product_number"`      // 상품번호
+	ProductNumber string     `gorm:"not null" json:"product_number"`      // 상품번호
 	Price         int64      `gorm:"not null" json:"price"`               // 가격
 	Quantity      int        `gorm:"not null" json:"quantity"`            // 수량
 	TotalAmount   int64      `gorm:"not null" json:"total_amount"`        // 금액
@@ -28,7 +28,7 @@ func (o *Order) Validate() error {
 	if o.MemberNumber == "" {
 		return errors.New("회원번호가 누락되었습니다.")
 	}
-	if o.ProductNumber <= 0 {
+	if o.ProductNumber == "" {
 		return errors.New("상품번호가 누락되었습니다.")
 	}
 	if o.Price <= 0 {

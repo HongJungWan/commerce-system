@@ -34,7 +34,7 @@ func (oi *OrderInteractor) CreateOrder(order *domain.Order) error {
 	}
 
 	// 상품 확인
-	product, err := oi.ProductRepository.GetById(order.ProductNumber)
+	product, err := oi.ProductRepository.GetByProductNumber(order.ProductNumber)
 	if err != nil || product == nil {
 		return errors.New("유효하지 않은 상품 번호입니다.")
 	}
@@ -76,7 +76,7 @@ func (oi *OrderInteractor) CancelOrder(orderNumber, memberNumber string) error {
 	}
 
 	// 재고 복구
-	product, err := oi.ProductRepository.GetById(order.ProductNumber)
+	product, err := oi.ProductRepository.GetByProductNumber(order.ProductNumber)
 	if err != nil {
 		return err
 	}
