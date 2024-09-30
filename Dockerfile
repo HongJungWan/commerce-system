@@ -1,6 +1,6 @@
 # 베이스 이미지 지정 - build 환경
 FROM docker.io/library/golang:1.20 AS builder
-RUN apt-get update && apt-get install -y tzdata
+RUN apt-get update && apt-get install -y tzdata bash
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -13,11 +13,11 @@ RUN go mod tidy
 COPY . .
 
 # 애플리케이션 컴파일
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o commerce-system ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o commerce-system ./main.go
 
 # 베이스 이미지 지정 - 실행 환경
 FROM docker.io/library/alpine:3.12.3
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata mysql-client bash
 
 # 환경 변수로 시간대 설정
 ENV TZ=Asia/Seoul
@@ -27,6 +27,5 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY --from=builder /app/commerce-system /usr/local/bin/commerce-system
 COPY deploy/config.toml /configs/config.toml
 
-# 시작 명령어 설정
-ENTRYPOINT ["/usr/local/bin/commerce-system"]
-CMD ["-c", "/configs/config.toml"]
+# DB 서비스가 준비될 때까지 대기 후 애플리케이션 실행
+ENTRYPOINT ["sh", "-c", "until mysqladmin ping -h db -P 3306 -uuser -ppwe1234 --silent; do echo 'Waiting for MariaDB...'; sleep 2; done; exec /usr/local/bin/commerce-system -c /configs/config.toml"]

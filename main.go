@@ -63,7 +63,7 @@ func startServer(db *gorm.DB) {
 	routers := router.NewRouter(conf, db)
 
 	server := &http.Server{
-		Addr:    ":3031",
+		Addr:    "0.0.0.0:3031",
 		Handler: routers,
 	}
 	err := server.ListenAndServe()
