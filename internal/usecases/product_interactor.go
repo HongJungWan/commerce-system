@@ -31,8 +31,8 @@ func (pi *ProductInteractor) GetProducts(filter map[string]interface{}) ([]*doma
 	return pi.ProductRepository.GetAll(filter)
 }
 
-func (pi *ProductInteractor) UpdateStock(productNumber string, quantity int) error {
-	product, err := pi.ProductRepository.GetByProductNumber(productNumber)
+func (pi *ProductInteractor) UpdateStock(id int, quantity int) error {
+	product, err := pi.ProductRepository.GetById(id)
 	if err != nil {
 		return err
 	}
@@ -42,8 +42,8 @@ func (pi *ProductInteractor) UpdateStock(productNumber string, quantity int) err
 	return pi.ProductRepository.Update(product)
 }
 
-func (pi *ProductInteractor) DeleteProduct(productNumber string) error {
-	product, err := pi.ProductRepository.GetByProductNumber(productNumber)
+func (pi *ProductInteractor) DeleteProduct(id int) error {
+	product, err := pi.ProductRepository.GetById(id)
 	if err != nil {
 		return err
 	}
@@ -54,5 +54,5 @@ func (pi *ProductInteractor) DeleteProduct(productNumber string) error {
 	if !canBeDeleted {
 		return errors.New("주문된 이력이 있어 삭제할 수 없습니다.")
 	}
-	return pi.ProductRepository.Delete(productNumber)
+	return pi.ProductRepository.Delete(id)
 }

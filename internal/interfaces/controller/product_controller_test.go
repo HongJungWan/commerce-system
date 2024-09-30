@@ -163,7 +163,7 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "재고 수량이 수정되었습니다.", response["message"])
 
-	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
+	updatedProduct, _ := productRepo.GetById("P12345")
 	assert.Equal(t, 20, updatedProduct.StockQuantity)
 }
 
@@ -201,7 +201,7 @@ func TestProductController_DeleteProduct_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "상품이 삭제되었습니다.", response["message"])
 
-	deletedProduct, err := productRepo.GetByProductNumber("P12345")
+	deletedProduct, err := productRepo.GetById("P12345")
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }

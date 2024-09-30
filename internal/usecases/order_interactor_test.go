@@ -155,7 +155,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	assert.NoError(t, err)
 	updatedOrder, _ := orderRepo.GetByOrderNumber("O12345")
 	assert.Equal(t, true, updatedOrder.IsCanceled)
-	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
+	updatedProduct, _ := productRepo.GetById("P12345")
 	assert.Equal(t, 12, updatedProduct.StockQuantity)
 }
 
