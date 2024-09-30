@@ -34,9 +34,9 @@ func (r *ProductRepositoryImpl) GetAll(filter map[string]interface{}) ([]*domain
 	return products, nil
 }
 
-func (r *ProductRepositoryImpl) GetByProductNumber(productNumber string) (*domain.Product, error) {
+func (r *ProductRepositoryImpl) GetById(id string) (*domain.Product, error) {
 	var product domain.Product
-	if err := r.db.First(&product, "product_number = ?", productNumber).Error; err != nil {
+	if err := r.db.First(&product, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &product, nil

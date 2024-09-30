@@ -117,7 +117,7 @@ func TestProductRepositoryImpl_GetAll_WithFilters(t *testing.T) {
 	assert.Equal(t, "Smartphone", products[0].ProductName)
 }
 
-func TestProductRepositoryImpl_GetByProductNumber_Success(t *testing.T) {
+func TestProductRepositoryImpl_GetById_Success(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	repo := repository.NewProductRepository(db)
@@ -131,20 +131,20 @@ func TestProductRepositoryImpl_GetByProductNumber_Success(t *testing.T) {
 	_ = repo.Create(product)
 
 	// When
-	retrievedProduct, err := repo.GetByProductNumber("P12345")
+	retrievedProduct, err := repo.GetById("P12345")
 
 	// Then
 	assert.NoError(t, err)
 	assert.Equal(t, product.ProductName, retrievedProduct.ProductName)
 }
 
-func TestProductRepositoryImpl_GetByProductNumber_Failure_NotFound(t *testing.T) {
+func TestProductRepositoryImpl_GetById_Failure_NotFound(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	repo := repository.NewProductRepository(db)
 
 	// When
-	retrievedProduct, err := repo.GetByProductNumber("nonexistent")
+	retrievedProduct, err := repo.GetById("nonexistent")
 
 	// Then
 	assert.Error(t, err)
@@ -172,7 +172,7 @@ func TestProductRepositoryImpl_Update_Success(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Verify
-	updatedProduct, _ := repo.GetByProductNumber("P12345")
+	updatedProduct, _ := repo.GetById("P12345")
 	assert.Equal(t, "New Name", updatedProduct.ProductName)
 }
 
@@ -196,7 +196,7 @@ func TestProductRepositoryImpl_Delete_Success(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Verify
-	deletedProduct, err := repo.GetByProductNumber("P12345")
+	deletedProduct, err := repo.GetById("P12345")
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }
