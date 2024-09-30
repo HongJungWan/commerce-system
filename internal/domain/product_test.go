@@ -12,7 +12,7 @@ func TestProduct_Validate_Success(t *testing.T) {
 	// Given
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -28,7 +28,7 @@ func TestProduct_Validate_Failure_MissingFields(t *testing.T) {
 	// Given
 	product := &domain.Product{
 		ProductNumber: "",
-		Name:          "",
+		ProductName:   "",
 		Price:         -1000,
 		StockQuantity: -10,
 	}

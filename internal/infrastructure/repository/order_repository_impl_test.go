@@ -21,8 +21,8 @@ func TestOrderRepositoryImpl_Create_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 
 	// When
@@ -43,8 +43,8 @@ func TestOrderRepositoryImpl_Create_Failure_DuplicateOrderNumber(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 	order2 := &domain.Order{
 		OrderNumber:   "O12345",
@@ -53,8 +53,8 @@ func TestOrderRepositoryImpl_Create_Failure_DuplicateOrderNumber(t *testing.T) {
 		ProductNumber: "P12346",
 		Price:         2000,
 		Quantity:      1,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 	_ = repo.Create(order1)
 
@@ -76,8 +76,8 @@ func TestOrderRepositoryImpl_GetByOrderNumber_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 	_ = repo.Create(order)
 
@@ -113,8 +113,8 @@ func TestOrderRepositoryImpl_GetByMemberNumber_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 	order2 := &domain.Order{
 		OrderNumber:   "O12346",
@@ -123,8 +123,8 @@ func TestOrderRepositoryImpl_GetByMemberNumber_Success(t *testing.T) {
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "ordered",
+		TotalAmount:   1500,
+		IsCanceled:    true,
 	}
 	_ = repo.Create(order1)
 	_ = repo.Create(order2)
@@ -148,13 +148,13 @@ func TestOrderRepositoryImpl_Update_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 	_ = repo.Create(order)
 
 	// When
-	order.Status = "canceled"
+	order.IsCanceled = true
 	err := repo.Update(order)
 
 	// Then
@@ -162,7 +162,7 @@ func TestOrderRepositoryImpl_Update_Success(t *testing.T) {
 
 	// Verify
 	updatedOrder, _ := repo.GetByOrderNumber("O12345")
-	assert.Equal(t, "canceled", updatedOrder.Status)
+	assert.Equal(t, true, updatedOrder.IsCanceled)
 }
 
 func TestOrderRepositoryImpl_GetMonthlyStats_Success(t *testing.T) {
@@ -176,8 +176,8 @@ func TestOrderRepositoryImpl_GetMonthlyStats_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    true,
 	}
 	order2 := &domain.Order{
 		OrderNumber:   "O12346",
@@ -186,8 +186,8 @@ func TestOrderRepositoryImpl_GetMonthlyStats_Success(t *testing.T) {
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "canceled",
+		TotalAmount:   1500,
+		IsCanceled:    true,
 	}
 	_ = repo.Create(order1)
 	_ = repo.Create(order2)

@@ -20,12 +20,12 @@ func (mi *MemberInteractor) Register(member *domain.Member) error {
 		return err
 	}
 
-	existingMember, _ := mi.MemberRepository.GetByUserID(member.UserID)
+	existingMember, _ := mi.MemberRepository.GetByUserID(member.Username)
 	if existingMember != nil {
 		return errors.New("이미 존재하는 사용자 ID입니다.")
 	}
 
-	if err := member.SetPassword(member.Password); err != nil {
+	if err := member.SetPassword(member.HashedPassword); err != nil {
 		return err
 	}
 
@@ -42,14 +42,14 @@ func (mi *MemberInteractor) UpdateByUserID(userID string, updateData *domain.Mem
 		return err
 	}
 
-	if updateData.Name != "" {
-		member.Name = updateData.Name
+	if updateData.FullName != "" {
+		member.FullName = updateData.FullName
 	}
 	if updateData.Email != "" {
 		member.Email = updateData.Email
 	}
-	if updateData.Password != "" {
-		if err := member.SetPassword(updateData.Password); err != nil {
+	if updateData.HashedPassword != "" {
+		if err := member.SetPassword(updateData.HashedPassword); err != nil {
 			return err
 		}
 	}

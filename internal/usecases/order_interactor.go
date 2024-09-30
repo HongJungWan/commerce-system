@@ -50,9 +50,9 @@ func (oi *OrderInteractor) CreateOrder(order *domain.Order) error {
 
 	// 주문 가격 설정
 	order.Price = product.Price
-	order.TotalPrice = product.Price * int64(order.Quantity)
+	order.TotalAmount = product.Price * int64(order.Quantity)
 	order.OrderDate = time.Now()
-	order.Status = "ordered"
+	order.IsCanceled = true
 
 	return oi.OrderRepository.Create(order)
 }

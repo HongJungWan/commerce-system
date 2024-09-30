@@ -45,7 +45,7 @@ func TestOrder_Cancel_Success(t *testing.T) {
 	// Given
 	order := &domain.Order{
 		OrderNumber: "O12345",
-		Status:      "ordered",
+		IsCanceled:  true,
 	}
 
 	// When
@@ -53,7 +53,7 @@ func TestOrder_Cancel_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	assert.Equal(t, "canceled", order.Status)
+	assert.Equal(t, "canceled", order.IsCanceled)
 	assert.NotNil(t, order.CanceledAt)
 }
 
@@ -61,7 +61,7 @@ func TestOrder_Cancel_Failure_AlreadyCanceled(t *testing.T) {
 	// Given
 	order := &domain.Order{
 		OrderNumber: "O12345",
-		Status:      "canceled",
+		IsCanceled:  true,
 	}
 
 	// When

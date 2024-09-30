@@ -24,8 +24,8 @@ func (r *ProductRepositoryImpl) GetAll(filter map[string]interface{}) ([]*domain
 	if category, ok := filter["category"]; ok {
 		query = query.Where("category = ?", category)
 	}
-	if name, ok := filter["name"]; ok {
-		query = query.Where("name LIKE ?", "%"+name.(string)+"%")
+	if productName, ok := filter["product_name"]; ok {
+		query = query.Where("product_name LIKE ?", "%"+productName.(string)+"%")
 	}
 
 	if err := query.Find(&products).Error; err != nil {

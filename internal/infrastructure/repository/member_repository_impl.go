@@ -29,7 +29,7 @@ func (r *MemberRepositoryImpl) GetByID(id uint) (*domain.Member, error) {
 
 func (r *MemberRepositoryImpl) GetByUserID(userID string) (*domain.Member, error) {
 	var member domain.Member
-	if err := r.db.Where("user_id = ?", userID).First(&member).Error; err != nil {
+	if err := r.db.Where("username = ?", userID).First(&member).Error; err != nil {
 		return nil, err
 	}
 	return &member, nil
@@ -73,7 +73,7 @@ func (r *MemberRepositoryImpl) GetStatsByMonth(month string) (int, int, error) {
 		return 0, 0, err
 	}
 
-	if err := r.db.Unscoped().Model(&domain.Member{}).Where("deleted_at >= ? AND deleted_at < ?", startDate, endDate).Count(&deletedCount).Error; err != nil {
+	if err := r.db.Unscoped().Model(&domain.Member{}).Where("withdrawn_at >= ? AND withdrawn_at < ?", startDate, endDate).Count(&deletedCount).Error; err != nil {
 		return 0, 0, err
 	}
 
