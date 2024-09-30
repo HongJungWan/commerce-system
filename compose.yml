@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  my-db:
+  db:
     image: mariadb:latest
     environment:
       MARIADB_ROOT_PASSWORD: pwe1234
@@ -9,28 +7,27 @@ services:
       MARIADB_USER: user
       MARIADB_PASSWORD: pwe1234
     ports:
-      - 3310:3306
+      - 3306:3306
     networks:
       - commerce-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-ppwe1234"]
+      interval: 5s
+      retries: 10
+      start_period: 60s
       timeout: 5s
 
-#  my-api-server:
-#    container_name: go-server
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - 3031:8080
-#    networks:
-#      - commerce-network
-#    depends_on:
-#      my-db:
-#        condition: service_healthy
+  api-server:
+    container_name: go-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3031:3031
+    networks:
+      - commerce-network
+    depends_on:
+      - db
 
 networks:
   commerce-network:

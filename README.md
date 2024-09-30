@@ -1,31 +1,17 @@
 # commerce-system
 
-안녕하세요, 홍정완입니다.
-
-본 Repository는 1주일 간의 개발 성과를 평가하기 위해 작성되었습니다.
-
-평가가 원활히 진행될 수 있도록, 아래 README.md에 작성된 내용을 충분히 검토해 주시면 감사하겠습니다.
-
----
-
-### 실행 방법 --- 작성 중 ⚙ ---
-1. `docker-compose up` 명령어 실행
-2. `docker build --no-cache -t my-app-image .` 명령어 실행
-
 <br>
 
-```
-# 📌 GoLand IDE에서 프로그램 실행 시 설정하는 방법
+### 실행 방법
+1. `compose.yml` 파일이 존재하는 경로로 이동합니다.
 
-- Program arguments: Go 프로그램을 실행할 때 전달할 명령줄 인수. 
-- 여기서는 `-c deploy/config.toml`을 전달하여 `config.toml` 파일을 설정 파일로 사용합니다.
 
-- 설정 방법
-  1. GoLand에서 Run/Debug Configurations를 엽니다.
-  2. Program arguments 필드에 `-c deploy/config.toml`을 입력합니다.
-  3. 이 설정은 프로그램이 `config.toml` 파일을 읽어들이도록 하여, 지정된 환경 설정을 로드하게 합니다.
-  4. 설정을 저장하고, Run 버튼을 클릭하여 프로그램을 실행합니다.
-```
+2. `docker-compose up --build -d` 명령어를 실행합니다.
+
+
+3. `Docker Desktop`에서 아래 이미지와 같이 컨테이너가 잘 실행 중인지 확인합니다.
+
+<img src="readme/image/docker-desktop.png" width="800"/>
 
 <br><br>
 

@@ -1,6 +1,6 @@
-# MariaDB 설정
-mariadb_host = "localhost"
+# MariaDB 설정, 컨테이너 통신용
+mariadb_host = "db"
 mariadb_user = "user"
 mariadb_password = "pwe1234"
 mariadb_db = "commerce-system"
-mariadb_port = "3310"
+mariadb_port = 3306
