@@ -24,20 +24,20 @@ func TestAuthController_Login_Success(t *testing.T) {
 	authController := controller.NewAuthController(authUseCase)
 
 	member := &domain.Member{
-		UserID:   "testuser",
-		Password: "password123",
-		Name:     "Test User",
-		Email:    "testuser@example.com",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
-	_ = member.SetPassword(member.Password)
+	_ = member.SetPassword(member.HashedPassword)
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
 	router.POST("/login", authController.Login)
 
 	loginRequest := map[string]string{
-		"user_id":  "testuser",
-		"password": "password123",
+		"username":        "testuser",
+		"hashed_password": "password123",
 	}
 	requestBody, _ := json.Marshal(loginRequest)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(requestBody))
@@ -66,8 +66,8 @@ func TestAuthController_Login_Failure_InvalidCredentials(t *testing.T) {
 	router.POST("/login", authController.Login)
 
 	loginRequest := map[string]string{
-		"user_id":  "nonexistent",
-		"password": "password123",
+		"username":        "nonexistent",
+		"hashed_password": "password123",
 	}
 	requestBody, _ := json.Marshal(loginRequest)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(requestBody))
@@ -96,7 +96,7 @@ func TestAuthController_Login_Failure_InvalidRequest(t *testing.T) {
 	router.POST("/login", authController.Login)
 
 	invalidRequest := map[string]interface{}{
-		"user_id": 123, // 잘못된 타입의 값
+		"username": 123, // 잘못된 타입의 값
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(requestBody))

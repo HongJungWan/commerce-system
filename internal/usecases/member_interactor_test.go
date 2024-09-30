@@ -18,11 +18,11 @@ func TestMemberInteractor_Register_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	member := &domain.Member{
-		UserID:       "newuser",
-		Password:     "password123",
-		Name:         "New User",
-		Email:        "newuser@example.com",
-		MemberNumber: "M12345",
+		Username:       "newuser",
+		HashedPassword: "password123",
+		FullName:       "New User",
+		Email:          "newuser@example.com",
+		MemberNumber:   "M12345",
 	}
 
 	// When
@@ -30,7 +30,7 @@ func TestMemberInteractor_Register_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	retrievedMember, _ := memberRepo.GetByUserID("newuser")
+	retrievedMember, _ := memberRepo.GetByUserName("newuser")
 	assert.NotNil(t, retrievedMember)
 }
 
@@ -41,20 +41,20 @@ func TestMemberInteractor_Register_Failure_DuplicateUserID(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	existingMember := &domain.Member{
-		UserID:       "duplicateuser",
-		Password:     "password123",
-		Name:         "Existing User",
-		Email:        "existing@example.com",
-		MemberNumber: "M12345",
+		Username:       "duplicateuser",
+		HashedPassword: "password123",
+		FullName:       "Existing User",
+		Email:          "existing@example.com",
+		MemberNumber:   "M12345",
 	}
 	_ = memberRepo.Create(existingMember)
 
 	newMember := &domain.Member{
-		UserID:       "duplicateuser",
-		Password:     "password456",
-		Name:         "New User",
-		Email:        "new@example.com",
-		MemberNumber: "M12346",
+		Username:       "duplicateuser",
+		HashedPassword: "password456",
+		FullName:       "New User",
+		Email:          "new@example.com",
+		MemberNumber:   "M12346",
 	}
 
 	// When
@@ -72,20 +72,20 @@ func TestMemberInteractor_GetByUserID_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	member := &domain.Member{
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
-		MemberNumber: "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
+		MemberNumber:   "M12345",
 	}
 	_ = memberRepo.Create(member)
 
 	// When
-	retrievedMember, err := interactor.GetByUserID("testuser")
+	retrievedMember, err := interactor.GetByUserName("testuser")
 
 	// Then
 	assert.NoError(t, err)
-	assert.Equal(t, member.Name, retrievedMember.Name)
+	assert.Equal(t, member.FullName, retrievedMember.FullName)
 }
 
 func TestMemberInteractor_GetByUserID_Failure_NotFound(t *testing.T) {
@@ -95,7 +95,7 @@ func TestMemberInteractor_GetByUserID_Failure_NotFound(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	// When
-	retrievedMember, err := interactor.GetByUserID("nonexistent")
+	retrievedMember, err := interactor.GetByUserName("nonexistent")
 
 	// Then
 	assert.Error(t, err)
@@ -109,17 +109,17 @@ func TestMemberInteractor_UpdateByUserID_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	member := &domain.Member{
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Old Name",
-		Email:        "old@example.com",
-		MemberNumber: "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Old Name",
+		Email:          "old@example.com",
+		MemberNumber:   "M12345",
 	}
 	_ = memberRepo.Create(member)
 
 	updateData := &domain.Member{
-		Name:  "New Name",
-		Email: "new@example.com",
+		FullName: "New Name",
+		Email:    "new@example.com",
 	}
 
 	// When
@@ -127,8 +127,8 @@ func TestMemberInteractor_UpdateByUserID_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	updatedMember, _ := memberRepo.GetByUserID("testuser")
-	assert.Equal(t, "New Name", updatedMember.Name)
+	updatedMember, _ := memberRepo.GetByUserName("testuser")
+	assert.Equal(t, "New Name", updatedMember.FullName)
 	assert.Equal(t, "new@example.com", updatedMember.Email)
 }
 
@@ -139,8 +139,8 @@ func TestMemberInteractor_UpdateByUserID_Failure_UserNotFound(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	updateData := &domain.Member{
-		Name:  "New Name",
-		Email: "new@example.com",
+		FullName: "New Name",
+		Email:    "new@example.com",
 	}
 
 	// When
@@ -157,11 +157,11 @@ func TestMemberInteractor_DeleteByUserID_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	member := &domain.Member{
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
-		MemberNumber: "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
+		MemberNumber:   "M12345",
 	}
 	_ = memberRepo.Create(member)
 
@@ -170,7 +170,7 @@ func TestMemberInteractor_DeleteByUserID_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	deletedMember, err := memberRepo.GetByUserID("testuser")
+	deletedMember, err := memberRepo.GetByUserName("testuser")
 	assert.Error(t, err)
 	assert.Nil(t, deletedMember)
 }
@@ -195,18 +195,18 @@ func TestMemberInteractor_GetAll_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	member1 := &domain.Member{
-		UserID:       "user1",
-		Password:     "password123",
-		Name:         "User One",
-		Email:        "user1@example.com",
-		MemberNumber: "M12345",
+		Username:       "user1",
+		HashedPassword: "password123",
+		FullName:       "User One",
+		Email:          "user1@example.com",
+		MemberNumber:   "M12345",
 	}
 	member2 := &domain.Member{
-		UserID:       "user2",
-		Password:     "password123",
-		Name:         "User Two",
-		Email:        "user2@example.com",
-		MemberNumber: "M12346",
+		Username:       "user2",
+		HashedPassword: "password123",
+		FullName:       "User Two",
+		Email:          "user2@example.com",
+		MemberNumber:   "M12346",
 	}
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)
@@ -226,20 +226,20 @@ func TestMemberInteractor_GetStatsByMonth_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	member1 := &domain.Member{
-		UserID:       "user1",
-		Password:     "password123",
-		Name:         "User One",
-		Email:        "user1@example.com",
-		MemberNumber: "M12345",
-		CreatedAt:    time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
+		Username:       "user1",
+		HashedPassword: "password123",
+		FullName:       "User One",
+		Email:          "user1@example.com",
+		MemberNumber:   "M12345",
+		CreatedAt:      time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 	}
 	member2 := &domain.Member{
-		UserID:       "user2",
-		Password:     "password123",
-		Name:         "User Two",
-		Email:        "user2@example.com",
-		MemberNumber: "M12346",
-		CreatedAt:    time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
+		Username:       "user2",
+		HashedPassword: "password123",
+		FullName:       "User Two",
+		Email:          "user2@example.com",
+		MemberNumber:   "M12346",
+		CreatedAt:      time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 	}
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)

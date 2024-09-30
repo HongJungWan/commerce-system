@@ -24,15 +24,17 @@ func TestProductController_GetProducts_Success(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product1 := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Product One",
+		ProductName:   "Product One",
 		Category:      "Electronics",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	product2 := &domain.Product{
+		ID:            12346,
 		ProductNumber: "P12346",
-		Name:          "Product Two",
+		ProductName:   "Product Two",
 		Category:      "Home",
 		Price:         1500,
 		StockQuantity: 5,
@@ -55,7 +57,7 @@ func TestProductController_GetProducts_Success(t *testing.T) {
 	err := json.Unmarshal(resp.Body.Bytes(), &products)
 	assert.NoError(t, err)
 	assert.Len(t, products, 1)
-	assert.Equal(t, "Product One", products[0].Name)
+	assert.Equal(t, "Product One", products[0].ProductName)
 }
 
 func TestProductController_CreateProduct_Success(t *testing.T) {
@@ -72,8 +74,9 @@ func TestProductController_CreateProduct_Success(t *testing.T) {
 	})
 
 	newProduct := domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "New Product",
+		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -107,8 +110,9 @@ func TestProductController_CreateProduct_Failure_Unauthorized(t *testing.T) {
 	})
 
 	newProduct := domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "New Product",
+		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -132,15 +136,16 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	_ = productRepo.Create(product)
 
 	router := gin.Default()
-	router.PUT("/products/:product_number/stock", func(c *gin.Context) {
+	router.PUT("/products/:id/stock", func(c *gin.Context) {
 		c.Set("is_admin", true)
 		productController.UpdateStock(c)
 	})
@@ -149,7 +154,7 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 		"stock_quantity": 20,
 	}
 	requestBody, _ := json.Marshal(updateData)
-	req, _ := http.NewRequest("PUT", "/products/P12345/stock", bytes.NewBuffer(requestBody))
+	req, _ := http.NewRequest("PUT", "/products/12345/stock", bytes.NewBuffer(requestBody))
 	req.Header.Set("Content-Type", "application/json")
 
 	// When
@@ -163,7 +168,7 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "재고 수량이 수정되었습니다.", response["message"])
 
-	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
+	updatedProduct, _ := productRepo.GetById(12345)
 	assert.Equal(t, 20, updatedProduct.StockQuantity)
 }
 
@@ -175,20 +180,21 @@ func TestProductController_DeleteProduct_Success(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	_ = productRepo.Create(product)
 
 	router := gin.Default()
-	router.DELETE("/products/:product_number", func(c *gin.Context) {
+	router.DELETE("/products/:id", func(c *gin.Context) {
 		c.Set("is_admin", true)
 		productController.DeleteProduct(c)
 	})
 
-	req, _ := http.NewRequest("DELETE", "/products/P12345", nil)
+	req, _ := http.NewRequest("DELETE", "/products/12345", nil)
 
 	// When
 	resp := httptest.NewRecorder()
@@ -201,7 +207,7 @@ func TestProductController_DeleteProduct_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "상품이 삭제되었습니다.", response["message"])
 
-	deletedProduct, err := productRepo.GetByProductNumber("P12345")
+	deletedProduct, err := productRepo.GetById(12345)
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }
@@ -215,25 +221,26 @@ func TestProductController_DeleteProduct_Failure_HasOrders(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
-		OrderNumber:   "O12345",
-		ProductNumber: "P12345",
+		OrderNumber: "O12345",
+		ID:          12345,
 	}
 	_ = productRepo.Create(product)
 	_ = orderRepo.Create(order)
 
 	router := gin.Default()
-	router.DELETE("/products/:product_number", func(c *gin.Context) {
+	router.DELETE("/products/:id", func(c *gin.Context) {
 		c.Set("is_admin", true)
 		productController.DeleteProduct(c)
 	})
 
-	req, _ := http.NewRequest("DELETE", "/products/P12345", nil)
+	req, _ := http.NewRequest("DELETE", "/products/12345", nil)
 
 	// When
 	resp := httptest.NewRecorder()

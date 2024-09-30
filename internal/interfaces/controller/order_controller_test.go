@@ -99,15 +99,17 @@ func TestOrderController_CancelOrder_Success(t *testing.T) {
 	orderController := controller.NewOrderController(orderInteractor)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
 		Quantity:      2,
-		Status:        "ordered",
+		IsCanceled:    false,
 	}
 	_ = productRepo.Create(product)
 	_ = orderRepo.Create(order)
@@ -142,24 +144,26 @@ func TestOrderController_GetMonthlyStats_Success(t *testing.T) {
 	orderController := controller.NewOrderController(orderInteractor)
 
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "canceled",
+		TotalAmount:   1500,
+		IsCanceled:    true,
 	}
 	_ = orderRepo.Create(order1)
 	_ = orderRepo.Create(order2)

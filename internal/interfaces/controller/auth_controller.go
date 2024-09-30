@@ -17,8 +17,8 @@ func NewAuthController(authUseCase *usecases.AuthUseCase) *AuthController {
 
 func (ctrl *AuthController) Login(c *gin.Context) {
 	var loginRequest struct {
-		UserID   string `json:"user_id"`
-		Password string `json:"password"`
+		Username       string `json:"username"`
+		HashedPassword string `json:"hashed_password"`
 	}
 
 	if err := c.ShouldBindJSON(&loginRequest); err != nil {
@@ -26,7 +26,7 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	member, err := ctrl.authUseCase.Authenticate(loginRequest.UserID, loginRequest.Password)
+	member, err := ctrl.authUseCase.Authenticate(loginRequest.Username, loginRequest.HashedPassword)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return

@@ -39,8 +39,8 @@ func (mc *MemberController) Register(c *gin.Context) {
 }
 
 func (mc *MemberController) GetMyInfo(c *gin.Context) {
-	userID := c.GetString("user_id")
-	member, err := mc.memberInteractor.GetByUserID(userID)
+	userID := c.GetString("username")
+	member, err := mc.memberInteractor.GetByUserName(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "사용자 정보를 가져올 수 없습니다."})
 		return
@@ -49,7 +49,7 @@ func (mc *MemberController) GetMyInfo(c *gin.Context) {
 }
 
 func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
-	userID := c.GetString("user_id")
+	userID := c.GetString("username")
 	var updateData domain.Member
 	if err := c.ShouldBindJSON(&updateData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
@@ -63,7 +63,7 @@ func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
 }
 
 func (mc *MemberController) DeleteMyAccount(c *gin.Context) {
-	userID := c.GetString("user_id")
+	userID := c.GetString("username")
 	if err := mc.memberInteractor.DeleteByUserID(userID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "계정 삭제에 실패했습니다."})
 		return
@@ -72,7 +72,6 @@ func (mc *MemberController) DeleteMyAccount(c *gin.Context) {
 }
 
 func (mc *MemberController) GetAllMembers(c *gin.Context) {
-	// FIXME: DB 찔러서 가져오도록 수정하기.
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
 		c.JSON(http.StatusForbidden, gin.H{"error": "접근 권한이 없습니다."})
@@ -87,7 +86,6 @@ func (mc *MemberController) GetAllMembers(c *gin.Context) {
 }
 
 func (mc *MemberController) GetMemberStats(c *gin.Context) {
-	// FIXME: DB 찔러서 가져오도록 수정하기.
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
 		c.JSON(http.StatusForbidden, gin.H{"error": "접근 권한이 없습니다."})
