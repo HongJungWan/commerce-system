@@ -170,6 +170,7 @@ func TestOrderRepositoryImpl_GetMonthlyStats_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewOrderRepository(db)
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
@@ -177,9 +178,10 @@ func TestOrderRepositoryImpl_GetMonthlyStats_Success(t *testing.T) {
 		Price:         1000,
 		Quantity:      2,
 		TotalAmount:   2000,
-		IsCanceled:    true,
+		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",

@@ -166,8 +166,8 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	})
 
 	updateData := map[string]interface{}{
-		"name":  "New Name",
-		"email": "new@example.com",
+		"full_name": "New Name",
+		"email":     "new@example.com",
 	}
 	requestBody, _ := json.Marshal(updateData)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))

@@ -99,10 +99,12 @@ func TestOrderController_CancelOrder_Success(t *testing.T) {
 	orderController := controller.NewOrderController(orderInteractor)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
 		ProductNumber: 12345,
@@ -142,6 +144,7 @@ func TestOrderController_GetMonthlyStats_Success(t *testing.T) {
 	orderController := controller.NewOrderController(orderInteractor)
 
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
@@ -152,6 +155,7 @@ func TestOrderController_GetMonthlyStats_Success(t *testing.T) {
 		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",

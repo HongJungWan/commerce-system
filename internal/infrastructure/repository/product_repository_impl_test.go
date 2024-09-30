@@ -131,7 +131,7 @@ func TestProductRepositoryImpl_GetById_Success(t *testing.T) {
 	_ = repo.Create(product)
 
 	// When
-	retrievedProduct, err := repo.GetById(1234)
+	retrievedProduct, err := repo.GetById(12345)
 
 	// Then
 	assert.NoError(t, err)

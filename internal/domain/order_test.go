@@ -4,16 +4,20 @@ import (
 	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestOrder_Validate_Success(t *testing.T) {
 	// Given
 	order := &domain.Order{
+		ID:            12345,
+		OrderDate:     time.Now(),
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
 		ProductNumber: 12345,
 		Quantity:      2,
 		Price:         1000,
+		TotalAmount:   3000,
 	}
 
 	// When
@@ -45,7 +49,7 @@ func TestOrder_Cancel_Success(t *testing.T) {
 	// Given
 	order := &domain.Order{
 		OrderNumber: "O12345",
-		IsCanceled:  true,
+		IsCanceled:  false,
 	}
 
 	// When

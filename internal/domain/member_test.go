@@ -46,6 +46,8 @@ func TestMember_CheckPassword_IncorrectPassword(t *testing.T) {
 func TestMember_Validate_Success(t *testing.T) {
 	// Given
 	member := &domain.Member{
+		ID:             12345,
+		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
 		FullName:       "Test User",
