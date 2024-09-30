@@ -19,12 +19,12 @@ func TestJWTAuthMiddleware_Success(t *testing.T) {
 	router := gin.New()
 	router.Use(middleware.JWTAuthMiddleware())
 	router.GET("/protected", func(c *gin.Context) {
-		userID := c.GetString("user_id")
+		userName := c.GetString("username")
 		isAdmin := c.GetBool("is_admin")
 		memberNumber := c.GetString("member_number")
 		c.JSON(http.StatusOK, gin.H{
 			"message":       "Access granted",
-			"user_id":       userID,
+			"username":      userName,
 			"is_admin":      isAdmin,
 			"member_number": memberNumber,
 		})
@@ -32,7 +32,7 @@ func TestJWTAuthMiddleware_Success(t *testing.T) {
 
 	// JWT 토큰 생성: 올바른 서명 키와 클레임 사용
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":       "testuser",
+		"username":      "testuser",
 		"is_admin":      true,
 		"member_number": "M12345",
 		"exp":           time.Now().Add(time.Hour * 1).Unix(),
@@ -53,7 +53,7 @@ func TestJWTAuthMiddleware_Success(t *testing.T) {
 	err = json.Unmarshal(resp.Body.Bytes(), &response)
 	assert.NoError(t, err)
 	assert.Equal(t, "Access granted", response["message"])
-	assert.Equal(t, "testuser", response["user_id"])
+	assert.Equal(t, "testuser", response["username"])
 	assert.Equal(t, true, response["is_admin"])
 	assert.Equal(t, "M12345", response["member_number"])
 }

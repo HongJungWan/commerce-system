@@ -12,7 +12,7 @@ func TestProduct_Validate_Success(t *testing.T) {
 	// Given
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -28,7 +28,7 @@ func TestProduct_Validate_Failure_MissingFields(t *testing.T) {
 	// Given
 	product := &domain.Product{
 		ProductNumber: "",
-		Name:          "",
+		ProductName:   "",
 		Price:         -1000,
 		StockQuantity: -10,
 	}
@@ -38,7 +38,7 @@ func TestProduct_Validate_Failure_MissingFields(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "상품번호가 누락되었습니다.", err.Error())
 }
 
 func TestProduct_UpdateStock_Success(t *testing.T) {

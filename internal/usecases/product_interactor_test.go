@@ -17,8 +17,9 @@ func TestProductInteractor_CreateProduct_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "New Product",
+		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -28,7 +29,7 @@ func TestProductInteractor_CreateProduct_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	retrievedProduct, _ := productRepo.GetByProductNumber("P12345")
+	retrievedProduct, _ := productRepo.GetById(12345)
 	assert.NotNil(t, retrievedProduct)
 }
 
@@ -39,8 +40,9 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
-		ProductNumber: "",
-		Name:          "",
+		ID:            0,
+		ProductNumber: "P12345",
+		ProductName:   "",
 		Price:         -1000,
 		StockQuantity: -10,
 	}
@@ -50,7 +52,7 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "상품명이 누락되었습니다.", err.Error())
 }
 
 func TestProductInteractor_GetProducts_Success(t *testing.T) {
@@ -60,15 +62,17 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product1 := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Product One",
+		ProductName:   "Product One",
 		Category:      "Electronics",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	product2 := &domain.Product{
+		ID:            12346,
 		ProductNumber: "P12346",
-		Name:          "Product Two",
+		ProductName:   "Product Two",
 		Category:      "Home",
 		Price:         1500,
 		StockQuantity: 5,
@@ -84,7 +88,7 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	assert.Len(t, products, 1)
-	assert.Equal(t, "Product One", products[0].Name)
+	assert.Equal(t, "Product One", products[0].ProductName)
 }
 
 func TestProductInteractor_UpdateStock_Success(t *testing.T) {
@@ -94,19 +98,20 @@ func TestProductInteractor_UpdateStock_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	_ = productRepo.Create(product)
 
 	// When
-	err := interactor.UpdateStock("P12345", 20)
+	err := interactor.UpdateStock(12345, 20)
 
 	// Then
 	assert.NoError(t, err)
-	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
+	updatedProduct, _ := productRepo.GetById(12345)
 	assert.Equal(t, 20, updatedProduct.StockQuantity)
 }
 
@@ -117,7 +122,7 @@ func TestProductInteractor_UpdateStock_Failure_ProductNotFound(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	// When
-	err := interactor.UpdateStock("InvalidProduct", 20)
+	err := interactor.UpdateStock(0, 20)
 
 	// Then
 	assert.Error(t, err)
@@ -130,19 +135,20 @@ func TestProductInteractor_DeleteProduct_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	_ = productRepo.Create(product)
 
 	// When
-	err := interactor.DeleteProduct("P12345")
+	err := interactor.DeleteProduct(12345)
 
 	// Then
 	assert.NoError(t, err)
-	deletedProduct, err := productRepo.GetByProductNumber("P12345")
+	deletedProduct, err := productRepo.GetById(12345)
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }
@@ -155,20 +161,21 @@ func TestProductInteractor_DeleteProduct_Failure_HasOrders(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
-		OrderNumber:   "O12345",
-		ProductNumber: "P12345",
+		OrderNumber: "O12345",
+		ID:          12345,
 	}
 	_ = productRepo.Create(product)
 	_ = orderRepo.Create(order)
 
 	// When
-	err := interactor.DeleteProduct("P12345")
+	err := interactor.DeleteProduct(12345)
 
 	// Then
 	assert.Error(t, err)

@@ -20,14 +20,15 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	product := &domain.Product{
-		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ID:            12345,
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	_ = productRepo.Create(product)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "InvalidMember",
 		ProductNumber: "P12345",
@@ -39,7 +40,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
@@ -51,18 +52,20 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		ID:             12345,
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	_ = memberRepo.Create(member)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
-		ProductNumber: "InvalidProduct",
+		ProductNumber: "",
 		Quantity:      2,
 	}
 
@@ -71,7 +74,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
@@ -83,15 +86,16 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		ID:             12345,
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	product := &domain.Product{
-		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ID:            12345,
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 1,
 	}
@@ -99,6 +103,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
@@ -110,7 +115,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
@@ -122,27 +127,30 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		ID:             12345,
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	product := &domain.Product{
+		ID:            12345,
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	_ = memberRepo.Create(member)
 	_ = productRepo.Create(product)
@@ -153,10 +161,14 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
+
+	// 주문이 성공적으로 취소되었는지 확인
 	updatedOrder, _ := orderRepo.GetByOrderNumber("O12345")
-	assert.Equal(t, "canceled", updatedOrder.Status)
+	assert.Equal(t, true, updatedOrder.IsCanceled) // 주문이 취소되었으므로 true
+
+	// 재고 수량이 제대로 복구되었는지 확인
 	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
-	assert.Equal(t, 12, updatedProduct.StockQuantity)
+	assert.Equal(t, 12, updatedProduct.StockQuantity) // 재고 수량이 2만큼 증가
 }
 
 func TestOrderInteractor_CancelOrder_Failure_OrderNotFound(t *testing.T) {
@@ -183,21 +195,23 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		ID:             12345,
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M99999",
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	_ = memberRepo.Create(member)
 	_ = orderRepo.Create(order)
@@ -219,31 +233,34 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		ID:             12345,
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "ordered",
+		TotalAmount:   1500,
+		IsCanceled:    false,
 	}
 	_ = memberRepo.Create(member)
 	_ = orderRepo.Create(order1)
@@ -266,24 +283,26 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "canceled",
+		TotalAmount:   1500,
+		IsCanceled:    true,
 	}
 	_ = orderRepo.Create(order1)
 	_ = orderRepo.Create(order2)

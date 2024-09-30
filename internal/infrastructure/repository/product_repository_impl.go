@@ -24,14 +24,22 @@ func (r *ProductRepositoryImpl) GetAll(filter map[string]interface{}) ([]*domain
 	if category, ok := filter["category"]; ok {
 		query = query.Where("category = ?", category)
 	}
-	if name, ok := filter["name"]; ok {
-		query = query.Where("name LIKE ?", "%"+name.(string)+"%")
+	if productName, ok := filter["product_name"]; ok {
+		query = query.Where("product_name LIKE ?", "%"+productName.(string)+"%")
 	}
 
 	if err := query.Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
+}
+
+func (r *ProductRepositoryImpl) GetById(id int) (*domain.Product, error) {
+	var product domain.Product
+	if err := r.db.First(&product, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &product, nil
 }
 
 func (r *ProductRepositoryImpl) GetByProductNumber(productNumber string) (*domain.Product, error) {
@@ -46,6 +54,6 @@ func (r *ProductRepositoryImpl) Update(product *domain.Product) error {
 	return r.db.Save(product).Error
 }
 
-func (r *ProductRepositoryImpl) Delete(productNumber string) error {
-	return r.db.Delete(&domain.Product{}, "product_number = ?", productNumber).Error
+func (r *ProductRepositoryImpl) Delete(id int) error {
+	return r.db.Delete(&domain.Product{}, "id = ?", id).Error
 }

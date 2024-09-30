@@ -7,22 +7,30 @@ import (
 )
 
 type Product struct {
-	ProductNumber string `gorm:"primaryKey;column:product_number" json:"product_number"`
-	Name          string `gorm:"not null" json:"name"`
-	Category      string `json:"category"`
-	Price         int64  `gorm:"not null" json:"price"`
-	StockQuantity int    `gorm:"not null" json:"stock_quantity"`
+	ID            int    `gorm:"primaryKey;autoIncrement" json:"id"`    // 기본 키
+	ProductNumber string `gorm:"unique;not null" json:"product_number"` // 상품번호
+	ProductName   string `gorm:"not null" json:"product_name"`          // 상품명
+	Category      string `json:"category"`                              // 카테고리
+	Price         int64  `gorm:"not null" json:"price"`                 // 가격
+	StockQuantity int    `gorm:"not null" json:"stock_quantity"`        // 재고수량
 }
 
-// 상품 생성 시 유효성 검사
 func (p *Product) Validate() error {
-	if p.ProductNumber == "" || p.Name == "" || p.Price <= 0 || p.StockQuantity < 0 {
-		return errors.New("필수 필드가 누락되었거나 잘못된 값입니다.")
+	if p.ProductNumber == "" {
+		return errors.New("상품번호가 누락되었습니다.")
+	}
+	if p.ProductName == "" {
+		return errors.New("상품명이 누락되었습니다.")
+	}
+	if p.Price <= 0 {
+		return errors.New("가격이 잘못되었습니다.")
+	}
+	if p.StockQuantity < 0 {
+		return errors.New("재고 수량은 음수일 수 없습니다.")
 	}
 	return nil
 }
 
-// 재고 수량 업데이트
 func (p *Product) UpdateStock(quantity int) error {
 	if quantity < 0 {
 		return errors.New("재고 수량은 음수일 수 없습니다.")
@@ -31,10 +39,9 @@ func (p *Product) UpdateStock(quantity int) error {
 	return nil
 }
 
-// 상품 삭제 가능 여부 확인 (주문 이력이 있는지 체크)
 func (p *Product) CanBeDeleted(db *gorm.DB) (bool, error) {
 	var count int64
-	if err := db.Model(&Order{}).Where("product_number = ?", p.ProductNumber).Count(&count).Error; err != nil {
+	if err := db.Model(&Order{}).Where("id = ?", p.ID).Count(&count).Error; err != nil {
 		return false, err
 	}
 	return count == 0, nil

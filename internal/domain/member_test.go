@@ -16,7 +16,7 @@ func TestMember_SetPassword_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	assert.NotEmpty(t, member.Password)
+	assert.NotEmpty(t, member.HashedPassword)
 }
 
 func TestMember_CheckPassword_CorrectPassword(t *testing.T) {
@@ -46,10 +46,12 @@ func TestMember_CheckPassword_IncorrectPassword(t *testing.T) {
 func TestMember_Validate_Success(t *testing.T) {
 	// Given
 	member := &domain.Member{
-		UserID:   "testuser",
-		Password: "password123",
-		Name:     "Test User",
-		Email:    "testuser@example.com",
+		ID:             12345,
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 
 	// When
@@ -68,5 +70,5 @@ func TestMember_Validate_Failure_MissingFields(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었습니다.", err.Error())
+	assert.Equal(t, "회원번호가 누락되었습니다.", err.Error())
 }
