@@ -24,14 +24,14 @@ func TestProductController_GetProducts_Success(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product1 := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Product One",
 		Category:      "Electronics",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	product2 := &domain.Product{
-		ProductNumber: "P12346",
+		ID:            12346,
 		ProductName:   "Product Two",
 		Category:      "Home",
 		Price:         1500,
@@ -72,7 +72,7 @@ func TestProductController_CreateProduct_Success(t *testing.T) {
 	})
 
 	newProduct := domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -107,7 +107,7 @@ func TestProductController_CreateProduct_Failure_Unauthorized(t *testing.T) {
 	})
 
 	newProduct := domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -132,7 +132,7 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -163,7 +163,7 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "재고 수량이 수정되었습니다.", response["message"])
 
-	updatedProduct, _ := productRepo.GetById("P12345")
+	updatedProduct, _ := productRepo.GetById(12345)
 	assert.Equal(t, 20, updatedProduct.StockQuantity)
 }
 
@@ -175,7 +175,7 @@ func TestProductController_DeleteProduct_Success(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -201,7 +201,7 @@ func TestProductController_DeleteProduct_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "상품이 삭제되었습니다.", response["message"])
 
-	deletedProduct, err := productRepo.GetById("P12345")
+	deletedProduct, err := productRepo.GetById(12345)
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }
@@ -215,14 +215,14 @@ func TestProductController_DeleteProduct_Failure_HasOrders(t *testing.T) {
 	productController := controller.NewProductController(productInteractor)
 
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
-		OrderNumber:   "O12345",
-		ProductNumber: "P12345",
+		OrderNumber: "O12345",
+		ID:          12345,
 	}
 	_ = productRepo.Create(product)
 	_ = orderRepo.Create(order)

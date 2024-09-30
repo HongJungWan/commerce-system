@@ -93,7 +93,7 @@ func TestProduct_CanBeDeleted_Failure_HasOrders(t *testing.T) {
 	}
 	order := &domain.Order{
 		OrderNumber:   "O12345",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 	}
 
 	db.Create(product)

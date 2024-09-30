@@ -122,7 +122,7 @@ func TestProductRepositoryImpl_GetById_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewProductRepository(db)
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Category:      "Electronics",
 		Price:         1000,
@@ -131,7 +131,7 @@ func TestProductRepositoryImpl_GetById_Success(t *testing.T) {
 	_ = repo.Create(product)
 
 	// When
-	retrievedProduct, err := repo.GetById("P12345")
+	retrievedProduct, err := repo.GetById(1234)
 
 	// Then
 	assert.NoError(t, err)
@@ -144,7 +144,7 @@ func TestProductRepositoryImpl_GetById_Failure_NotFound(t *testing.T) {
 	repo := repository.NewProductRepository(db)
 
 	// When
-	retrievedProduct, err := repo.GetById("nonexistent")
+	retrievedProduct, err := repo.GetById(0)
 
 	// Then
 	assert.Error(t, err)
@@ -156,7 +156,7 @@ func TestProductRepositoryImpl_Update_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewProductRepository(db)
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Old Name",
 		Category:      "Electronics",
 		Price:         1000,
@@ -172,7 +172,7 @@ func TestProductRepositoryImpl_Update_Success(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Verify
-	updatedProduct, _ := repo.GetById("P12345")
+	updatedProduct, _ := repo.GetById(12345)
 	assert.Equal(t, "New Name", updatedProduct.ProductName)
 }
 
@@ -181,7 +181,7 @@ func TestProductRepositoryImpl_Delete_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewProductRepository(db)
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Category:      "Electronics",
 		Price:         1000,
@@ -190,13 +190,13 @@ func TestProductRepositoryImpl_Delete_Success(t *testing.T) {
 	_ = repo.Create(product)
 
 	// When
-	err := repo.Delete("P12345")
+	err := repo.Delete(12345)
 
 	// Then
 	assert.NoError(t, err)
 
 	// Verify
-	deletedProduct, err := repo.GetById("P12345")
+	deletedProduct, err := repo.GetById(12345)
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }

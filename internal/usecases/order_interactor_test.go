@@ -20,7 +20,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -30,7 +30,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	order := &domain.Order{
 		OrderNumber:   "O12345",
 		MemberNumber:  "InvalidMember",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Quantity:      2,
 	}
 
@@ -62,7 +62,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	order := &domain.Order{
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
-		ProductNumber: "InvalidProduct",
+		ProductNumber: 0,
 		Quantity:      2,
 	}
 
@@ -90,7 +90,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 		Email:          "testuser@example.com",
 	}
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 1,
@@ -101,7 +101,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	order := &domain.Order{
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Quantity:      2,
 	}
 
@@ -129,7 +129,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		Email:          "testuser@example.com",
 	}
 	product := &domain.Product{
-		ProductNumber: "P12345",
+		ID:            12345,
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -138,7 +138,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Price:         1000,
 		Quantity:      2,
 		TotalAmount:   2000,
@@ -155,7 +155,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	assert.NoError(t, err)
 	updatedOrder, _ := orderRepo.GetByOrderNumber("O12345")
 	assert.Equal(t, true, updatedOrder.IsCanceled)
-	updatedProduct, _ := productRepo.GetById("P12345")
+	updatedProduct, _ := productRepo.GetById(12345)
 	assert.Equal(t, 12, updatedProduct.StockQuantity)
 }
 
@@ -193,7 +193,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M99999",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Price:         1000,
 		Quantity:      2,
 		TotalAmount:   2000,
@@ -229,7 +229,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Price:         1000,
 		Quantity:      2,
 		TotalAmount:   2000,
@@ -239,7 +239,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		OrderNumber:   "O12346",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
-		ProductNumber: "P12346",
+		ProductNumber: 12346,
 		Price:         1500,
 		Quantity:      1,
 		TotalAmount:   1500,
@@ -269,7 +269,7 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Price:         1000,
 		Quantity:      2,
 		TotalAmount:   2000,
@@ -279,7 +279,7 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",
-		ProductNumber: "P12346",
+		ProductNumber: 12346,
 		Price:         1500,
 		Quantity:      1,
 		TotalAmount:   1500,

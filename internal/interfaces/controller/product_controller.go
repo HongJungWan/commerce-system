@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/HongJungWan/commerce-system/internal/domain"
 	"net/http"
+	"strconv"
 
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
@@ -60,7 +61,13 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 		return
 	}
 
-	productNumber := c.Param("product_number")
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 상품 ID입니다."})
+		return
+	}
+
 	var req struct {
 		StockQuantity int `json:"stock_quantity"`
 	}
@@ -69,7 +76,7 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 		return
 	}
 
-	if err := pc.productInteractor.UpdateStock(productNumber, req.StockQuantity); err != nil {
+	if err := pc.productInteractor.UpdateStock(id, req.StockQuantity); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -83,8 +90,14 @@ func (pc *ProductController) DeleteProduct(c *gin.Context) {
 		return
 	}
 
-	productNumber := c.Param("product_number")
-	if err := pc.productInteractor.DeleteProduct(productNumber); err != nil {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 상품 ID입니다."})
+		return
+	}
+
+	if err := pc.productInteractor.DeleteProduct(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

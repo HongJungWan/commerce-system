@@ -11,7 +11,7 @@ func TestOrder_Validate_Success(t *testing.T) {
 	order := &domain.Order{
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
-		ProductNumber: "P12345",
+		ProductNumber: 12345,
 		Quantity:      2,
 		Price:         1000,
 	}
@@ -28,7 +28,7 @@ func TestOrder_Validate_Failure_MissingFields(t *testing.T) {
 	order := &domain.Order{
 		OrderNumber:   "",
 		MemberNumber:  "",
-		ProductNumber: "",
+		ProductNumber: 0,
 		Quantity:      -1,
 		Price:         -1000,
 	}
