@@ -28,6 +28,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "InvalidMember",
 		ProductNumber: 12345,
@@ -51,6 +52,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -60,6 +62,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	_ = memberRepo.Create(member)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
 		ProductNumber: 0,
@@ -83,6 +86,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -99,6 +103,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		MemberNumber:  "M12345",
 		ProductNumber: 12345,
@@ -122,6 +127,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -135,6 +141,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		StockQuantity: 10,
 	}
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -183,6 +190,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -190,6 +198,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 		Email:          "testuser@example.com",
 	}
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M99999",
@@ -219,6 +228,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -226,6 +236,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		Email:          "testuser@example.com",
 	}
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -236,6 +247,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -266,6 +278,7 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	order1 := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
@@ -276,6 +289,7 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
+		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",

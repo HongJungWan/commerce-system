@@ -18,6 +18,7 @@ func TestProductInteractor_CreateProduct_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -40,6 +41,7 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 
 	product := &domain.Product{
 		ID:            0,
+		ProductNumber: "P12345",
 		ProductName:   "",
 		Price:         -1000,
 		StockQuantity: -10,
@@ -50,7 +52,7 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "상품번호가 누락되었습니다.", err.Error())
+	assert.Equal(t, "상품명이 누락되었습니다.", err.Error())
 }
 
 func TestProductInteractor_GetProducts_Success(t *testing.T) {
@@ -61,6 +63,7 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 
 	product1 := &domain.Product{
 		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "Product One",
 		Category:      "Electronics",
 		Price:         1000,
@@ -68,6 +71,7 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 	}
 	product2 := &domain.Product{
 		ID:            12346,
+		ProductNumber: "P12346",
 		ProductName:   "Product Two",
 		Category:      "Home",
 		Price:         1500,
@@ -95,6 +99,7 @@ func TestProductInteractor_UpdateStock_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -131,6 +136,7 @@ func TestProductInteractor_DeleteProduct_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
@@ -156,6 +162,7 @@ func TestProductInteractor_DeleteProduct_Failure_HasOrders(t *testing.T) {
 
 	product := &domain.Product{
 		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,

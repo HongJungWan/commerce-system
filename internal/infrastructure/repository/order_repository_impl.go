@@ -51,14 +51,14 @@ func (r *OrderRepositoryImpl) GetMonthlyStats(month string) (int64, int64, error
 
 	// 매출액 계산 (취소되지 않은 주문)
 	if err := r.db.Model(&domain.Order{}).
-		Where("order_date >= ? AND order_date < ? AND is_canceled = ?", startDate, endDate, "ordered").
+		Where("order_date >= ? AND order_date < ? AND is_canceled = ?", startDate, endDate, false).
 		Select("COALESCE(SUM(total_amount), 0)").Scan(&totalSales).Error; err != nil {
 		return 0, 0, err
 	}
 
 	// 취소액 계산 (취소된 주문)
 	if err := r.db.Model(&domain.Order{}).
-		Where("order_date >= ? AND order_date < ? AND is_canceled = ?", startDate, endDate, "canceled").
+		Where("order_date >= ? AND order_date < ? AND is_canceled = ?", startDate, endDate, true).
 		Select("COALESCE(SUM(total_amount), 0)").Scan(&totalCanceled).Error; err != nil {
 		return 0, 0, err
 	}

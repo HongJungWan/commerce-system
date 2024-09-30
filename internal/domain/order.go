@@ -6,7 +6,7 @@ import (
 )
 
 type Order struct {
-	ID            uint       `gorm:"primaryKey;autoIncrement" json:"id"`  // 기본 키
+	ID            int        `gorm:"primaryKey;autoIncrement" json:"id"`  // 기본 키
 	OrderNumber   string     `gorm:"unique;not null" json:"order_number"` // 주문번호
 	OrderDate     time.Time  `gorm:"not null" json:"order_date"`          // 주문일
 	MemberNumber  string     `gorm:"not null" json:"member_number"`       // 회원번호

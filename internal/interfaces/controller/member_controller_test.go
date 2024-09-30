@@ -27,6 +27,8 @@ func TestMemberController_Register_Success(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	newMember := domain.Member{
+		ID:             1234,
+		MemberNumber:   "P1234",
 		Username:       "newuser",
 		HashedPassword: "password123",
 		FullName:       "New User",
@@ -62,7 +64,7 @@ func TestMemberController_Register_Failure_InvalidRequest(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	invalidRequest := map[string]interface{}{
-		"user_id": 123, // 잘못된 타입의 값
+		"username": 0, // 잘못된 타입의 값
 	}
 
 	requestBody, _ := json.Marshal(invalidRequest)
@@ -86,17 +88,18 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
+		ID:             1234,
+		MemberNumber:   "P1234",
 		Username:       "testuser",
 		HashedPassword: "password123",
 		FullName:       "Test User",
 		Email:          "testuser@example.com",
-		MemberNumber:   "M12345",
 	}
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
 	router.GET("/me", func(c *gin.Context) {
-		c.Set("user_id", "testuser")
+		c.Set("username", "testuser")
 		memberController.GetMyInfo(c)
 	})
 
@@ -124,7 +127,7 @@ func TestMemberController_GetMyInfo_Failure_UserNotFound(t *testing.T) {
 
 	router := gin.Default()
 	router.GET("/me", func(c *gin.Context) {
-		c.Set("user_id", "nonexistent")
+		c.Set("username", "nonexistent")
 		memberController.GetMyInfo(c)
 	})
 
@@ -147,6 +150,8 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
+		ID:             1234,
+		MemberNumber:   "P1234",
 		Username:       "testuser",
 		HashedPassword: "password123",
 		FullName:       "Old Name",
@@ -156,7 +161,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 
 	router := gin.Default()
 	router.PUT("/me", func(c *gin.Context) {
-		c.Set("user_id", "testuser")
+		c.Set("username", "testuser")
 		memberController.UpdateMyInfo(c)
 	})
 
@@ -194,12 +199,12 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 
 	router := gin.Default()
 	router.PUT("/me", func(c *gin.Context) {
-		c.Set("user_id", "testuser")
+		c.Set("username", "testuser")
 		memberController.UpdateMyInfo(c)
 	})
 
 	invalidRequest := map[string]interface{}{
-		"name": 123, // 잘못된 타입의 값
+		"username": 0, // 잘못된 타입의 값
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))
@@ -222,6 +227,7 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
+		ID:             1234,
 		Username:       "testuser",
 		HashedPassword: "password123",
 		FullName:       "Test User",
@@ -231,7 +237,7 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 
 	router := gin.Default()
 	router.DELETE("/me", func(c *gin.Context) {
-		c.Set("user_id", "testuser")
+		c.Set("username", "testuser")
 		memberController.DeleteMyAccount(c)
 	})
 
@@ -262,12 +268,14 @@ func TestMemberController_GetAllMembers_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member1 := &domain.Member{
+		ID:             1234,
 		Username:       "user1",
 		HashedPassword: "password123",
 		FullName:       "User One",
 		Email:          "user1@example.com",
 	}
 	member2 := &domain.Member{
+		ID:             1235,
 		Username:       "user2",
 		HashedPassword: "password123",
 		FullName:       "User Two",

@@ -7,7 +7,7 @@ import (
 )
 
 type Product struct {
-	ID            uint   `gorm:"primaryKey;autoIncrement" json:"id"`    // 기본 키
+	ID            int    `gorm:"primaryKey;autoIncrement" json:"id"`    // 기본 키
 	ProductNumber string `gorm:"unique;not null" json:"product_number"` // 상품번호
 	ProductName   string `gorm:"not null" json:"product_name"`          // 상품명
 	Category      string `json:"category"`                              // 카테고리

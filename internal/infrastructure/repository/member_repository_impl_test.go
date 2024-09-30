@@ -15,6 +15,7 @@ func TestMemberRepositoryImpl_Create_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -35,6 +36,7 @@ func TestMemberRepositoryImpl_Create_Failure_DuplicateUserID(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member1 := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "duplicateuser",
 		HashedPassword: "password123",
@@ -42,6 +44,7 @@ func TestMemberRepositoryImpl_Create_Failure_DuplicateUserID(t *testing.T) {
 		Email:          "user1@example.com",
 	}
 	member2 := &domain.Member{
+		ID:             12346,
 		MemberNumber:   "M12346",
 		Username:       "duplicateuser",
 		HashedPassword: "password123",
@@ -62,6 +65,7 @@ func TestMemberRepositoryImpl_GetByID_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -96,6 +100,7 @@ func TestMemberRepositoryImpl_GetByUserID_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -130,6 +135,7 @@ func TestMemberRepositoryImpl_Update_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -155,6 +161,7 @@ func TestMemberRepositoryImpl_Delete_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "testuser",
 		HashedPassword: "password123",
@@ -180,6 +187,7 @@ func TestMemberRepositoryImpl_GetAll_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member1 := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "user1",
 		HashedPassword: "password123",
@@ -187,6 +195,7 @@ func TestMemberRepositoryImpl_GetAll_Success(t *testing.T) {
 		Email:          "user1@example.com",
 	}
 	member2 := &domain.Member{
+		ID:             12346,
 		MemberNumber:   "M12346",
 		Username:       "user2",
 		HashedPassword: "password123",
@@ -211,6 +220,7 @@ func TestMemberRepositoryImpl_GetStatsByMonth_Success(t *testing.T) {
 
 	// 특정 월에 가입한 회원 생성
 	member1 := &domain.Member{
+		ID:             12345,
 		MemberNumber:   "M12345",
 		Username:       "user1",
 		HashedPassword: "password123",
@@ -219,6 +229,7 @@ func TestMemberRepositoryImpl_GetStatsByMonth_Success(t *testing.T) {
 		CreatedAt:      time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 	}
 	member2 := &domain.Member{
+		ID:             12346,
 		MemberNumber:   "M12346",
 		Username:       "user2",
 		HashedPassword: "password123",
@@ -227,6 +238,7 @@ func TestMemberRepositoryImpl_GetStatsByMonth_Success(t *testing.T) {
 		CreatedAt:      time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 	}
 	member3 := &domain.Member{
+		ID:             12347,
 		MemberNumber:   "M12347",
 		Username:       "user3",
 		HashedPassword: "password123",
