@@ -16,13 +16,13 @@ func TestAuthUseCase_Authenticate_Success(t *testing.T) {
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
 
 	member := &domain.Member{
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
-		MemberNumber: "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
+		MemberNumber:   "M12345",
 	}
-	_ = member.SetPassword(member.Password)
+	_ = member.SetPassword(member.HashedPassword)
 	_ = memberRepo.Create(member)
 
 	// When
@@ -30,7 +30,7 @@ func TestAuthUseCase_Authenticate_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	assert.Equal(t, "testuser", authenticatedMember.UserID)
+	assert.Equal(t, "testuser", authenticatedMember.Username)
 }
 
 func TestAuthUseCase_Authenticate_Failure_WrongPassword(t *testing.T) {
@@ -40,13 +40,13 @@ func TestAuthUseCase_Authenticate_Failure_WrongPassword(t *testing.T) {
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
 
 	member := &domain.Member{
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
-		MemberNumber: "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
+		MemberNumber:   "M12345",
 	}
-	_ = member.SetPassword(member.Password)
+	_ = member.SetPassword(member.HashedPassword)
 	_ = memberRepo.Create(member)
 
 	// When
@@ -80,7 +80,7 @@ func TestAuthUseCase_GenerateToken_Success(t *testing.T) {
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
 
 	member := &domain.Member{
-		UserID:       "testuser",
+		Username:     "testuser",
 		IsAdmin:      true,
 		MemberNumber: "M12345",
 	}

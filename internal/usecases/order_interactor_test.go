@@ -21,7 +21,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -39,7 +39,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
@@ -51,11 +51,11 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	_ = memberRepo.Create(member)
 
@@ -71,7 +71,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
@@ -83,15 +83,15 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 1,
 	}
@@ -110,7 +110,7 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
@@ -122,15 +122,15 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -141,8 +141,8 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	_ = memberRepo.Create(member)
 	_ = productRepo.Create(product)
@@ -154,7 +154,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	updatedOrder, _ := orderRepo.GetByOrderNumber("O12345")
-	assert.Equal(t, "canceled", updatedOrder.Status)
+	assert.Equal(t, true, updatedOrder.IsCanceled)
 	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
 	assert.Equal(t, 12, updatedProduct.StockQuantity)
 }
@@ -183,11 +183,11 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	order := &domain.Order{
 		OrderNumber:   "O12345",
@@ -196,8 +196,8 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	_ = memberRepo.Create(member)
 	_ = orderRepo.Create(order)
@@ -219,11 +219,11 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		MemberNumber: "M12345",
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
+		MemberNumber:   "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	order1 := &domain.Order{
 		OrderNumber:   "O12345",
@@ -232,8 +232,8 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
 		OrderNumber:   "O12346",
@@ -242,8 +242,8 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "ordered",
+		TotalAmount:   1500,
+		IsCanceled:    false,
 	}
 	_ = memberRepo.Create(member)
 	_ = orderRepo.Create(order1)
@@ -272,8 +272,8 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 		ProductNumber: "P12345",
 		Price:         1000,
 		Quantity:      2,
-		TotalPrice:    2000,
-		Status:        "ordered",
+		TotalAmount:   2000,
+		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
 		OrderNumber:   "O12346",
@@ -282,8 +282,8 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 		ProductNumber: "P12346",
 		Price:         1500,
 		Quantity:      1,
-		TotalPrice:    1500,
-		Status:        "canceled",
+		TotalAmount:   1500,
+		IsCanceled:    true,
 	}
 	_ = orderRepo.Create(order1)
 	_ = orderRepo.Create(order2)

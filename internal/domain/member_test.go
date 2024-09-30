@@ -68,5 +68,5 @@ func TestMember_Validate_Failure_MissingFields(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었습니다.", err.Error())
+	assert.Equal(t, "회원번호가 누락되었습니다.", err.Error())
 }

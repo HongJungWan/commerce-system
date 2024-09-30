@@ -20,7 +20,7 @@ func (mi *MemberInteractor) Register(member *domain.Member) error {
 		return err
 	}
 
-	existingMember, _ := mi.MemberRepository.GetByUserID(member.Username)
+	existingMember, _ := mi.MemberRepository.GetByUserName(member.Username)
 	if existingMember != nil {
 		return errors.New("이미 존재하는 사용자 ID입니다.")
 	}
@@ -32,12 +32,12 @@ func (mi *MemberInteractor) Register(member *domain.Member) error {
 	return mi.MemberRepository.Create(member)
 }
 
-func (mi *MemberInteractor) GetByUserID(userID string) (*domain.Member, error) {
-	return mi.MemberRepository.GetByUserID(userID)
+func (mi *MemberInteractor) GetByUserName(userID string) (*domain.Member, error) {
+	return mi.MemberRepository.GetByUserName(userID)
 }
 
 func (mi *MemberInteractor) UpdateByUserID(userID string, updateData *domain.Member) error {
-	member, err := mi.MemberRepository.GetByUserID(userID)
+	member, err := mi.MemberRepository.GetByUserName(userID)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (mi *MemberInteractor) UpdateByUserID(userID string, updateData *domain.Mem
 }
 
 func (mi *MemberInteractor) DeleteByUserID(userID string) error {
-	member, err := mi.MemberRepository.GetByUserID(userID)
+	member, err := mi.MemberRepository.GetByUserName(userID)
 	if err != nil {
 		return err
 	}

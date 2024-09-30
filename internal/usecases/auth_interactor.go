@@ -23,7 +23,7 @@ func NewAuthUseCase(secretKey string, memberRepo repository.MemberRepository) *A
 
 func (uc *AuthUseCase) GenerateToken(member *domain.Member) (string, error) {
 	claims := jwt.MapClaims{
-		"user_name":     member.Username,
+		"username":      member.Username,
 		"is_admin":      member.IsAdmin == true,
 		"member_number": member.MemberNumber,
 		"exp":           time.Now().Add(time.Hour * 24).Unix(),
@@ -32,8 +32,8 @@ func (uc *AuthUseCase) GenerateToken(member *domain.Member) (string, error) {
 	return token.SignedString([]byte(uc.SecretKey))
 }
 
-func (uc *AuthUseCase) Authenticate(userID, password string) (*domain.Member, error) {
-	member, err := uc.MemberRepository.GetByUserID(userID)
+func (uc *AuthUseCase) Authenticate(userName, password string) (*domain.Member, error) {
+	member, err := uc.MemberRepository.GetByUserName(userName)
 	if err != nil || member == nil {
 		return nil, errors.New("Invalid credentials")
 	}

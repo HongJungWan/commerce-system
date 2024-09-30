@@ -27,9 +27,9 @@ func (r *MemberRepositoryImpl) GetByID(id uint) (*domain.Member, error) {
 	return &member, nil
 }
 
-func (r *MemberRepositoryImpl) GetByUserID(userID string) (*domain.Member, error) {
+func (r *MemberRepositoryImpl) GetByUserName(userName string) (*domain.Member, error) {
 	var member domain.Member
-	if err := r.db.Where("username = ?", userID).First(&member).Error; err != nil {
+	if err := r.db.Where("username = ?", userName).First(&member).Error; err != nil {
 		return nil, err
 	}
 	return &member, nil

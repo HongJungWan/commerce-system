@@ -27,10 +27,10 @@ func TestMemberController_Register_Success(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	newMember := domain.Member{
-		UserID:   "newuser",
-		Password: "password123",
-		Name:     "New User",
-		Email:    "newuser@example.com",
+		Username:       "newuser",
+		HashedPassword: "password123",
+		FullName:       "New User",
+		Email:          "newuser@example.com",
 	}
 
 	requestBody, _ := json.Marshal(newMember)
@@ -86,11 +86,11 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
-		UserID:       "testuser",
-		Password:     "password123",
-		Name:         "Test User",
-		Email:        "testuser@example.com",
-		MemberNumber: "M12345",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
+		MemberNumber:   "M12345",
 	}
 	_ = memberRepo.Create(member)
 
@@ -111,7 +111,7 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 	var retrievedMember domain.Member
 	err := json.Unmarshal(resp.Body.Bytes(), &retrievedMember)
 	assert.NoError(t, err)
-	assert.Equal(t, "Test User", retrievedMember.Name)
+	assert.Equal(t, "Test User", retrievedMember.FullName)
 }
 
 func TestMemberController_GetMyInfo_Failure_UserNotFound(t *testing.T) {
@@ -147,10 +147,10 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
-		UserID:   "testuser",
-		Password: "password123",
-		Name:     "Old Name",
-		Email:    "old@example.com",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Old Name",
+		Email:          "old@example.com",
 	}
 	_ = memberRepo.Create(member)
 
@@ -180,7 +180,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	assert.Equal(t, "정보가 수정되었습니다.", response["message"])
 
 	updatedMember, _ := memberRepo.GetByUserID("testuser")
-	assert.Equal(t, "New Name", updatedMember.Name)
+	assert.Equal(t, "New Name", updatedMember.FullName)
 	assert.Equal(t, "new@example.com", updatedMember.Email)
 }
 
@@ -222,10 +222,10 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
-		UserID:   "testuser",
-		Password: "password123",
-		Name:     "Test User",
-		Email:    "testuser@example.com",
+		Username:       "testuser",
+		HashedPassword: "password123",
+		FullName:       "Test User",
+		Email:          "testuser@example.com",
 	}
 	_ = memberRepo.Create(member)
 
@@ -262,16 +262,16 @@ func TestMemberController_GetAllMembers_Success(t *testing.T) {
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member1 := &domain.Member{
-		UserID:   "user1",
-		Password: "password123",
-		Name:     "User One",
-		Email:    "user1@example.com",
+		Username:       "user1",
+		HashedPassword: "password123",
+		FullName:       "User One",
+		Email:          "user1@example.com",
 	}
 	member2 := &domain.Member{
-		UserID:   "user2",
-		Password: "password123",
-		Name:     "User Two",
-		Email:    "user2@example.com",
+		Username:       "user2",
+		HashedPassword: "password123",
+		FullName:       "User Two",
+		Email:          "user2@example.com",
 	}
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)

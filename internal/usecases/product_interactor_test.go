@@ -18,7 +18,7 @@ func TestProductInteractor_CreateProduct_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "New Product",
+		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -40,7 +40,7 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "",
-		Name:          "",
+		ProductName:   "",
 		Price:         -1000,
 		StockQuantity: -10,
 	}
@@ -50,7 +50,7 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "필수 필드가 누락되었거나 잘못된 값입니다.", err.Error())
+	assert.Equal(t, "상품번호가 누락되었습니다.", err.Error())
 }
 
 func TestProductInteractor_GetProducts_Success(t *testing.T) {
@@ -61,14 +61,14 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 
 	product1 := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Product One",
+		ProductName:   "Product One",
 		Category:      "Electronics",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	product2 := &domain.Product{
 		ProductNumber: "P12346",
-		Name:          "Product Two",
+		ProductName:   "Product Two",
 		Category:      "Home",
 		Price:         1500,
 		StockQuantity: 5,
@@ -84,7 +84,7 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	assert.Len(t, products, 1)
-	assert.Equal(t, "Product One", products[0].Name)
+	assert.Equal(t, "Product One", products[0].ProductName)
 }
 
 func TestProductInteractor_UpdateStock_Success(t *testing.T) {
@@ -95,7 +95,7 @@ func TestProductInteractor_UpdateStock_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -131,7 +131,7 @@ func TestProductInteractor_DeleteProduct_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -156,7 +156,7 @@ func TestProductInteractor_DeleteProduct_Failure_HasOrders(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}

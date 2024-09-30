@@ -41,7 +41,7 @@ func (p *Product) UpdateStock(quantity int) error {
 
 func (p *Product) CanBeDeleted(db *gorm.DB) (bool, error) {
 	var count int64
-	if err := db.Model(&Order{}).Where("product_id = ?", p.ID).Count(&count).Error; err != nil {
+	if err := db.Model(&Order{}).Where("id = ?", p.ID).Count(&count).Error; err != nil {
 		return false, err
 	}
 	return count == 0, nil

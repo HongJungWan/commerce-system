@@ -25,14 +25,14 @@ func TestProductController_GetProducts_Success(t *testing.T) {
 
 	product1 := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Product One",
+		ProductName:   "Product One",
 		Category:      "Electronics",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	product2 := &domain.Product{
 		ProductNumber: "P12346",
-		Name:          "Product Two",
+		ProductName:   "Product Two",
 		Category:      "Home",
 		Price:         1500,
 		StockQuantity: 5,
@@ -55,7 +55,7 @@ func TestProductController_GetProducts_Success(t *testing.T) {
 	err := json.Unmarshal(resp.Body.Bytes(), &products)
 	assert.NoError(t, err)
 	assert.Len(t, products, 1)
-	assert.Equal(t, "Product One", products[0].Name)
+	assert.Equal(t, "Product One", products[0].ProductName)
 }
 
 func TestProductController_CreateProduct_Success(t *testing.T) {
@@ -73,7 +73,7 @@ func TestProductController_CreateProduct_Success(t *testing.T) {
 
 	newProduct := domain.Product{
 		ProductNumber: "P12345",
-		Name:          "New Product",
+		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -108,7 +108,7 @@ func TestProductController_CreateProduct_Failure_Unauthorized(t *testing.T) {
 
 	newProduct := domain.Product{
 		ProductNumber: "P12345",
-		Name:          "New Product",
+		ProductName:   "New Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -133,7 +133,7 @@ func TestProductController_UpdateStock_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -176,7 +176,7 @@ func TestProductController_DeleteProduct_Success(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
@@ -216,7 +216,7 @@ func TestProductController_DeleteProduct_Failure_HasOrders(t *testing.T) {
 
 	product := &domain.Product{
 		ProductNumber: "P12345",
-		Name:          "Test Product",
+		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}

@@ -16,14 +16,13 @@ func NewProductController(pi *usecases.ProductInteractor) *ProductController {
 	return &ProductController{productInteractor: pi}
 }
 
-// 상품 목록 조회
 func (pc *ProductController) GetProducts(c *gin.Context) {
 	filter := make(map[string]interface{})
 	if category := c.Query("category"); category != "" {
 		filter["category"] = category
 	}
-	if name := c.Query("name"); name != "" {
-		filter["name"] = name
+	if name := c.Query("product_name"); name != "" {
+		filter["product_name"] = name
 	}
 
 	products, err := pc.productInteractor.GetProducts(filter)
@@ -34,7 +33,6 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, products)
 }
 
-// 상품 등록
 func (pc *ProductController) CreateProduct(c *gin.Context) {
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
@@ -55,7 +53,6 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "상품이 등록되었습니다.", "product": product})
 }
 
-// 재고 수량 수정
 func (pc *ProductController) UpdateStock(c *gin.Context) {
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
@@ -79,7 +76,6 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "재고 수량이 수정되었습니다."})
 }
 
-// 상품 삭제
 func (pc *ProductController) DeleteProduct(c *gin.Context) {
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
