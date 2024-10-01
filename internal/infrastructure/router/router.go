@@ -11,6 +11,8 @@ import (
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
@@ -24,6 +26,7 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	config.AllowCredentials = true
 
 	service.Use(cors.New(config))
+	service.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	service.GET("", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, "commerce system")
 	})
