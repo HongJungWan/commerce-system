@@ -7,7 +7,7 @@ services:
       MARIADB_USER: user
       MARIADB_PASSWORD: pwe1234
     ports:
-      - 3306:3306
+      - 3310:3306
     networks:
       - commerce-network
     healthcheck:
