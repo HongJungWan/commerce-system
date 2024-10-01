@@ -22,31 +22,60 @@
 go test ./internal/...
 ```
 
-<br>
+<img src="readme/image/test_all.png" width="450"/>
+
+<br><br>
 
 📌 **성공한 테스트 코드 확인 명령어**
 ```
 go test ./internal/... -json | Select-String -Pattern '"Action":"pass"' | Measure-Object
 ```
 
-<br>
+<img src="readme/image/test_pass.png" width="750"/>
+
+<br><br>
 
 📌 **실패한 테스트 코드 확인 명령어**
 ```
 go test ./internal/... -json | Select-String -Pattern '"Action":"fail"' | Measure-Object
 ```
 
-<br><br>
-
-### Swagger 테스트 순서
-
-... 작성 중 ⚙
+<img src="readme/image/test_fail.png" width="750"/>
 
 <br><br>
 
 ### Swagger 테스트
 
-... 작성 중 ⚙
+```
+swag init
+
+go-server 컨테이너 실행 확인 후, `http://localhost:3031/docs/index.html` 접근
+```
+
+<br>
+
+#### 예시 1️⃣, ...API
+
+| 실행 전 UI                                               | 실행 후 UI                                               |
+|-------------------------------------------------------|-------------------------------------------------------|
+|  |  |
+
+<br>
+
+#### 예시 2️⃣, ...API
+
+| 실행 전 UI                                               | 실행 후 UI                                               |
+|-------------------------------------------------------|-------------------------------------------------------|
+|  |  |
+
+<br>
+
+#### 예시 3️⃣, ...API
+
+| 실행 전 UI                                               | 실행 후 UI                                               |
+|-------------------------------------------------------|-------------------------------------------------------|
+|  |  |
+
 
 <br><br>
 
@@ -60,7 +89,53 @@ go test ./internal/... -json | Select-String -Pattern '"Action":"fail"' | Measur
 
 ### 폴더 구조
 
-... 작성 중 ⚙
+4개의 핵심 도메인 계층이 있습니다.
+
+* `Models Layer`
+* `Infrastructure Layer`
+* `Usecase Layer`
+* `Controller Layer`
+
+<br>
+
+```commerce-system
+├── database
+├── deploy
+├── docs
+│   ├── docs.go
+│   ├── swagger.json
+│   └── swagger.yaml
+│
+├── internal
+│   ├── domain
+│   │   │── repository (interface)
+│   │   │   │── member_repository.go
+│   │   │
+│   │   │── member.go
+│   │   │── member_test.go
+│   │   │── ...
+│   │
+│   ├── infrastructure
+│   │   ├── configs
+│   │   ├── repository (impl)
+│   │   │   │── member_repository_impl.go
+│   │   │
+│   │   └── router
+│   │
+│   ├── interfaces
+│   │   ├── controller
+│   │   ├── dto
+│   │   └── middleware
+│   │
+│   └── usecases
+│
+├── test
+│   └── fixtures
+│
+├── compose.yml
+├── Dockerfile
+├── go.mod
+```
 
 <br><br>
 
@@ -72,9 +147,30 @@ go test ./internal/... -json | Select-String -Pattern '"Action":"fail"' | Measur
 
 ### API Endpoint
 
-| HTTP Method | URI                       | Description              |
-|-------------|---------------------------|--------------------------|
-| `작성 중...`   | `작성 중...`               | 작성 중...                  |
+| HTTP Method | URI                                   | Description                             |
+|-------------|---------------------------------------|-----------------------------------------|
+| GET         | `/api/health`                         | 서비스 상태 확인                               |
+|          |                        |                                         |
+|          |                        |                                         |
+| POST        | `/api/login`                          | 사용자 로그인                                 |
+| POST        | `/api/members`                        | 회원 가입                                   |
+| GET         | `/api/members/me`                     | 내 정보 조회, `authentication`               |
+| PUT         | `/api/members/me`                     | 내 정보 수정, `authentication`                                 |
+| DELETE      | `/api/members/me`                     | 회원 탈퇴, `authentication`                                   |
+| GET         | `/api/members`                        | 회원 목록 조회, `authentication/authorization`                              |
+| GET         | `/api/members/stats`                  | 회원 통계 조회, `authentication/authorization` |
+|          |                        |                                         |
+|          |                        |                                         |
+| GET         | `/api/products`                       | 상품 목록 조회, `authentication`                                |
+| POST        | `/api/products`                       | 상품 생성, `authentication/authorization`                                   |
+| PUT         | `/api/products/:product_number/stock` | 상품 재고 수정, `authentication/authorization`                                |
+| DELETE      | `/api/products/:product_number`       | 상품 삭제, `authentication/authorization`                                   |
+|          |                        |                                         |
+|          |                        |                                         |
+| POST        | `/api/orders`                         | 주문 생성, `authentication`                                   |
+| GET         | `/api/orders/me`                      | 내 주문 조회, `authentication`                                 |
+| PUT         | `/api/orders/:order_number/cancel`    | 주문 취소, `authentication`                                   |
+| GET         | `/api/orders/stats`                   | 주문 통계 조회, `authentication/authorization`                                |
 
 <br><br>
 
