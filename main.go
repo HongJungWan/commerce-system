@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/HongJungWan/commerce-system/docs"
 	"github.com/HongJungWan/commerce-system/internal/helper"
 	configs "github.com/HongJungWan/commerce-system/internal/infrastructure/configs"
 	"github.com/HongJungWan/commerce-system/internal/infrastructure/router"
@@ -22,6 +23,7 @@ func main() {
 		helper.ShowHelp()
 		os.Exit(-1)
 	}
+	initializeSwaggerHost(&conf)
 	db := configs.ConnectionDB(&conf)
 	startServer(db)
 }
@@ -70,4 +72,21 @@ func startServer(db *gorm.DB) {
 	if err != nil {
 		helper.ErrorPanic(err)
 	}
+}
+
+func initializeSwaggerHost(conf *configs.Config) {
+	docs.SwaggerInfo.Host = conf.Host
+	docs.SwaggerInfo.Schemes = conf.Scheme
+	docs.SwaggerInfo.Version = conf.Version
+	docs.SwaggerInfo.BasePath = conf.BasePath
+	docs.SwaggerInfo.Title = conf.Title
+
+	fmt.Printf(
+		"설정된 Swagger 정보:\nHost: %s\nSchemes: %v\nVersion: %s\nBasePath: %s\nTitle: %s\n",
+		conf.Host,
+		conf.Scheme,
+		conf.Version,
+		conf.BasePath,
+		conf.Title,
+	)
 }

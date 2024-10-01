@@ -4,3 +4,9 @@ mariadb_user = "user"
 mariadb_password = "pwe1234"
 mariadb_db = "commerce-system"
 mariadb_port = 3306
+
+host = "localhost:3031"
+scheme = "http"
+version = "1.0"
+basePath = "/api"
+title = "commerce-system API"
