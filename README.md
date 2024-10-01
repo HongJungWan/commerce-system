@@ -141,7 +141,7 @@ go-server 컨테이너 실행 확인 후, `http://localhost:3031/docs/index.html
 
 ### ERD(Entity Relationship Diagram)
 
-... 작성 중 ⚙
+<img src="readme/image/erd.png" width="400"/>
 
 <br><br>
 
