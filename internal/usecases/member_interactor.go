@@ -32,12 +32,12 @@ func (mi *MemberInteractor) Register(member *domain.Member) error {
 	return mi.MemberRepository.Create(member)
 }
 
-func (mi *MemberInteractor) GetByUserName(userID string) (*domain.Member, error) {
-	return mi.MemberRepository.GetByUserName(userID)
+func (mi *MemberInteractor) GetByUserName(userName string) (*domain.Member, error) {
+	return mi.MemberRepository.GetByUserName(userName)
 }
 
-func (mi *MemberInteractor) UpdateByUserID(userID string, updateData *domain.Member) error {
-	member, err := mi.MemberRepository.GetByUserName(userID)
+func (mi *MemberInteractor) UpdateByUserName(userName string, updateData *domain.Member) error {
+	member, err := mi.MemberRepository.GetByUserName(userName)
 	if err != nil {
 		return err
 	}
@@ -57,8 +57,8 @@ func (mi *MemberInteractor) UpdateByUserID(userID string, updateData *domain.Mem
 	return mi.MemberRepository.Update(member)
 }
 
-func (mi *MemberInteractor) DeleteByUserID(userID string) error {
-	member, err := mi.MemberRepository.GetByUserName(userID)
+func (mi *MemberInteractor) DeleteByUserName(userName string) error {
+	member, err := mi.MemberRepository.GetByUserName(userName)
 	if err != nil {
 		return err
 	}

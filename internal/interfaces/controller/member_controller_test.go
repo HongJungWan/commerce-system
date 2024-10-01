@@ -197,6 +197,15 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
+	member := &domain.Member{
+		MemberNumber: "M1234",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
+	}
+	member.SetPassword("password123")
+	memberRepo.Create(member)
+
 	router := gin.Default()
 	router.PUT("/me", func(c *gin.Context) {
 		c.Set("username", "testuser")
@@ -204,7 +213,7 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 	})
 
 	invalidRequest := map[string]interface{}{
-		"username": 0, // 잘못된 타입의 값
+		"full_name": 123, // 잘못된 타입
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))

@@ -2,8 +2,11 @@ package controller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -17,20 +20,45 @@ func NewOrderController(oi *usecases.OrderInteractor) *OrderController {
 }
 
 func (oc *OrderController) CreateOrder(c *gin.Context) {
-	var order domain.Order
-	if err := c.ShouldBindJSON(&order); err != nil {
+	var req request.CreateOrderRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
 
 	memberNumber := c.GetString("member_number")
-	order.MemberNumber = memberNumber
 
-	if err := oc.orderInteractor.CreateOrder(&order); err != nil {
+	order := &domain.Order{
+		OrderNumber:   req.OrderNumber,
+		OrderDate:     time.Now(),
+		MemberNumber:  memberNumber,
+		ProductNumber: req.ProductNumber,
+		Quantity:      req.Quantity,
+	}
+
+	// 가격 및 총 금액은 비즈니스 로직에서 계산됩니다.
+	if err := oc.orderInteractor.CreateOrder(order); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "주문이 등록되었습니다.", "order": order})
+
+	orderResponse := response.OrderResponse{
+		ID:            order.ID,
+		OrderNumber:   order.OrderNumber,
+		OrderDate:     order.OrderDate.Format(time.RFC3339),
+		MemberNumber:  order.MemberNumber,
+		ProductNumber: order.ProductNumber,
+		Price:         order.Price,
+		Quantity:      order.Quantity,
+		TotalAmount:   order.TotalAmount,
+		IsCanceled:    order.IsCanceled,
+		CanceledAt:    formatTime(order.CanceledAt),
+	}
+
+	c.JSON(http.StatusCreated, response.CreateOrderResponse{
+		Message: "주문이 등록되었습니다.",
+		Order:   orderResponse,
+	})
 }
 
 func (oc *OrderController) GetMyOrders(c *gin.Context) {
@@ -40,7 +68,24 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "주문 내역을 가져올 수 없습니다."})
 		return
 	}
-	c.JSON(http.StatusOK, orders)
+
+	var orderResponses []response.OrderResponse
+	for _, order := range orders {
+		orderResponses = append(orderResponses, response.OrderResponse{
+			ID:            order.ID,
+			OrderNumber:   order.OrderNumber,
+			OrderDate:     order.OrderDate.Format(time.RFC3339),
+			MemberNumber:  order.MemberNumber,
+			ProductNumber: order.ProductNumber,
+			Price:         order.Price,
+			Quantity:      order.Quantity,
+			TotalAmount:   order.TotalAmount,
+			IsCanceled:    order.IsCanceled,
+			CanceledAt:    formatTime(order.CanceledAt),
+		})
+	}
+
+	c.JSON(http.StatusOK, orderResponses)
 }
 
 func (oc *OrderController) CancelOrder(c *gin.Context) {

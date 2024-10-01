@@ -1,10 +1,12 @@
 package controller
 
 import (
-	"github.com/HongJungWan/commerce-system/internal/domain"
 	"net/http"
 	"strconv"
 
+	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +33,20 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "상품 목록을 가져올 수 없습니다."})
 		return
 	}
-	c.JSON(http.StatusOK, products)
+
+	var productResponses []response.ProductResponse
+	for _, product := range products {
+		productResponses = append(productResponses, response.ProductResponse{
+			ID:            product.ID,
+			ProductNumber: product.ProductNumber,
+			ProductName:   product.ProductName,
+			Category:      product.Category,
+			Price:         product.Price,
+			StockQuantity: product.StockQuantity,
+		})
+	}
+
+	c.JSON(http.StatusOK, productResponses)
 }
 
 func (pc *ProductController) CreateProduct(c *gin.Context) {
@@ -41,17 +56,38 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	var product domain.Product
-	if err := c.ShouldBindJSON(&product); err != nil {
+	var req request.CreateProductRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
 
-	if err := pc.productInteractor.CreateProduct(&product); err != nil {
+	product := &domain.Product{
+		ProductNumber: req.ProductNumber,
+		ProductName:   req.ProductName,
+		Category:      req.Category,
+		Price:         req.Price,
+		StockQuantity: req.StockQuantity,
+	}
+
+	if err := pc.productInteractor.CreateProduct(product); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "상품이 등록되었습니다.", "product": product})
+
+	productResponse := response.ProductResponse{
+		ID:            product.ID,
+		ProductNumber: product.ProductNumber,
+		ProductName:   product.ProductName,
+		Category:      product.Category,
+		Price:         product.Price,
+		StockQuantity: product.StockQuantity,
+	}
+
+	c.JSON(http.StatusCreated, response.CreateProductResponse{
+		Message: "상품이 등록되었습니다.",
+		Product: productResponse,
+	})
 }
 
 func (pc *ProductController) UpdateStock(c *gin.Context) {
@@ -68,9 +104,7 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 		return
 	}
 
-	var req struct {
-		StockQuantity int `json:"stock_quantity"`
-	}
+	var req request.UpdateStockRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return

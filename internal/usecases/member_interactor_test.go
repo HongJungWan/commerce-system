@@ -123,7 +123,7 @@ func TestMemberInteractor_UpdateByUserID_Success(t *testing.T) {
 	}
 
 	// When
-	err := interactor.UpdateByUserID("testuser", updateData)
+	err := interactor.UpdateByUserName("testuser", updateData)
 
 	// Then
 	assert.NoError(t, err)
@@ -144,7 +144,7 @@ func TestMemberInteractor_UpdateByUserID_Failure_UserNotFound(t *testing.T) {
 	}
 
 	// When
-	err := interactor.UpdateByUserID("nonexistent", updateData)
+	err := interactor.UpdateByUserName("nonexistent", updateData)
 
 	// Then
 	assert.Error(t, err)
@@ -166,7 +166,7 @@ func TestMemberInteractor_DeleteByUserID_Success(t *testing.T) {
 	_ = memberRepo.Create(member)
 
 	// When
-	err := interactor.DeleteByUserID("testuser")
+	err := interactor.DeleteByUserName("testuser")
 
 	// Then
 	assert.NoError(t, err)
@@ -182,7 +182,7 @@ func TestMemberInteractor_DeleteByUserID_Failure_UserNotFound(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo)
 
 	// When
-	err := interactor.DeleteByUserID("nonexistent")
+	err := interactor.DeleteByUserName("nonexistent")
 
 	// Then
 	assert.Error(t, err)
