@@ -16,6 +16,18 @@ func NewOrderController(oi *usecases.OrderInteractor) *OrderController {
 	return &OrderController{orderInteractor: oi}
 }
 
+// CreateOrder godoc
+// @Summary      주문 생성
+// @Description  새로운 주문을 생성합니다.
+// @Tags         orders
+// @Security     ApiKeyAuth
+// @Accept       json
+// @Produce      json
+// @Param        orderRequest body request.CreateOrderRequest true "주문 정보"
+// @Success      201 {object} response.OrderResponse "주문 생성 성공"
+// @Failure      400 {object} map[string]string "잘못된 요청"
+// @Failure      500 {object} map[string]string "주문 생성 실패"
+// @Router       /orders [post]
 func (oc *OrderController) CreateOrder(c *gin.Context) {
 	var req request.CreateOrderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -34,6 +46,16 @@ func (oc *OrderController) CreateOrder(c *gin.Context) {
 	c.JSON(http.StatusCreated, responseData)
 }
 
+// GetMyOrders godoc
+// @Summary      내 주문 조회
+// @Description  인증된 사용자의 주문 내역을 조회합니다.
+// @Tags         orders
+// @Security     ApiKeyAuth
+// @Accept       json
+// @Produce      json
+// @Success      200 {array} response.OrderResponse "주문 목록"
+// @Failure      500 {object} map[string]string "주문 조회 실패"
+// @Router       /orders/me [get]
 func (oc *OrderController) GetMyOrders(c *gin.Context) {
 	memberNumber := c.GetString("member_number")
 
@@ -46,6 +68,17 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 	c.JSON(http.StatusOK, orderResponses)
 }
 
+// CancelOrder godoc
+// @Summary      주문 취소
+// @Description  특정 주문을 취소합니다.
+// @Tags         orders
+// @Security     ApiKeyAuth
+// @Accept       json
+// @Produce      json
+// @Param        order_number path string true "주문 번호"
+// @Success      200 {object} map[string]string "취소 성공"
+// @Failure      500 {object} map[string]string "취소 실패"
+// @Router       /orders/{order_number}/cancel [put]
 func (oc *OrderController) CancelOrder(c *gin.Context) {
 	orderNumber := c.Param("order_number")
 	memberNumber := c.GetString("member_number")
@@ -57,6 +90,19 @@ func (oc *OrderController) CancelOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "주문이 취소되었습니다."})
 }
 
+// GetMonthlyStats godoc
+// @Summary      주문 통계 조회
+// @Description  특정 월의 주문 통계를 조회합니다. (관리자 전용)
+// @Tags         orders
+// @Security     ApiKeyAuth
+// @Accept       json
+// @Produce      json
+// @Param        month query string true "조회할 월 (YYYY-MM)"
+// @Success      200 {object} response.OrderStatsResponse "통계 정보"
+// @Failure      400 {object} map[string]string "잘못된 요청"
+// @Failure      403 {object} map[string]string "권한 없음"
+// @Failure      500 {object} map[string]string "통계 조회 실패"
+// @Router       /orders/stats [get]
 func (oc *OrderController) GetMonthlyStats(c *gin.Context) {
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
