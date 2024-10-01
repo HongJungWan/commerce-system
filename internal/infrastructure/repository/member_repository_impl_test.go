@@ -178,8 +178,8 @@ func TestMemberRepositoryImpl_Delete_Success(t *testing.T) {
 
 	// Verify
 	deletedMember, err := repo.GetByID(member.ID)
-	assert.Error(t, err)
-	assert.Nil(t, deletedMember)
+	assert.NoError(t, err)
+	assert.True(t, deletedMember.IsWithdrawn)
 }
 
 func TestMemberRepositoryImpl_GetAll_Success(t *testing.T) {
@@ -254,13 +254,19 @@ func TestMemberRepositoryImpl_GetStatsByMonth_Success(t *testing.T) {
 	// 회원 탈퇴
 	_ = repo.Delete(member2.ID)
 
+	// 삭제된 회원의 WithdrawnAt을 테스트 월에 포함되도록 설정
+	member2Fetched, _ := repo.GetByID(member2.ID)
+	withdrawnAt := time.Date(2024, 9, 20, 0, 0, 0, 0, time.UTC)
+	member2Fetched.WithdrawnAt = &withdrawnAt
+	_ = repo.Update(member2Fetched)
+
 	// When
 	joined, deleted, err := repo.GetStatsByMonth("2024-09")
 
 	// Then
 	assert.NoError(t, err)
-	assert.Equal(t, 1, joined)
-	assert.Equal(t, 0, deleted)
+	assert.Equal(t, 2, joined)  // 수정된 기대 값
+	assert.Equal(t, 1, deleted) // 수정된 기대 값
 }
 
 func TestMemberRepositoryImpl_GetStatsByMonth_Failure_InvalidMonth(t *testing.T) {

@@ -264,8 +264,8 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 	assert.Equal(t, "계정이 삭제되었습니다.", response["message"])
 
 	deletedMember, err := memberRepo.GetByUserName("testuser")
-	assert.Error(t, err)
-	assert.Nil(t, deletedMember)
+	assert.NoError(t, err)
+	assert.True(t, deletedMember.IsWithdrawn)
 }
 
 func TestMemberController_GetAllMembers_Success(t *testing.T) {

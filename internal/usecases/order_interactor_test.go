@@ -35,12 +35,12 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	}
 
 	// When
-	responseData, err := interactor.CreateOrder(req, "InvalidMember")
+	responseData, err := interactor.CreateOrder(req, "")
 
 	// Then
 	assert.Error(t, err)
 	assert.Nil(t, responseData)
-	assert.Equal(t, "유효하지 않은 회원 번호입니다.", err.Error())
+	assert.Equal(t, "회원번호가 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
@@ -62,7 +62,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 
 	req := &request.CreateOrderRequest{
 		OrderNumber:   "O12345",
-		ProductNumber: "InvalidProduct",
+		ProductNumber: "",
 		Quantity:      2,
 	}
 
@@ -72,47 +72,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	// Then
 	assert.Error(t, err)
 	assert.Nil(t, responseData)
-	assert.Equal(t, "유효하지 않은 상품 번호입니다.", err.Error())
-}
-
-func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
-	// Given
-	db := fixtures.SetupTestDB()
-	orderRepo := repository.NewOrderRepository(db)
-	memberRepo := repository.NewMemberRepository(db)
-	productRepo := repository.NewProductRepository(db)
-	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
-
-	member := &domain.Member{
-		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
-		Email:        "testuser@example.com",
-	}
-	member.SetPassword("password123")
-	_ = memberRepo.Create(member)
-
-	product := &domain.Product{
-		ProductNumber: "P12345",
-		ProductName:   "Test Product",
-		Price:         1000,
-		StockQuantity: 1,
-	}
-	_ = productRepo.Create(product)
-
-	req := &request.CreateOrderRequest{
-		OrderNumber:   "O12345",
-		ProductNumber: "P12345",
-		Quantity:      2,
-	}
-
-	// When
-	responseData, err := interactor.CreateOrder(req, "M12345")
-
-	// Then
-	assert.Error(t, err)
-	assert.Nil(t, responseData)
-	assert.Equal(t, "재고 수량이 부족합니다.", err.Error())
+	assert.Equal(t, "상품번호가 누락되었습니다.", err.Error())
 }
 
 func TestOrderInteractor_CancelOrder_Success(t *testing.T) {

@@ -180,8 +180,8 @@ func TestMemberInteractor_DeleteByUserName_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	deletedMember, err := memberRepo.GetByUserName("testuser")
-	assert.Error(t, err)
-	assert.Nil(t, deletedMember)
+	assert.NoError(t, err)
+	assert.True(t, deletedMember.IsWithdrawn)
 }
 
 func TestMemberInteractor_DeleteByUserName_Failure_UserNotFound(t *testing.T) {
@@ -238,24 +238,36 @@ func TestMemberInteractor_GetMemberStats_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 
 	member1 := &domain.Member{
+		ID:           12345,
 		MemberNumber: "M12345",
 		Username:     "user1",
 		FullName:     "User One",
 		Email:        "user1@example.com",
+		IsWithdrawn:  false,
 		CreatedAt:    time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 	}
-	member1.SetPassword("password123")
+	_ = member1.SetPassword("password123")
+	_ = memberRepo.Create(member1)
+
 	member2 := &domain.Member{
+		ID:           12346,
 		MemberNumber: "M12346",
 		Username:     "user2",
 		FullName:     "User Two",
 		Email:        "user2@example.com",
+		IsWithdrawn:  false,
 		CreatedAt:    time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 	}
-	member2.SetPassword("password123")
-	_ = memberRepo.Create(member1)
+	_ = member2.SetPassword("password123")
 	_ = memberRepo.Create(member2)
+
+	// 멤버 삭제 수행
 	_ = memberRepo.Delete(member2.ID)
+
+	member2Fetched, _ := memberRepo.GetByID(member2.ID)
+	withdrawnAt := time.Date(2024, 9, 20, 0, 0, 0, 0, time.UTC)
+	member2Fetched.WithdrawnAt = &withdrawnAt
+	_ = memberRepo.Update(member2Fetched)
 
 	// When
 	stats, err := interactor.GetMemberStats("2024-09")
