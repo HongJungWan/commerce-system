@@ -26,13 +26,13 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 		filter["product_name"] = name
 	}
 
-	responseData, err := pc.productInteractor.GetProducts(filter)
+	productResponses, err := pc.productInteractor.GetProducts(filter)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "상품 목록을 가져올 수 없습니다."})
 		return
 	}
 
-	c.JSON(http.StatusOK, responseData)
+	c.JSON(http.StatusOK, productResponses)
 }
 
 func (pc *ProductController) CreateProduct(c *gin.Context) {

@@ -1,5 +1,11 @@
 package response
 
+import (
+	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/HongJungWan/commerce-system/internal/helper"
+	"time"
+)
+
 type OrderResponse struct {
 	ID            int    `json:"id"`
 	OrderNumber   string `json:"order_number"`
@@ -16,4 +22,19 @@ type OrderResponse struct {
 type CreateOrderResponse struct {
 	Message string        `json:"message"`
 	Order   OrderResponse `json:"order"`
+}
+
+func NewOrderResponse(order *domain.Order) *OrderResponse {
+	return &OrderResponse{
+		ID:            order.ID,
+		OrderNumber:   order.OrderNumber,
+		OrderDate:     order.OrderDate.Format(time.RFC3339),
+		MemberNumber:  order.MemberNumber,
+		ProductNumber: order.ProductNumber,
+		Price:         order.Price,
+		Quantity:      order.Quantity,
+		TotalAmount:   order.TotalAmount,
+		IsCanceled:    order.IsCanceled,
+		CanceledAt:    helper.FormatTime(order.CanceledAt),
+	}
 }

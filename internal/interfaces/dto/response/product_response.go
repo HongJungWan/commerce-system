@@ -1,5 +1,7 @@
 package response
 
+import "github.com/HongJungWan/commerce-system/internal/domain"
+
 type ProductResponse struct {
 	ID            int    `json:"id"`
 	ProductNumber string `json:"product_number"`
@@ -10,6 +12,17 @@ type ProductResponse struct {
 }
 
 type CreateProductResponse struct {
-	Message string           `json:"message"`
-	Product *ProductResponse `json:"product"`
+	Message string          `json:"message"`
+	Product ProductResponse `json:"product"`
+}
+
+func NewProductResponse(product *domain.Product) *ProductResponse {
+	return &ProductResponse{
+		ID:            product.ID,
+		ProductNumber: product.ProductNumber,
+		ProductName:   product.ProductName,
+		Category:      product.Category,
+		Price:         product.Price,
+		StockQuantity: product.StockQuantity,
+	}
 }

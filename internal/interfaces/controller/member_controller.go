@@ -49,19 +49,18 @@ func (mc *MemberController) GetMyInfo(c *gin.Context) {
 
 func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
 	username := c.GetString("username")
-	var updateData request.UpdateMemberRequest
-	if err := c.ShouldBindJSON(&updateData); err != nil {
+	var req request.UpdateMemberRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
 
-	if err := mc.memberInteractor.UpdateMyInfo(username, &updateData); err != nil {
+	if err := mc.memberInteractor.UpdateMyInfo(username, &req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "업데이트에 실패했습니다."})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "정보가 수정되었습니다."})
 }
-
 func (mc *MemberController) DeleteMyAccount(c *gin.Context) {
 	username := c.GetString("username")
 	if err := mc.memberInteractor.DeleteByUserName(username); err != nil {
