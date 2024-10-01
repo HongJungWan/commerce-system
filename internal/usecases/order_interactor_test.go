@@ -6,6 +6,7 @@ import (
 
 	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/infrastructure/repository"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/HongJungWan/commerce-system/test/fixtures"
 	"github.com/stretchr/testify/assert"
@@ -20,27 +21,26 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	product := &domain.Product{
-		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 	_ = productRepo.Create(product)
 
-	order := &domain.Order{
-		ID:            12345,
+	req := &request.CreateOrderRequest{
 		OrderNumber:   "O12345",
-		MemberNumber:  "InvalidMember",
 		ProductNumber: "P12345",
 		Quantity:      2,
 	}
 
 	// When
-	err := interactor.CreateOrder(order)
+	responseData, err := interactor.CreateOrder(req, "InvalidMember")
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
+	assert.Nil(t, responseData)
+	assert.Equal(t, "유효하지 않은 회원 번호입니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
@@ -52,29 +52,27 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M12345",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
 	_ = memberRepo.Create(member)
 
-	order := &domain.Order{
-		ID:            12345,
+	req := &request.CreateOrderRequest{
 		OrderNumber:   "O12345",
-		MemberNumber:  "M12345",
-		ProductNumber: "",
+		ProductNumber: "InvalidProduct",
 		Quantity:      2,
 	}
 
 	// When
-	err := interactor.CreateOrder(order)
+	responseData, err := interactor.CreateOrder(req, "M12345")
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
+	assert.Nil(t, responseData)
+	assert.Equal(t, "유효하지 않은 상품 번호입니다.", err.Error())
 }
 
 func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
@@ -86,36 +84,35 @@ func TestOrderInteractor_CreateOrder_Failure_InsufficientStock(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M12345",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
+	_ = memberRepo.Create(member)
+
 	product := &domain.Product{
-		ID:            12345,
+		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 1,
 	}
-	_ = memberRepo.Create(member)
 	_ = productRepo.Create(product)
 
-	order := &domain.Order{
-		ID:            12345,
+	req := &request.CreateOrderRequest{
 		OrderNumber:   "O12345",
-		MemberNumber:  "M12345",
 		ProductNumber: "P12345",
 		Quantity:      2,
 	}
 
 	// When
-	err := interactor.CreateOrder(order)
+	responseData, err := interactor.CreateOrder(req, "M12345")
 
 	// Then
 	assert.Error(t, err)
-	assert.Equal(t, "주문일이 누락되었습니다.", err.Error())
+	assert.Nil(t, responseData)
+	assert.Equal(t, "재고 수량이 부족합니다.", err.Error())
 }
 
 func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
@@ -127,22 +124,23 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M12345",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
+	_ = memberRepo.Create(member)
+
 	product := &domain.Product{
-		ID:            12345,
 		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
+	_ = productRepo.Create(product)
+
 	order := &domain.Order{
-		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -152,8 +150,6 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		TotalAmount:   2000,
 		IsCanceled:    false,
 	}
-	_ = memberRepo.Create(member)
-	_ = productRepo.Create(product)
 	_ = orderRepo.Create(order)
 
 	// When
@@ -162,13 +158,11 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 
-	// 주문이 성공적으로 취소되었는지 확인
 	updatedOrder, _ := orderRepo.GetByOrderNumber("O12345")
-	assert.Equal(t, true, updatedOrder.IsCanceled) // 주문이 취소되었으므로 true
+	assert.True(t, updatedOrder.IsCanceled)
 
-	// 재고 수량이 제대로 복구되었는지 확인
 	updatedProduct, _ := productRepo.GetByProductNumber("P12345")
-	assert.Equal(t, 12, updatedProduct.StockQuantity) // 재고 수량이 2만큼 증가
+	assert.Equal(t, 12, updatedProduct.StockQuantity)
 }
 
 func TestOrderInteractor_CancelOrder_Failure_OrderNotFound(t *testing.T) {
@@ -195,15 +189,15 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M12345",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
+	_ = memberRepo.Create(member)
+
 	order := &domain.Order{
-		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M99999",
@@ -213,7 +207,6 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 		TotalAmount:   2000,
 		IsCanceled:    false,
 	}
-	_ = memberRepo.Create(member)
 	_ = orderRepo.Create(order)
 
 	// When
@@ -233,15 +226,15 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M12345",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
+	_ = memberRepo.Create(member)
+
 	order1 := &domain.Order{
-		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -252,7 +245,6 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
-		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -262,7 +254,6 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		TotalAmount:   1500,
 		IsCanceled:    false,
 	}
-	_ = memberRepo.Create(member)
 	_ = orderRepo.Create(order1)
 	_ = orderRepo.Create(order2)
 
@@ -283,7 +274,6 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	order1 := &domain.Order{
-		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12345",
@@ -294,7 +284,6 @@ func TestOrderInteractor_GetMonthlyStats_Success(t *testing.T) {
 		IsCanceled:    false,
 	}
 	order2 := &domain.Order{
-		ID:            12346,
 		OrderNumber:   "O12346",
 		OrderDate:     time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 		MemberNumber:  "M12346",

@@ -5,6 +5,7 @@ import (
 
 	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/infrastructure/repository"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/HongJungWan/commerce-system/test/fixtures"
 	"github.com/stretchr/testify/assert"
@@ -16,21 +17,26 @@ func TestProductInteractor_CreateProduct_Success(t *testing.T) {
 	productRepo := repository.NewProductRepository(db)
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
-	product := &domain.Product{
-		ID:            12345,
+	req := &request.CreateProductRequest{
 		ProductNumber: "P12345",
 		ProductName:   "New Product",
+		Category:      "Electronics",
 		Price:         1000,
 		StockQuantity: 10,
 	}
 
 	// When
-	err := interactor.CreateProduct(product)
+	responseData, err := interactor.CreateProduct(req)
 
 	// Then
 	assert.NoError(t, err)
-	retrievedProduct, _ := productRepo.GetById(12345)
+	assert.Equal(t, "상품이 등록되었습니다.", responseData.Message)
+	assert.Equal(t, "New Product", responseData.Product.ProductName)
+
+	retrievedProduct, err := productRepo.GetById(responseData.Product.ID)
+	assert.NoError(t, err)
 	assert.NotNil(t, retrievedProduct)
+	assert.Equal(t, "New Product", retrievedProduct.ProductName)
 }
 
 func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
@@ -39,16 +45,16 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 	productRepo := repository.NewProductRepository(db)
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
-	product := &domain.Product{
-		ID:            0,
+	req := &request.CreateProductRequest{
 		ProductNumber: "P12345",
-		ProductName:   "",
-		Price:         -1000,
-		StockQuantity: -10,
+		ProductName:   "", // 상품명 누락
+		Category:      "Electronics",
+		Price:         -1000, // 잘못된 가격
+		StockQuantity: -10,   // 잘못된 재고 수량
 	}
 
 	// When
-	err := interactor.CreateProduct(product)
+	_, err := interactor.CreateProduct(req)
 
 	// Then
 	assert.Error(t, err)
@@ -62,7 +68,6 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product1 := &domain.Product{
-		ID:            12345,
 		ProductNumber: "P12345",
 		ProductName:   "Product One",
 		Category:      "Electronics",
@@ -70,7 +75,6 @@ func TestProductInteractor_GetProducts_Success(t *testing.T) {
 		StockQuantity: 10,
 	}
 	product2 := &domain.Product{
-		ID:            12346,
 		ProductNumber: "P12346",
 		ProductName:   "Product Two",
 		Category:      "Home",
@@ -98,7 +102,6 @@ func TestProductInteractor_UpdateStock_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
-		ID:            12345,
 		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
@@ -107,11 +110,11 @@ func TestProductInteractor_UpdateStock_Success(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	// When
-	err := interactor.UpdateStock(12345, 20)
+	err := interactor.UpdateStock(product.ID, 20)
 
 	// Then
 	assert.NoError(t, err)
-	updatedProduct, _ := productRepo.GetById(12345)
+	updatedProduct, _ := productRepo.GetById(product.ID)
 	assert.Equal(t, 20, updatedProduct.StockQuantity)
 }
 
@@ -122,7 +125,7 @@ func TestProductInteractor_UpdateStock_Failure_ProductNotFound(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	// When
-	err := interactor.UpdateStock(0, 20)
+	err := interactor.UpdateStock(9999, 20) // 존재하지 않는 ID
 
 	// Then
 	assert.Error(t, err)
@@ -135,7 +138,6 @@ func TestProductInteractor_DeleteProduct_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
-		ID:            12345,
 		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
@@ -144,11 +146,11 @@ func TestProductInteractor_DeleteProduct_Success(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	// When
-	err := interactor.DeleteProduct(12345)
+	err := interactor.DeleteProduct(product.ID)
 
 	// Then
 	assert.NoError(t, err)
-	deletedProduct, err := productRepo.GetById(12345)
+	deletedProduct, err := productRepo.GetById(product.ID)
 	assert.Error(t, err)
 	assert.Nil(t, deletedProduct)
 }
@@ -157,25 +159,25 @@ func TestProductInteractor_DeleteProduct_Failure_HasOrders(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	productRepo := repository.NewProductRepository(db)
-	orderRepo := repository.NewOrderRepository(db)
+	orderRepo := repository.NewOrderRepository(db) // OrderRepository가 정의되어 있다고 가정
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	product := &domain.Product{
-		ID:            12345,
 		ProductNumber: "P12345",
 		ProductName:   "Test Product",
 		Price:         1000,
 		StockQuantity: 10,
 	}
-	order := &domain.Order{
-		OrderNumber: "O12345",
-		ID:          12345,
-	}
 	_ = productRepo.Create(product)
+
+	order := &domain.Order{
+		OrderNumber:   "O12345",
+		ProductNumber: product.ProductNumber,
+	}
 	_ = orderRepo.Create(order)
 
 	// When
-	err := interactor.DeleteProduct(12345)
+	err := interactor.DeleteProduct(product.ID)
 
 	// Then
 	assert.Error(t, err)
