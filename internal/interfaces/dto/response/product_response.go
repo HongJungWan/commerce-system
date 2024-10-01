@@ -10,6 +10,6 @@ type ProductResponse struct {
 }
 
 type CreateProductResponse struct {
-	Message string          `json:"message"`
-	Product ProductResponse `json:"product"`
+	Message string           `json:"message"`
+	Product *ProductResponse `json:"product"`
 }

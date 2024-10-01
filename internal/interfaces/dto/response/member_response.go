@@ -13,7 +13,7 @@ type MemberResponse struct {
 }
 
 type RegisterMemberResponse struct {
-	Message string         `json:"message"`
-	Token   string         `json:"token"`
-	User    MemberResponse `json:"user"`
+	Message string          `json:"message"`
+	Token   string          `json:"token"`
+	User    *MemberResponse `json:"user"`
 }

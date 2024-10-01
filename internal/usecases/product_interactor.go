@@ -5,6 +5,8 @@ import (
 
 	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/domain/repository"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"gorm.io/gorm"
 )
 
@@ -20,15 +22,32 @@ func NewProductInteractor(repo repository.ProductRepository, db *gorm.DB) *Produ
 	}
 }
 
-func (pi *ProductInteractor) CreateProduct(product *domain.Product) error {
+func (pi *ProductInteractor) CreateProduct(req *request.CreateProductRequest) (*response.CreateProductResponse, error) {
+	product := pi.toEntity(req)
 	if err := product.Validate(); err != nil {
-		return err
+		return nil, err
 	}
-	return pi.ProductRepository.Create(product)
+	if err := pi.ProductRepository.Create(product); err != nil {
+		return nil, err
+	}
+	return &response.CreateProductResponse{
+		Message: "상품이 등록되었습니다.",
+		Product: pi.toDTO(product),
+	}, nil
 }
 
-func (pi *ProductInteractor) GetProducts(filter map[string]interface{}) ([]*domain.Product, error) {
-	return pi.ProductRepository.GetAll(filter)
+func (pi *ProductInteractor) GetProducts(filter map[string]interface{}) ([]*response.ProductResponse, error) {
+	products, err := pi.ProductRepository.GetAll(filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var productResponses []*response.ProductResponse
+	for _, product := range products {
+		productResponses = append(productResponses, pi.toDTO(product))
+	}
+
+	return productResponses, nil
 }
 
 func (pi *ProductInteractor) UpdateStock(id int, quantity int) error {
@@ -55,4 +74,25 @@ func (pi *ProductInteractor) DeleteProduct(id int) error {
 		return errors.New("주문된 이력이 있어 삭제할 수 없습니다.")
 	}
 	return pi.ProductRepository.Delete(id)
+}
+
+func (pi *ProductInteractor) toEntity(req *request.CreateProductRequest) *domain.Product {
+	return &domain.Product{
+		ProductNumber: req.ProductNumber,
+		ProductName:   req.ProductName,
+		Category:      req.Category,
+		Price:         req.Price,
+		StockQuantity: req.StockQuantity,
+	}
+}
+
+func (pi *ProductInteractor) toDTO(product *domain.Product) *response.ProductResponse {
+	return &response.ProductResponse{
+		ID:            product.ID,
+		ProductNumber: product.ProductNumber,
+		ProductName:   product.ProductName,
+		Category:      product.Category,
+		Price:         product.Price,
+		StockQuantity: product.StockQuantity,
+	}
 }

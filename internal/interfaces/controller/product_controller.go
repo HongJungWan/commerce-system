@@ -4,9 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
-	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -28,25 +26,13 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 		filter["product_name"] = name
 	}
 
-	products, err := pc.productInteractor.GetProducts(filter)
+	responseData, err := pc.productInteractor.GetProducts(filter)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "상품 목록을 가져올 수 없습니다."})
 		return
 	}
 
-	var productResponses []response.ProductResponse
-	for _, product := range products {
-		productResponses = append(productResponses, response.ProductResponse{
-			ID:            product.ID,
-			ProductNumber: product.ProductNumber,
-			ProductName:   product.ProductName,
-			Category:      product.Category,
-			Price:         product.Price,
-			StockQuantity: product.StockQuantity,
-		})
-	}
-
-	c.JSON(http.StatusOK, productResponses)
+	c.JSON(http.StatusOK, responseData)
 }
 
 func (pc *ProductController) CreateProduct(c *gin.Context) {
@@ -62,32 +48,13 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	product := &domain.Product{
-		ProductNumber: req.ProductNumber,
-		ProductName:   req.ProductName,
-		Category:      req.Category,
-		Price:         req.Price,
-		StockQuantity: req.StockQuantity,
-	}
-
-	if err := pc.productInteractor.CreateProduct(product); err != nil {
+	responseData, err := pc.productInteractor.CreateProduct(&req)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	productResponse := response.ProductResponse{
-		ID:            product.ID,
-		ProductNumber: product.ProductNumber,
-		ProductName:   product.ProductName,
-		Category:      product.Category,
-		Price:         product.Price,
-		StockQuantity: product.StockQuantity,
-	}
-
-	c.JSON(http.StatusCreated, response.CreateProductResponse{
-		Message: "상품이 등록되었습니다.",
-		Product: productResponse,
-	})
+	c.JSON(http.StatusCreated, responseData)
 }
 
 func (pc *ProductController) UpdateStock(c *gin.Context) {
