@@ -3,6 +3,8 @@ package controller
 import (
 	"net/http"
 
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -16,10 +18,7 @@ func NewAuthController(authUseCase *usecases.AuthUseCase) *AuthController {
 }
 
 func (ctrl *AuthController) Login(c *gin.Context) {
-	var loginRequest struct {
-		Username       string `json:"username"`
-		HashedPassword string `json:"hashed_password"`
-	}
+	var loginRequest request.LoginRequest
 
 	if err := c.ShouldBindJSON(&loginRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
@@ -38,5 +37,9 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	loginResponse := response.LoginResponse{
+		Token: token,
+	}
+
+	c.JSON(http.StatusOK, loginResponse)
 }

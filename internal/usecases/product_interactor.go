@@ -3,8 +3,9 @@ package usecases
 import (
 	"errors"
 
-	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/domain/repository"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"gorm.io/gorm"
 )
 
@@ -20,15 +21,36 @@ func NewProductInteractor(repo repository.ProductRepository, db *gorm.DB) *Produ
 	}
 }
 
-func (pi *ProductInteractor) CreateProduct(product *domain.Product) error {
-	if err := product.Validate(); err != nil {
-		return err
+func (pi *ProductInteractor) CreateProduct(req *request.CreateProductRequest) (*response.CreateProductResponse, error) {
+	product, err := req.ToEntity()
+	if err != nil {
+		return nil, err
 	}
-	return pi.ProductRepository.Create(product)
+
+	if err := pi.ProductRepository.Create(product); err != nil {
+		return nil, err
+	}
+
+	productResponse := response.NewProductResponse(product)
+
+	return &response.CreateProductResponse{
+		Message: "상품이 등록되었습니다.",
+		Product: *productResponse,
+	}, nil
 }
 
-func (pi *ProductInteractor) GetProducts(filter map[string]interface{}) ([]*domain.Product, error) {
-	return pi.ProductRepository.GetAll(filter)
+func (pi *ProductInteractor) GetProducts(filter map[string]interface{}) ([]response.ProductResponse, error) {
+	products, err := pi.ProductRepository.GetAll(filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var productResponses []response.ProductResponse
+	for _, product := range products {
+		productResponses = append(productResponses, *response.NewProductResponse(product))
+	}
+
+	return productResponses, nil
 }
 
 func (pi *ProductInteractor) UpdateStock(id int, quantity int) error {

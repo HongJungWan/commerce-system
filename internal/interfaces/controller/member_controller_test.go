@@ -3,36 +3,38 @@ package controller_test
 import (
 	"bytes"
 	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/infrastructure/repository"
 	"github.com/HongJungWan/commerce-system/internal/interfaces/controller"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/HongJungWan/commerce-system/test/fixtures"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 func TestMemberController_Register_Success(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo) // JWT 시크릿 키 설정
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	router := gin.Default()
 	router.POST("/register", memberController.Register)
 
-	newMember := domain.Member{
-		ID:             1234,
-		MemberNumber:   "P1234",
-		Username:       "newuser",
-		HashedPassword: "password123",
-		FullName:       "New User",
-		Email:          "newuser@example.com",
+	newMember := request.RegisterMemberRequest{
+		MemberNumber: "M1234",
+		Username:     "newuser",
+		Password:     "password123",
+		FullName:     "New User",
+		Email:        "newuser@example.com",
 	}
 
 	requestBody, _ := json.Marshal(newMember)
@@ -45,19 +47,19 @@ func TestMemberController_Register_Success(t *testing.T) {
 
 	// Then
 	assert.Equal(t, http.StatusCreated, resp.Code)
-	var response map[string]interface{}
-	err := json.Unmarshal(resp.Body.Bytes(), &response)
+	var responseData response.RegisterMemberResponse
+	err := json.Unmarshal(resp.Body.Bytes(), &responseData)
 	assert.NoError(t, err)
-	assert.Equal(t, "회원 가입이 완료되었습니다.", response["message"])
-	assert.NotEmpty(t, response["token"])
+	assert.Equal(t, "회원 가입이 완료되었습니다.", responseData.Message)
+	assert.Equal(t, "newuser", responseData.User.Username)
 }
 
 func TestMemberController_Register_Failure_InvalidRequest(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	router := gin.Default()
@@ -83,18 +85,17 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
-		ID:             1234,
-		MemberNumber:   "P1234",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M1234",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -111,18 +112,18 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 
 	// Then
 	assert.Equal(t, http.StatusOK, resp.Code)
-	var retrievedMember domain.Member
-	err := json.Unmarshal(resp.Body.Bytes(), &retrievedMember)
+	var responseData response.MemberResponse
+	err := json.Unmarshal(resp.Body.Bytes(), &responseData)
 	assert.NoError(t, err)
-	assert.Equal(t, "Test User", retrievedMember.FullName)
+	assert.Equal(t, "Test User", responseData.FullName)
 }
 
 func TestMemberController_GetMyInfo_Failure_UserNotFound(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	router := gin.Default()
@@ -145,18 +146,17 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
-		ID:             1234,
-		MemberNumber:   "P1234",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Old Name",
-		Email:          "old@example.com",
+		MemberNumber: "M1234",
+		Username:     "testuser",
+		FullName:     "Old Name",
+		Email:        "old@example.com",
 	}
+	member.SetPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -165,9 +165,9 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 		memberController.UpdateMyInfo(c)
 	})
 
-	updateData := map[string]interface{}{
-		"full_name": "New Name",
-		"email":     "new@example.com",
+	updateData := request.UpdateMemberRequest{
+		FullName: "New Name",
+		Email:    "new@example.com",
 	}
 	requestBody, _ := json.Marshal(updateData)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))
@@ -193,9 +193,18 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
+
+	member := &domain.Member{
+		MemberNumber: "M1234",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
+	}
+	member.SetPassword("password123")
+	memberRepo.Create(member)
 
 	router := gin.Default()
 	router.PUT("/me", func(c *gin.Context) {
@@ -204,7 +213,7 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 	})
 
 	invalidRequest := map[string]interface{}{
-		"username": 0, // 잘못된 타입의 값
+		"full_name": 123, // 잘못된 타입
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))
@@ -222,17 +231,17 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member := &domain.Member{
-		ID:             1234,
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		MemberNumber: "M1234",
+		Username:     "testuser",
+		FullName:     "Test User",
+		Email:        "testuser@example.com",
 	}
+	member.SetPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -255,32 +264,32 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 	assert.Equal(t, "계정이 삭제되었습니다.", response["message"])
 
 	deletedMember, err := memberRepo.GetByUserName("testuser")
-	assert.Error(t, err)
-	assert.Nil(t, deletedMember)
+	assert.NoError(t, err)
+	assert.True(t, deletedMember.IsWithdrawn)
 }
 
 func TestMemberController_GetAllMembers_Success(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	member1 := &domain.Member{
-		ID:             1234,
-		Username:       "user1",
-		HashedPassword: "password123",
-		FullName:       "User One",
-		Email:          "user1@example.com",
+		MemberNumber: "M1234",
+		Username:     "user1",
+		FullName:     "User One",
+		Email:        "user1@example.com",
 	}
+	member1.SetPassword("password123")
 	member2 := &domain.Member{
-		ID:             1235,
-		Username:       "user2",
-		HashedPassword: "password123",
-		FullName:       "User Two",
-		Email:          "user2@example.com",
+		MemberNumber: "M1235",
+		Username:     "user2",
+		FullName:     "User Two",
+		Email:        "user2@example.com",
 	}
+	member2.SetPassword("password123")
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)
 
@@ -298,18 +307,18 @@ func TestMemberController_GetAllMembers_Success(t *testing.T) {
 
 	// Then
 	assert.Equal(t, http.StatusOK, resp.Code)
-	var members []domain.Member
+	var members []*response.MemberResponse
 	err := json.Unmarshal(resp.Body.Bytes(), &members)
 	assert.NoError(t, err)
-	assert.Len(t, members, 1)
+	assert.Len(t, members, 2)
 }
 
 func TestMemberController_GetAllMembers_Failure_Unauthorized(t *testing.T) {
 	// Given
 	db := fixtures.SetupTestDB()
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 	memberController := controller.NewMemberController(memberInteractor, authUseCase)
 
 	router := gin.Default()

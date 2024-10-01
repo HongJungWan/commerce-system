@@ -2,10 +2,9 @@ package usecases
 
 import (
 	"errors"
-	"time"
-
-	"github.com/HongJungWan/commerce-system/internal/domain"
 	"github.com/HongJungWan/commerce-system/internal/domain/repository"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/response"
 )
 
 type OrderInteractor struct {
@@ -22,43 +21,58 @@ func NewOrderInteractor(or repository.OrderRepository, mr repository.MemberRepos
 	}
 }
 
-func (oi *OrderInteractor) CreateOrder(order *domain.Order) error {
-	if err := order.Validate(); err != nil {
-		return err
+func (oi *OrderInteractor) CreateOrder(req *request.CreateOrderRequest, memberNumber string) (*response.CreateOrderResponse, error) {
+	order, err := req.ToEntity(memberNumber)
+	if err != nil {
+		return nil, err
 	}
 
-	// 회원 확인
-	member, err := oi.MemberRepository.GetByMemberNumber(order.MemberNumber)
+	member, err := oi.MemberRepository.GetByMemberNumber(memberNumber)
 	if err != nil || member == nil {
-		return errors.New("유효하지 않은 회원 번호입니다.")
+		return nil, errors.New("유효하지 않은 회원 번호입니다.")
 	}
 
-	// 상품 확인
 	product, err := oi.ProductRepository.GetByProductNumber(order.ProductNumber)
 	if err != nil || product == nil {
-		return errors.New("유효하지 않은 상품 번호입니다.")
+		return nil, errors.New("유효하지 않은 상품 번호입니다.")
 	}
 
-	// 재고 확인 및 감소
 	if product.StockQuantity < order.Quantity {
-		return errors.New("재고 수량이 부족합니다.")
+		return nil, errors.New("재고 수량이 부족합니다.")
 	}
 	product.StockQuantity -= order.Quantity
 	if err := oi.ProductRepository.Update(product); err != nil {
-		return err
+		return nil, err
 	}
 
-	// 주문 가격 설정
 	order.Price = product.Price
 	order.TotalAmount = product.Price * int64(order.Quantity)
-	order.OrderDate = time.Now()
-	order.IsCanceled = true
+	order.IsCanceled = false
 
-	return oi.OrderRepository.Create(order)
+	if err := oi.OrderRepository.Create(order); err != nil {
+		return nil, err
+	}
+
+	orderResponse := response.NewOrderResponse(order)
+
+	return &response.CreateOrderResponse{
+		Message: "주문이 등록되었습니다.",
+		Order:   *orderResponse,
+	}, nil
 }
 
-func (oi *OrderInteractor) GetMyOrders(memberNumber string) ([]*domain.Order, error) {
-	return oi.OrderRepository.GetByMemberNumber(memberNumber)
+func (oi *OrderInteractor) GetMyOrders(memberNumber string) ([]response.OrderResponse, error) {
+	orders, err := oi.OrderRepository.GetByMemberNumber(memberNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	var orderResponses []response.OrderResponse
+	for _, order := range orders {
+		orderResponses = append(orderResponses, *response.NewOrderResponse(order))
+	}
+
+	return orderResponses, nil
 }
 
 func (oi *OrderInteractor) CancelOrder(orderNumber, memberNumber string) error {
@@ -75,7 +89,6 @@ func (oi *OrderInteractor) CancelOrder(orderNumber, memberNumber string) error {
 		return err
 	}
 
-	// 재고 복구
 	product, err := oi.ProductRepository.GetByProductNumber(order.ProductNumber)
 	if err != nil {
 		return err

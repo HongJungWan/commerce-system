@@ -48,7 +48,16 @@ func (r *MemberRepositoryImpl) Update(member *domain.Member) error {
 }
 
 func (r *MemberRepositoryImpl) Delete(id uint) error {
-	return r.db.Delete(&domain.Member{}, id).Error
+	member, err := r.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	now := time.Now()
+	member.IsWithdrawn = true
+	member.WithdrawnAt = &now
+
+	return r.Update(member)
 }
 
 func (r *MemberRepositoryImpl) GetAll() ([]*domain.Member, error) {
@@ -69,11 +78,17 @@ func (r *MemberRepositoryImpl) GetStatsByMonth(month string) (int, int, error) {
 	}
 	endDate := startDate.AddDate(0, 1, 0)
 
-	if err := r.db.Model(&domain.Member{}).Where("created_at >= ? AND created_at < ?", startDate, endDate).Count(&joinedCount).Error; err != nil {
+	// 가입한 멤버 수
+	if err := r.db.Model(&domain.Member{}).
+		Where("created_at >= ? AND created_at < ?", startDate, endDate).
+		Count(&joinedCount).Error; err != nil {
 		return 0, 0, err
 	}
 
-	if err := r.db.Unscoped().Model(&domain.Member{}).Where("withdrawn_at >= ? AND withdrawn_at < ?", startDate, endDate).Count(&deletedCount).Error; err != nil {
+	// 삭제된 멤버 수
+	if err := r.db.Model(&domain.Member{}).
+		Where("is_withdrawn = ? AND withdrawn_at >= ? AND withdrawn_at < ?", true, startDate, endDate).
+		Count(&deletedCount).Error; err != nil {
 		return 0, 0, err
 	}
 

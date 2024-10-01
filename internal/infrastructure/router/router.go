@@ -39,8 +39,8 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 
 	// 회원 관련 설정
 	memberRepo := repository.NewMemberRepository(db)
-	memberInteractor := usecases.NewMemberInteractor(memberRepo)
 	authInteractor := usecases.NewAuthUseCase("commerce-system", memberRepo)
+	memberInteractor := usecases.NewMemberInteractor(memberRepo, authInteractor)
 	memberController := controller.NewMemberController(memberInteractor, authInteractor)
 	authController := controller.NewAuthController(authInteractor)
 

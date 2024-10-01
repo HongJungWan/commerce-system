@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -21,50 +21,49 @@ func NewMemberController(mi *usecases.MemberInteractor, au *usecases.AuthUseCase
 }
 
 func (mc *MemberController) Register(c *gin.Context) {
-	var member domain.Member
-	if err := c.ShouldBindJSON(&member); err != nil {
+	var req request.RegisterMemberRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
-	if err := mc.memberInteractor.Register(&member); err != nil {
+
+	responseData, err := mc.memberInteractor.Register(&req)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	token, _ := mc.authUseCase.GenerateToken(&member)
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "회원 가입이 완료되었습니다.",
-		"token":   token,
-		"user":    member,
-	})
+
+	c.JSON(http.StatusCreated, responseData)
 }
 
 func (mc *MemberController) GetMyInfo(c *gin.Context) {
-	userID := c.GetString("username")
-	member, err := mc.memberInteractor.GetByUserName(userID)
+	username := c.GetString("username")
+	responseData, err := mc.memberInteractor.GetMyInfo(username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "사용자 정보를 가져올 수 없습니다."})
 		return
 	}
-	c.JSON(http.StatusOK, member)
+
+	c.JSON(http.StatusOK, responseData)
 }
 
 func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
-	userID := c.GetString("username")
-	var updateData domain.Member
-	if err := c.ShouldBindJSON(&updateData); err != nil {
+	username := c.GetString("username")
+	var req request.UpdateMemberRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
-	if err := mc.memberInteractor.UpdateByUserID(userID, &updateData); err != nil {
+
+	if err := mc.memberInteractor.UpdateMyInfo(username, &req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "업데이트에 실패했습니다."})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "정보가 수정되었습니다."})
 }
-
 func (mc *MemberController) DeleteMyAccount(c *gin.Context) {
-	userID := c.GetString("username")
-	if err := mc.memberInteractor.DeleteByUserID(userID); err != nil {
+	username := c.GetString("username")
+	if err := mc.memberInteractor.DeleteByUserName(username); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "계정 삭제에 실패했습니다."})
 		return
 	}
@@ -77,12 +76,13 @@ func (mc *MemberController) GetAllMembers(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "접근 권한이 없습니다."})
 		return
 	}
-	members, err := mc.memberInteractor.GetAll()
+	responseData, err := mc.memberInteractor.GetAllMembers()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "회원 목록을 가져올 수 없습니다."})
 		return
 	}
-	c.JSON(http.StatusOK, members)
+
+	c.JSON(http.StatusOK, responseData)
 }
 
 func (mc *MemberController) GetMemberStats(c *gin.Context) {
@@ -96,14 +96,10 @@ func (mc *MemberController) GetMemberStats(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "month 파라미터가 필요합니다."})
 		return
 	}
-	joined, deleted, err := mc.memberInteractor.GetStatsByMonth(month)
+	stats, err := mc.memberInteractor.GetMemberStats(month)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "통계 정보를 가져올 수 없습니다."})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"month":           month,
-		"joined_members":  joined,
-		"deleted_members": deleted,
-	})
+	c.JSON(http.StatusOK, stats)
 }

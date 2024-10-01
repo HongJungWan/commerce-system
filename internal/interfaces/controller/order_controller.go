@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -17,30 +17,33 @@ func NewOrderController(oi *usecases.OrderInteractor) *OrderController {
 }
 
 func (oc *OrderController) CreateOrder(c *gin.Context) {
-	var order domain.Order
-	if err := c.ShouldBindJSON(&order); err != nil {
+	var req request.CreateOrderRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
 
 	memberNumber := c.GetString("member_number")
-	order.MemberNumber = memberNumber
 
-	if err := oc.orderInteractor.CreateOrder(&order); err != nil {
+	responseData, err := oc.orderInteractor.CreateOrder(&req, memberNumber)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "주문이 등록되었습니다.", "order": order})
+
+	c.JSON(http.StatusCreated, responseData)
 }
 
 func (oc *OrderController) GetMyOrders(c *gin.Context) {
 	memberNumber := c.GetString("member_number")
-	orders, err := oc.orderInteractor.GetMyOrders(memberNumber)
+
+	orderResponses, err := oc.orderInteractor.GetMyOrders(memberNumber)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "주문 내역을 가져올 수 없습니다."})
 		return
 	}
-	c.JSON(http.StatusOK, orders)
+
+	c.JSON(http.StatusOK, orderResponses)
 }
 
 func (oc *OrderController) CancelOrder(c *gin.Context) {
