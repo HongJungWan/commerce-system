@@ -18,6 +18,24 @@ var (
 	file string
 )
 
+// @title Commerce-System Service API
+// @version 1.0
+// @description A commerce-system service API in Go using Gin framework
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.email support@commerce-system.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:3031
+// @BasePath /api
+// @schemes http
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	if !parseConfig() {
 		helper.ShowHelp()
