@@ -13,6 +13,7 @@ const (
 type CreateOrderRequest struct {
 	ProductNumber string `json:"product_number"`
 	Quantity      int    `json:"quantity"`
+	Price         int64  `json:"price"`
 }
 
 type CancelOrderRequest struct {
@@ -25,6 +26,7 @@ func (req *CreateOrderRequest) CreateToEntity(memberNumber string) (*domain.Orde
 		OrderDate:     time.Now(),
 		MemberNumber:  memberNumber,
 		ProductNumber: req.ProductNumber,
+		Price:         req.Price,
 		Quantity:      req.Quantity,
 	}
 

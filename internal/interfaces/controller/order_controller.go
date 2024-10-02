@@ -77,7 +77,7 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 // @Param        ID path string true "기본키 (primary key)"
 // @Success      200 {object} map[string]string "취소 성공"
 // @Failure      500 {object} map[string]string "취소 실패"
-// @Router       /orders/:id/cancel [put]
+// @Router       /orders/{id}/cancel [put]
 func (oc *OrderController) CancelOrder(c *gin.Context) {
 	orderParam := c.Param("id")
 	id, err := strconv.Atoi(orderParam)

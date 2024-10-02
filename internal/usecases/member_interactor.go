@@ -59,8 +59,8 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 		return err
 	}
 
-	if req.FullName != "" {
-		member.FullName = req.FullName
+	if req.NickName != "" {
+		member.FullName = req.NickName
 	}
 	if req.Email != "" {
 		member.Email = req.Email

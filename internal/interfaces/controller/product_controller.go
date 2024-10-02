@@ -92,7 +92,7 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 // @Failure      400 {object} map[string]string "잘못된 요청"
 // @Failure      403 {object} map[string]string "권한 없음"
 // @Failure      500 {object} map[string]string "수정 실패"
-// @Router       /products/:id/stock [put]
+// @Router       /products/{id}/stock [put]
 func (pc *ProductController) UpdateStock(c *gin.Context) {
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {
@@ -132,7 +132,7 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 // @Failure      400 {object} map[string]string "잘못된 상품 번호"
 // @Failure      403 {object} map[string]string "권한 없음"
 // @Failure      500 {object} map[string]string "삭제 실패"
-// @Router       /products/:id [delete]
+// @Router       /products/{id} [delete]
 func (pc *ProductController) DeleteProduct(c *gin.Context) {
 	isAdmin := c.GetBool("is_admin")
 	if !isAdmin {

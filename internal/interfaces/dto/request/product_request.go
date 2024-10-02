@@ -22,7 +22,7 @@ type UpdateStockRequest struct {
 
 func (req *CreateProductRequest) CreateToEntity() (*domain.Product, error) {
 	product := &domain.Product{
-		ProductNumber: ORDER + uuid.New().String(),
+		ProductNumber: PRODUCT + uuid.New().String(),
 		ProductName:   req.ProductName,
 		Category:      req.Category,
 		Price:         req.Price,

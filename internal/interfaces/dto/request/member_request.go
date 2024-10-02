@@ -11,16 +11,16 @@ const (
 )
 
 type CreateMemberRequest struct {
-	Username    string `json:"username"`
+	AccountId   string `json:"account_id"`
 	Password    string `json:"password"`
-	FullName    string `json:"full_name"`
+	NickName    string `json:"nick_name"`
 	Email       string `json:"email"`
 	IsAdmin     bool   `json:"is_admin"`
 	IsWithdrawn bool   `json:"is_withdrawn"`
 }
 
 type UpdateMemberRequest struct {
-	FullName string `json:"full_name,omitempty"`
+	NickName string `json:"nick_name,omitempty"`
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
 }
@@ -28,8 +28,8 @@ type UpdateMemberRequest struct {
 func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
 		MemberNumber: MEMBER + uuid.New().String(),
-		Username:     req.Username,
-		FullName:     req.FullName,
+		Username:     req.AccountId,
+		FullName:     req.NickName,
 		Email:        req.Email,
 		IsAdmin:      req.IsAdmin,
 		IsWithdrawn:  false,
@@ -49,7 +49,7 @@ func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {
 
 func (req *UpdateMemberRequest) UpdateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
-		FullName: req.FullName,
+		FullName: req.NickName,
 		Email:    req.Email,
 	}
 
