@@ -7,12 +7,12 @@ import (
 )
 
 type Product struct {
-	ID            int    `gorm:"primaryKey;autoIncrement" json:"id"`    // 기본 키
-	ProductNumber string `gorm:"unique;not null" json:"product_number"` // 상품번호
-	ProductName   string `gorm:"not null" json:"product_name"`          // 상품명
-	Category      string `json:"category"`                              // 카테고리
-	Price         int64  `gorm:"not null" json:"price"`                 // 가격
-	StockQuantity int    `gorm:"not null" json:"stock_quantity"`        // 재고수량
+	ID            int    `gorm:"primaryKey;autoIncrement" json:"id"`                           // 기본 키
+	ProductNumber string `gorm:"unique;not null" json:"product_number"`                        // 상품번호
+	ProductName   string `gorm:"not null;index:idx_category_product_name" json:"product_name"` // 상품명
+	Category      string `gorm:"index:idx_category_product_name" json:"category"`              // 카테고리
+	Price         int64  `gorm:"not null" json:"price"`                                        // 가격
+	StockQuantity int    `gorm:"not null" json:"stock_quantity"`                               // 재고수량
 }
 
 func (p *Product) Validate() error {
