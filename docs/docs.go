@@ -747,8 +747,8 @@ const docTemplate = `{
                 "summary": "상품 삭제",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "상품 번호",
+                        "type": "integer",
+                        "description": "기본키 (primary key)",
                         "name": "product_number",
                         "in": "path",
                         "required": true
@@ -814,8 +814,8 @@ const docTemplate = `{
                 "summary": "재고 수정",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "상품 번호",
+                        "type": "integer",
+                        "description": "기본키 (primary key)",
                         "name": "product_number",
                         "in": "path",
                         "required": true

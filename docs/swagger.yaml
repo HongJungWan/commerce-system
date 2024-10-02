@@ -611,11 +611,11 @@ paths:
       - application/json
       description: 상품을 삭제합니다. (관리자 전용)
       parameters:
-      - description: 상품 번호
+      - description: 기본키 (primary key)
         in: path
         name: product_number
         required: true
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
@@ -654,11 +654,11 @@ paths:
       - application/json
       description: 상품의 재고 수량을 수정합니다. (관리자 전용)
       parameters:
-      - description: 상품 번호
+      - description: 기본키 (primary key)
         in: path
         name: product_number
         required: true
-        type: string
+        type: integer
       - description: 재고 정보
         in: body
         name: stockRequest
