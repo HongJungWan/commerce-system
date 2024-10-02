@@ -587,7 +587,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "기본키 (primary key)",
-                        "name": "ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -749,7 +749,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "기본키 (primary key)",
-                        "name": "ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -816,7 +816,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "기본키 (primary key)",
-                        "name": "ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },
@@ -876,22 +876,28 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong43ok"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong43ok@gmail.com"
                 },
                 "is_admin": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "example": true
                 },
                 "is_withdrawn": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "example": false
                 },
                 "nick_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hongmang"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ghdwjddhks"
                 }
             }
         },
@@ -899,13 +905,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "price": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1000
                 },
                 "product_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Product0fe0dfb2-0a9e-4e47-b670-5d1a761e62b5"
                 },
                 "quantity": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 2
                 }
             }
         },
@@ -913,16 +922,20 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "category": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "food"
                 },
                 "price": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1000
                 },
                 "product_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "pizza"
                 },
                 "stock_quantity": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 100
                 }
             }
         },
@@ -930,10 +943,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "account_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong43ok"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ghdwjddhks"
                 }
             }
         },
@@ -941,13 +956,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong43ok@naver.com"
                 },
                 "nick_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong"
                 }
             }
         },
@@ -955,7 +973,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "stock_quantity": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 77
                 }
             }
         },

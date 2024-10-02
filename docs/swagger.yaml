@@ -2,57 +2,76 @@ definitions:
   request.CreateMemberRequest:
     properties:
       account_id:
+        example: hong43ok
         type: string
       email:
+        example: hong43ok@gmail.com
         type: string
       is_admin:
+        example: true
         type: boolean
       is_withdrawn:
+        example: false
         type: boolean
       nick_name:
+        example: hongmang
         type: string
       password:
+        example: ghdwjddhks
         type: string
     type: object
   request.CreateOrderRequest:
     properties:
       price:
+        example: 1000
         type: integer
       product_number:
+        example: Product0fe0dfb2-0a9e-4e47-b670-5d1a761e62b5
         type: string
       quantity:
+        example: 2
         type: integer
     type: object
   request.CreateProductRequest:
     properties:
       category:
+        example: food
         type: string
       price:
+        example: 1000
         type: integer
       product_name:
+        example: pizza
         type: string
       stock_quantity:
+        example: 100
         type: integer
     type: object
   request.LoginRequest:
     properties:
       account_id:
+        example: hong43ok
         type: string
       password:
+        example: ghdwjddhks
         type: string
     type: object
   request.UpdateMemberRequest:
     properties:
       email:
+        example: hong43ok@naver.com
         type: string
       nick_name:
+        example: hong
         type: string
       password:
+        example: hong
         type: string
     type: object
   request.UpdateStockRequest:
     properties:
       stock_quantity:
+        example: 77
         type: integer
     type: object
   response.LoginResponse:
@@ -443,7 +462,7 @@ paths:
       parameters:
       - description: 기본키 (primary key)
         in: path
-        name: ID
+        name: id
         required: true
         type: string
       produces:
@@ -613,7 +632,7 @@ paths:
       parameters:
       - description: 기본키 (primary key)
         in: path
-        name: ID
+        name: id
         required: true
         type: integer
       produces:
@@ -656,7 +675,7 @@ paths:
       parameters:
       - description: 기본키 (primary key)
         in: path
-        name: ID
+        name: id
         required: true
         type: integer
       - description: 재고 정보
