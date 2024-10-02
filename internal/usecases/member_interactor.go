@@ -66,7 +66,7 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 		member.Email = req.Email
 	}
 	if req.Password != "" {
-		if err := member.SetPassword(req.Password); err != nil {
+		if err := member.AssignPassword(req.Password); err != nil {
 			return err
 		}
 	}

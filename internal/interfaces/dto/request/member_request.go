@@ -28,7 +28,7 @@ func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
 		CreatedAt:    time.Now(),
 	}
 
-	if err := member.SetPassword(req.Password); err != nil {
+	if err := member.AssignPassword(req.Password); err != nil {
 		return nil, err
 	}
 
@@ -46,7 +46,7 @@ func (req *UpdateMemberRequest) ToEntity() (*domain.Member, error) {
 	}
 
 	if req.Password != "" {
-		if err := member.SetPassword(req.Password); err != nil {
+		if err := member.AssignPassword(req.Password); err != nil {
 			return nil, err
 		}
 	}

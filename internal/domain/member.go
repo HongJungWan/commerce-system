@@ -20,7 +20,7 @@ type Member struct {
 	WithdrawnAt    *time.Time `gorm:"index" json:"withdrawn_at,omitempty"`  // 탈퇴일
 }
 
-func (m *Member) SetPassword(password string) error {
+func (m *Member) AssignPassword(password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err

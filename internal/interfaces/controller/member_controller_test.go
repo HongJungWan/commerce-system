@@ -95,7 +95,7 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -156,7 +156,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 		FullName:     "Old Name",
 		Email:        "old@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -203,7 +203,7 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	memberRepo.Create(member)
 
 	router := gin.Default()
@@ -241,7 +241,7 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -282,14 +282,14 @@ func TestMemberController_GetAllMembers_Success(t *testing.T) {
 		FullName:     "User One",
 		Email:        "user1@example.com",
 	}
-	member1.SetPassword("password123")
+	member1.AssignPassword("password123")
 	member2 := &domain.Member{
 		MemberNumber: "M1235",
 		Username:     "user2",
 		FullName:     "User Two",
 		Email:        "user2@example.com",
 	}
-	member2.SetPassword("password123")
+	member2.AssignPassword("password123")
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)
 

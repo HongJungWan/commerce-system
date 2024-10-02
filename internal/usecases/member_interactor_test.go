@@ -50,7 +50,7 @@ func TestMemberInteractor_Register_Failure_DuplicateUserID(t *testing.T) {
 		FullName:     "Existing User",
 		Email:        "existing@example.com",
 	}
-	existingMember.SetPassword("password123")
+	existingMember.AssignPassword("password123")
 	_ = memberRepo.Create(existingMember)
 
 	req := &request.RegisterMemberRequest{
@@ -82,7 +82,7 @@ func TestMemberInteractor_GetMyInfo_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	// When
@@ -121,7 +121,7 @@ func TestMemberInteractor_UpdateMyInfo_Success(t *testing.T) {
 		FullName:     "Old Name",
 		Email:        "old@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	updateReq := &request.UpdateMemberRequest{
@@ -171,7 +171,7 @@ func TestMemberInteractor_DeleteByUserName_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	// When
@@ -211,14 +211,14 @@ func TestMemberInteractor_GetAllMembers_Success(t *testing.T) {
 		FullName:     "User One",
 		Email:        "user1@example.com",
 	}
-	member1.SetPassword("password123")
+	member1.AssignPassword("password123")
 	member2 := &domain.Member{
 		MemberNumber: "M12346",
 		Username:     "user2",
 		FullName:     "User Two",
 		Email:        "user2@example.com",
 	}
-	member2.SetPassword("password123")
+	member2.AssignPassword("password123")
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)
 
@@ -246,7 +246,7 @@ func TestMemberInteractor_GetMemberStats_Success(t *testing.T) {
 		IsWithdrawn:  false,
 		CreatedAt:    time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 	}
-	_ = member1.SetPassword("password123")
+	_ = member1.AssignPassword("password123")
 	_ = memberRepo.Create(member1)
 
 	member2 := &domain.Member{
@@ -258,7 +258,7 @@ func TestMemberInteractor_GetMemberStats_Success(t *testing.T) {
 		IsWithdrawn:  false,
 		CreatedAt:    time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 	}
-	_ = member2.SetPassword("password123")
+	_ = member2.AssignPassword("password123")
 	_ = memberRepo.Create(member2)
 
 	// 멤버 삭제 수행

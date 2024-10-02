@@ -29,7 +29,7 @@ func TestAuthController_Login_Success(t *testing.T) {
 		FullName:       "Test User",
 		Email:          "testuser@example.com",
 	}
-	_ = member.SetPassword(member.HashedPassword)
+	_ = member.AssignPassword(member.HashedPassword)
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()

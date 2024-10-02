@@ -22,7 +22,7 @@ func TestAuthUseCase_Authenticate_Success(t *testing.T) {
 		Email:          "testuser@example.com",
 		MemberNumber:   "M12345",
 	}
-	_ = member.SetPassword(member.HashedPassword)
+	_ = member.AssignPassword(member.HashedPassword)
 	_ = memberRepo.Create(member)
 
 	// When
@@ -46,7 +46,7 @@ func TestAuthUseCase_Authenticate_Failure_WrongPassword(t *testing.T) {
 		Email:          "testuser@example.com",
 		MemberNumber:   "M12345",
 	}
-	_ = member.SetPassword(member.HashedPassword)
+	_ = member.AssignPassword(member.HashedPassword)
 	_ = memberRepo.Create(member)
 
 	// When

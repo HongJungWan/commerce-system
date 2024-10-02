@@ -12,7 +12,7 @@ func TestMember_SetPassword_Success(t *testing.T) {
 	member := &domain.Member{}
 
 	// When
-	err := member.SetPassword("password123")
+	err := member.AssignPassword("password123")
 
 	// Then
 	assert.NoError(t, err)
@@ -22,7 +22,7 @@ func TestMember_SetPassword_Success(t *testing.T) {
 func TestMember_CheckPassword_CorrectPassword(t *testing.T) {
 	// Given
 	member := &domain.Member{}
-	_ = member.SetPassword("password123")
+	_ = member.AssignPassword("password123")
 
 	// When
 	isValid := member.CheckPassword("password123")
@@ -34,7 +34,7 @@ func TestMember_CheckPassword_CorrectPassword(t *testing.T) {
 func TestMember_CheckPassword_IncorrectPassword(t *testing.T) {
 	// Given
 	member := &domain.Member{}
-	_ = member.SetPassword("password123")
+	_ = member.AssignPassword("password123")
 
 	// When
 	isValid := member.CheckPassword("wrongpassword")

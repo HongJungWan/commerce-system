@@ -57,7 +57,7 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	req := &request.CreateOrderRequest{
@@ -89,7 +89,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	product := &domain.Product{
@@ -154,7 +154,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	order := &domain.Order{
@@ -191,7 +191,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	order1 := &domain.Order{
