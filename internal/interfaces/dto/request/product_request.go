@@ -10,14 +10,14 @@ const (
 )
 
 type CreateProductRequest struct {
-	ProductName   string `json:"product_name"`
-	Category      string `json:"category"`
-	Price         int64  `json:"price"`
-	StockQuantity int    `json:"stock_quantity"`
+	ProductName   string `json:"product_name" example:"pizza"`
+	Category      string `json:"category" example:"food"`
+	Price         int64  `json:"price" example:"1000"`
+	StockQuantity int    `json:"stock_quantity" example:"100"`
 }
 
 type UpdateStockRequest struct {
-	StockQuantity int `json:"stock_quantity"`
+	StockQuantity int `json:"stock_quantity" example:"77"`
 }
 
 func (req *CreateProductRequest) CreateToEntity() (*domain.Product, error) {

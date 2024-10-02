@@ -11,18 +11,18 @@ const (
 )
 
 type CreateMemberRequest struct {
-	AccountId   string `json:"account_id"`
-	Password    string `json:"password"`
-	NickName    string `json:"nick_name"`
-	Email       string `json:"email"`
-	IsAdmin     bool   `json:"is_admin"`
-	IsWithdrawn bool   `json:"is_withdrawn"`
+	AccountId   string `json:"account_id" example:"hong43ok"`
+	Password    string `json:"password" example:"ghdwjddhks"`
+	NickName    string `json:"nick_name" example:"hongmang"`
+	Email       string `json:"email" example:"hong43ok@gmail.com"`
+	IsAdmin     bool   `json:"is_admin" example:"true"`
+	IsWithdrawn bool   `json:"is_withdrawn" example:"false"`
 }
 
 type UpdateMemberRequest struct {
-	NickName string `json:"nick_name,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
+	NickName string `json:"nick_name,omitempty" example:"hong"`
+	Email    string `json:"email,omitempty" example:"hong43ok@naver.com"`
+	Password string `json:"password,omitempty" example:"hong"`
 }
 
 func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {

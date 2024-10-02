@@ -1,6 +1,6 @@
 package request
 
 type LoginRequest struct {
-	AccountId string `json:"account_id"`
-	Password  string `json:"password"`
+	AccountId string `json:"account_id" example:"hong43ok"`
+	Password  string `json:"password" example:"ghdwjddhks"`
 }
