@@ -74,7 +74,7 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 // @Security     Bearer
 // @Accept       json
 // @Produce      json
-// @Param        ID path string true "기본키 (primary key)"
+// @Param        id path string true "기본키 (primary key)"
 // @Success      200 {object} map[string]string "취소 성공"
 // @Failure      500 {object} map[string]string "취소 실패"
 // @Router       /orders/{id}/cancel [put]

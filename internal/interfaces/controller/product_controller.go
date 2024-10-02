@@ -86,7 +86,7 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 // @Security     Bearer
 // @Accept       json
 // @Produce      json
-// @Param        ID path int true "기본키 (primary key)"
+// @Param        id path int true "기본키 (primary key)"
 // @Param        stockRequest body request.UpdateStockRequest true "재고 정보"
 // @Success      200 {object} map[string]string "수정 성공"
 // @Failure      400 {object} map[string]string "잘못된 요청"
@@ -127,7 +127,7 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 // @Security     Bearer
 // @Accept       json
 // @Produce      json
-// @Param        ID path int true "기본키 (primary key)"
+// @Param        id path int true "기본키 (primary key)"
 // @Success      200 {object} map[string]string "삭제 성공"
 // @Failure      400 {object} map[string]string "잘못된 상품 번호"
 // @Failure      403 {object} map[string]string "권한 없음"
