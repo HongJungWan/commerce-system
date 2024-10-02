@@ -36,8 +36,8 @@ func TestAuthController_Login_Success(t *testing.T) {
 	router.POST("/login", authController.Login)
 
 	loginRequest := map[string]string{
-		"username":        "testuser",
-		"hashed_password": "password123",
+		"account_id": "testuser",
+		"password":   "password123",
 	}
 	requestBody, _ := json.Marshal(loginRequest)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(requestBody))
@@ -66,8 +66,8 @@ func TestAuthController_Login_Failure_InvalidCredentials(t *testing.T) {
 	router.POST("/login", authController.Login)
 
 	loginRequest := map[string]string{
-		"username":        "nonexistent",
-		"hashed_password": "password123",
+		"account_id": "nonexistent",
+		"password":   "password123",
 	}
 	requestBody, _ := json.Marshal(loginRequest)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(requestBody))
@@ -96,7 +96,7 @@ func TestAuthController_Login_Failure_InvalidRequest(t *testing.T) {
 	router.POST("/login", authController.Login)
 
 	invalidRequest := map[string]interface{}{
-		"username": 123, // 잘못된 타입의 값
+		"account_id": 123,
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(requestBody))

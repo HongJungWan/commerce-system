@@ -30,10 +30,10 @@ func TestMemberController_Register_Success(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	newMember := request.CreateMemberRequest{
-		Username: "newuser",
-		Password: "password123",
-		FullName: "New User",
-		Email:    "newuser@example.com",
+		AccountId: "newuser",
+		Password:  "password123",
+		NickName:  "New User",
+		Email:     "newuser@example.com",
 	}
 
 	requestBody, _ := json.Marshal(newMember)
@@ -65,7 +65,7 @@ func TestMemberController_Register_Failure_InvalidRequest(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	invalidRequest := map[string]interface{}{
-		"username": 0, // 잘못된 타입의 값
+		"account_id": 0, // 잘못된 타입의 값
 	}
 
 	requestBody, _ := json.Marshal(invalidRequest)
@@ -165,7 +165,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	})
 
 	updateData := request.UpdateMemberRequest{
-		FullName: "New Name",
+		NickName: "New Name",
 		Email:    "new@example.com",
 	}
 	requestBody, _ := json.Marshal(updateData)
@@ -212,7 +212,7 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 	})
 
 	invalidRequest := map[string]interface{}{
-		"full_name": 123, // 잘못된 타입
+		"nick_name": 123, // 잘못된 타입
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))
