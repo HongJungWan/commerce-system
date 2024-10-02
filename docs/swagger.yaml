@@ -1,4 +1,19 @@
 definitions:
+  request.CreateMemberRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      is_admin:
+        type: boolean
+      is_withdrawn:
+        type: boolean
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   request.CreateOrderRequest:
     properties:
       product_number:
@@ -20,21 +35,6 @@ definitions:
   request.LoginRequest:
     properties:
       hashed_password:
-        type: string
-      username:
-        type: string
-    type: object
-  request.RegisterMemberRequest:
-    properties:
-      email:
-        type: string
-      full_name:
-        type: string
-      is_admin:
-        type: boolean
-      is_withdrawn:
-        type: boolean
-      password:
         type: string
       username:
         type: string
@@ -246,10 +246,10 @@ paths:
       parameters:
       - description: 회원 가입 정보
         in: body
-        name: registerRequest
+        name: CreateMemberRequest
         required: true
         schema:
-          $ref: '#/definitions/request.RegisterMemberRequest'
+          $ref: '#/definitions/request.CreateMemberRequest'
       produces:
       - application/json
       responses:

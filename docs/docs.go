@@ -171,11 +171,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "회원 가입 정보",
-                        "name": "registerRequest",
+                        "name": "CreateMemberRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.RegisterMemberRequest"
+                            "$ref": "#/definitions/request.CreateMemberRequest"
                         }
                     }
                 ],
@@ -872,6 +872,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "request.CreateMemberRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "is_withdrawn": {
+                    "type": "boolean"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "request.CreateOrderRequest": {
             "type": "object",
             "properties": {
@@ -904,29 +927,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "hashed_password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.RegisterMemberRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "is_admin": {
-                    "type": "boolean"
-                },
-                "is_withdrawn": {
-                    "type": "boolean"
-                },
-                "password": {
                     "type": "string"
                 },
                 "username": {
