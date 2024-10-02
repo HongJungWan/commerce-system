@@ -1,8 +1,6 @@
 definitions:
   request.CreateOrderRequest:
     properties:
-      order_number:
-        type: string
       product_number:
         type: string
       quantity:
@@ -15,8 +13,6 @@ definitions:
       price:
         type: integer
       product_name:
-        type: string
-      product_number:
         type: string
       stock_quantity:
         type: integer
@@ -38,8 +34,6 @@ definitions:
         type: boolean
       is_withdrawn:
         type: boolean
-      member_number:
-        type: string
       password:
         type: string
       username:

@@ -866,9 +866,6 @@
         "request.CreateOrderRequest": {
             "type": "object",
             "properties": {
-                "order_number": {
-                    "type": "string"
-                },
                 "product_number": {
                     "type": "string"
                 },
@@ -887,9 +884,6 @@
                     "type": "integer"
                 },
                 "product_name": {
-                    "type": "string"
-                },
-                "product_number": {
                     "type": "string"
                 },
                 "stock_quantity": {
@@ -922,9 +916,6 @@
                 },
                 "is_withdrawn": {
                     "type": "boolean"
-                },
-                "member_number": {
-                    "type": "string"
                 },
                 "password": {
                     "type": "string"

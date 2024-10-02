@@ -875,9 +875,6 @@ const docTemplate = `{
         "request.CreateOrderRequest": {
             "type": "object",
             "properties": {
-                "order_number": {
-                    "type": "string"
-                },
                 "product_number": {
                     "type": "string"
                 },
@@ -896,9 +893,6 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "product_name": {
-                    "type": "string"
-                },
-                "product_number": {
                     "type": "string"
                 },
                 "stock_quantity": {
@@ -931,9 +925,6 @@ const docTemplate = `{
                 },
                 "is_withdrawn": {
                     "type": "boolean"
-                },
-                "member_number": {
-                    "type": "string"
                 },
                 "password": {
                     "type": "string"
