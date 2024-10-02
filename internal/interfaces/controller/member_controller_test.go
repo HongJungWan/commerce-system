@@ -29,7 +29,7 @@ func TestMemberController_Register_Success(t *testing.T) {
 	router := gin.Default()
 	router.POST("/register", memberController.Register)
 
-	newMember := request.RegisterMemberRequest{
+	newMember := request.CreateMemberRequest{
 		Username: "newuser",
 		Password: "password123",
 		FullName: "New User",

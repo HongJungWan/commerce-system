@@ -19,7 +19,7 @@ func TestMemberInteractor_Register_Success(t *testing.T) {
 	authUseCase := usecases.NewAuthUseCase("secret", memberRepo)
 	interactor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 
-	req := &request.RegisterMemberRequest{
+	req := &request.CreateMemberRequest{
 		Username: "newuser",
 		Password: "password123",
 		FullName: "New User",
@@ -52,7 +52,7 @@ func TestMemberInteractor_Register_Failure_DuplicateUserID(t *testing.T) {
 	existingMember.AssignPassword("password123")
 	_ = memberRepo.Create(existingMember)
 
-	req := &request.RegisterMemberRequest{
+	req := &request.CreateMemberRequest{
 		Username: "duplicateuser",
 		Password: "password456",
 		FullName: "New User",
