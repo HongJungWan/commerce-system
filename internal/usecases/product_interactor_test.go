@@ -18,7 +18,6 @@ func TestProductInteractor_CreateProduct_Success(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	req := &request.CreateProductRequest{
-		ProductNumber: "P12345",
 		ProductName:   "New Product",
 		Category:      "Electronics",
 		Price:         1000,
@@ -46,7 +45,6 @@ func TestProductInteractor_CreateProduct_Failure_InvalidProduct(t *testing.T) {
 	interactor := usecases.NewProductInteractor(productRepo, db)
 
 	req := &request.CreateProductRequest{
-		ProductNumber: "P12345",
 		ProductName:   "", // 상품명 누락
 		Category:      "Electronics",
 		Price:         -1000, // 잘못된 가격

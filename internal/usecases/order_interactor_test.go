@@ -29,7 +29,6 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	req := &request.CreateOrderRequest{
-		OrderNumber:   "O12345",
 		ProductNumber: "P12345",
 		Quantity:      2,
 	}
@@ -61,7 +60,6 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 	_ = memberRepo.Create(member)
 
 	req := &request.CreateOrderRequest{
-		OrderNumber:   "O12345",
 		ProductNumber: "",
 		Quantity:      2,
 	}

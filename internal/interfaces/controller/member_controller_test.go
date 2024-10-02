@@ -30,11 +30,10 @@ func TestMemberController_Register_Success(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	newMember := request.RegisterMemberRequest{
-		MemberNumber: "M1234",
-		Username:     "newuser",
-		Password:     "password123",
-		FullName:     "New User",
-		Email:        "newuser@example.com",
+		Username: "newuser",
+		Password: "password123",
+		FullName: "New User",
+		Email:    "newuser@example.com",
 	}
 
 	requestBody, _ := json.Marshal(newMember)

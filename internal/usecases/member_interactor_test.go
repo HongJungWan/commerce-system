@@ -20,11 +20,10 @@ func TestMemberInteractor_Register_Success(t *testing.T) {
 	interactor := usecases.NewMemberInteractor(memberRepo, authUseCase)
 
 	req := &request.RegisterMemberRequest{
-		MemberNumber: "M12345",
-		Username:     "newuser",
-		Password:     "password123",
-		FullName:     "New User",
-		Email:        "newuser@example.com",
+		Username: "newuser",
+		Password: "password123",
+		FullName: "New User",
+		Email:    "newuser@example.com",
 	}
 
 	// When
@@ -54,11 +53,10 @@ func TestMemberInteractor_Register_Failure_DuplicateUserID(t *testing.T) {
 	_ = memberRepo.Create(existingMember)
 
 	req := &request.RegisterMemberRequest{
-		MemberNumber: "M12346",
-		Username:     "duplicateuser",
-		Password:     "password456",
-		FullName:     "New User",
-		Email:        "new@example.com",
+		Username: "duplicateuser",
+		Password: "password456",
+		FullName: "New User",
+		Email:    "new@example.com",
 	}
 
 	// When
