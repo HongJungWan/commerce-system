@@ -1,9 +1,15 @@
 package request
 
-import "github.com/HongJungWan/commerce-system/internal/domain"
+import (
+	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/google/uuid"
+)
+
+const (
+	PRODUCT = "Product"
+)
 
 type CreateProductRequest struct {
-	ProductNumber string `json:"product_number"`
 	ProductName   string `json:"product_name"`
 	Category      string `json:"category"`
 	Price         int64  `json:"price"`
@@ -16,7 +22,7 @@ type UpdateStockRequest struct {
 
 func (req *CreateProductRequest) ToEntity() (*domain.Product, error) {
 	product := &domain.Product{
-		ProductNumber: req.ProductNumber,
+		ProductNumber: ORDER + uuid.New().String(),
 		ProductName:   req.ProductName,
 		Category:      req.Category,
 		Price:         req.Price,

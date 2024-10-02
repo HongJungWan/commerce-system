@@ -2,11 +2,15 @@ package request
 
 import (
 	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/google/uuid"
 	"time"
 )
 
+const (
+	ORDER = "Order"
+)
+
 type CreateOrderRequest struct {
-	OrderNumber   string `json:"order_number"`
 	ProductNumber string `json:"product_number"`
 	Quantity      int    `json:"quantity"`
 }
@@ -17,7 +21,7 @@ type CancelOrderRequest struct {
 
 func (req *CreateOrderRequest) ToEntity(memberNumber string) (*domain.Order, error) {
 	order := &domain.Order{
-		OrderNumber:   req.OrderNumber,
+		OrderNumber:   ORDER + uuid.New().String(),
 		OrderDate:     time.Now(),
 		MemberNumber:  memberNumber,
 		ProductNumber: req.ProductNumber,

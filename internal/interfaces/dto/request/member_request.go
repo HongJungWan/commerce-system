@@ -2,17 +2,21 @@ package request
 
 import (
 	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/google/uuid"
 	"time"
 )
 
+const (
+	MEMBER = "Member"
+)
+
 type RegisterMemberRequest struct {
-	MemberNumber string `json:"member_number"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	FullName     string `json:"full_name"`
-	Email        string `json:"email"`
-	IsAdmin      bool   `json:"is_admin"`
-	IsWithdrawn  bool   `json:"is_withdrawn"`
+	Username    string `json:"username"`
+	Password    string `json:"password"`
+	FullName    string `json:"full_name"`
+	Email       string `json:"email"`
+	IsAdmin     bool   `json:"is_admin"`
+	IsWithdrawn bool   `json:"is_withdrawn"`
 }
 
 type UpdateMemberRequest struct {
@@ -23,7 +27,7 @@ type UpdateMemberRequest struct {
 
 func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
 	member := &domain.Member{
-		MemberNumber: req.MemberNumber,
+		MemberNumber: MEMBER + uuid.New().String(),
 		Username:     req.Username,
 		FullName:     req.FullName,
 		Email:        req.Email,
