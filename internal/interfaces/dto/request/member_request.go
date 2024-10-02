@@ -10,7 +10,7 @@ const (
 	MEMBER = "Member"
 )
 
-type RegisterMemberRequest struct {
+type CreateMemberRequest struct {
 	Username    string `json:"username"`
 	Password    string `json:"password"`
 	FullName    string `json:"full_name"`
@@ -25,7 +25,7 @@ type UpdateMemberRequest struct {
 	Password string `json:"password,omitempty"`
 }
 
-func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
+func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
 		MemberNumber: MEMBER + uuid.New().String(),
 		Username:     req.Username,
@@ -47,7 +47,7 @@ func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
 	return member, nil
 }
 
-func (req *UpdateMemberRequest) ToEntity() (*domain.Member, error) {
+func (req *UpdateMemberRequest) UpdateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
 		FullName: req.FullName,
 		Email:    req.Email,

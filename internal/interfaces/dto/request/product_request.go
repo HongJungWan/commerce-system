@@ -20,7 +20,7 @@ type UpdateStockRequest struct {
 	StockQuantity int `json:"stock_quantity"`
 }
 
-func (req *CreateProductRequest) ToEntity() (*domain.Product, error) {
+func (req *CreateProductRequest) CreateToEntity() (*domain.Product, error) {
 	product := &domain.Product{
 		ProductNumber: ORDER + uuid.New().String(),
 		ProductName:   req.ProductName,

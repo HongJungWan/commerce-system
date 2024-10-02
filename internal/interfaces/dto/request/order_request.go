@@ -19,7 +19,7 @@ type CancelOrderRequest struct {
 	OrderNumber string `json:"order_number"`
 }
 
-func (req *CreateOrderRequest) ToEntity(memberNumber string) (*domain.Order, error) {
+func (req *CreateOrderRequest) CreateToEntity(memberNumber string) (*domain.Order, error) {
 	order := &domain.Order{
 		OrderNumber:   ORDER + uuid.New().String(),
 		OrderDate:     time.Now(),

@@ -22,7 +22,7 @@ func NewOrderInteractor(or repository.OrderRepository, mr repository.MemberRepos
 }
 
 func (oi *OrderInteractor) CreateOrder(req *request.CreateOrderRequest, memberNumber string) (*response.CreateOrderResponse, error) {
-	order, err := req.ToEntity(memberNumber)
+	order, err := req.CreateToEntity(memberNumber)
 	if err != nil {
 		return nil, err
 	}

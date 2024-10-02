@@ -20,8 +20,8 @@ func NewMemberInteractor(repo repository.MemberRepository, auth *AuthUseCase) *M
 	}
 }
 
-func (mi *MemberInteractor) Register(req *request.RegisterMemberRequest) (*response.RegisterMemberResponse, error) {
-	member, err := req.ToEntity()
+func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*response.RegisterMemberResponse, error) {
+	member, err := req.CreateToEntity()
 	if err != nil {
 		return nil, err
 	}

@@ -32,7 +32,7 @@ func NewMemberController(mi *usecases.MemberInteractor, au *usecases.AuthUseCase
 // @Failure      500 {object} map[string]string "서버 오류"
 // @Router       /members [post]
 func (mc *MemberController) Register(c *gin.Context) {
-	var req request.RegisterMemberRequest
+	var req request.CreateMemberRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
