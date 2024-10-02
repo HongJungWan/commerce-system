@@ -26,7 +26,7 @@ func NewMemberController(mi *usecases.MemberInteractor, au *usecases.AuthUseCase
 // @Tags         members
 // @Accept       json
 // @Produce      json
-// @Param        registerRequest body request.RegisterMemberRequest true "회원 가입 정보"
+// @Param        CreateMemberRequest body request.CreateMemberRequest true "회원 가입 정보"
 // @Success      201 {object} response.MemberResponse "가입 성공"
 // @Failure      400 {object} map[string]string "잘못된 요청"
 // @Failure      500 {object} map[string]string "서버 오류"
