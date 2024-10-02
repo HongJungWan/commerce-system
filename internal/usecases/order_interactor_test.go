@@ -101,6 +101,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -113,7 +114,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	_ = orderRepo.Create(order)
 
 	// When
-	err := interactor.CancelOrder("O12345", "M12345")
+	err := interactor.CancelOrder(12345, "M12345")
 
 	// Then
 	assert.NoError(t, err)
@@ -134,7 +135,7 @@ func TestOrderInteractor_CancelOrder_Failure_OrderNotFound(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	// When
-	err := interactor.CancelOrder("InvalidOrder", "M12345")
+	err := interactor.CancelOrder(0, "M12345")
 
 	// Then
 	assert.Error(t, err)
@@ -158,6 +159,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	_ = memberRepo.Create(member)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M99999",
@@ -170,7 +172,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	_ = orderRepo.Create(order)
 
 	// When
-	err := interactor.CancelOrder("O12345", "M12345")
+	err := interactor.CancelOrder(12345, "M12345")
 
 	// Then
 	assert.Error(t, err)
