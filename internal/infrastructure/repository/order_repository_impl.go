@@ -27,6 +27,14 @@ func (r *OrderRepositoryImpl) GetByOrderNumber(orderNumber string) (*domain.Orde
 	return &order, nil
 }
 
+func (r *OrderRepositoryImpl) GetById(id int) (*domain.Order, error) {
+	var order domain.Order
+	if err := r.db.First(&order, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &order, nil
+}
+
 func (r *OrderRepositoryImpl) GetByMemberNumber(memberNumber string) ([]*domain.Order, error) {
 	var orders []*domain.Order
 	if err := r.db.Where("member_number = ?", memberNumber).Find(&orders).Error; err != nil {

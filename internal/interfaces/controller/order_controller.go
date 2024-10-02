@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/HongJungWan/commerce-system/internal/interfaces/dto/request"
 	"github.com/HongJungWan/commerce-system/internal/usecases"
@@ -73,15 +74,21 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 // @Security     Bearer
 // @Accept       json
 // @Produce      json
-// @Param        order_number path string true "주문 번호"
+// @Param        ID path string true "기본키 (primary key)"
 // @Success      200 {object} map[string]string "취소 성공"
 // @Failure      500 {object} map[string]string "취소 실패"
-// @Router       /orders/{order_number}/cancel [put]
+// @Router       /orders/:id/cancel [put]
 func (oc *OrderController) CancelOrder(c *gin.Context) {
-	orderNumber := c.Param("order_number")
+	orderParam := c.Param("id")
+	id, err := strconv.Atoi(orderParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 주문 ID입니다."})
+		return
+	}
+
 	memberNumber := c.GetString("member_number")
 
-	if err := oc.orderInteractor.CancelOrder(orderNumber, memberNumber); err != nil {
+	if err := oc.orderInteractor.CancelOrder(id, memberNumber); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

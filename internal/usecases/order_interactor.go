@@ -75,8 +75,8 @@ func (oi *OrderInteractor) GetMyOrders(memberNumber string) ([]response.OrderRes
 	return orderResponses, nil
 }
 
-func (oi *OrderInteractor) CancelOrder(orderNumber, memberNumber string) error {
-	order, err := oi.OrderRepository.GetByOrderNumber(orderNumber)
+func (oi *OrderInteractor) CancelOrder(orderId int, memberNumber string) error {
+	order, err := oi.OrderRepository.GetById(orderId)
 	if err != nil {
 		return err
 	}
