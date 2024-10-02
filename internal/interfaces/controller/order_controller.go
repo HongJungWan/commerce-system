@@ -20,7 +20,7 @@ func NewOrderController(oi *usecases.OrderInteractor) *OrderController {
 // @Summary      주문 생성
 // @Description  새로운 주문을 생성합니다.
 // @Tags         orders
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        orderRequest body request.CreateOrderRequest true "주문 정보"
@@ -42,7 +42,6 @@ func (oc *OrderController) CreateOrder(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusCreated, responseData)
 }
 
@@ -50,7 +49,7 @@ func (oc *OrderController) CreateOrder(c *gin.Context) {
 // @Summary      내 주문 조회
 // @Description  인증된 사용자의 주문 내역을 조회합니다.
 // @Tags         orders
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Success      200 {array} response.OrderResponse "주문 목록"
@@ -64,7 +63,6 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "주문 내역을 가져올 수 없습니다."})
 		return
 	}
-
 	c.JSON(http.StatusOK, orderResponses)
 }
 
@@ -72,7 +70,7 @@ func (oc *OrderController) GetMyOrders(c *gin.Context) {
 // @Summary      주문 취소
 // @Description  특정 주문을 취소합니다.
 // @Tags         orders
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        order_number path string true "주문 번호"
@@ -94,7 +92,7 @@ func (oc *OrderController) CancelOrder(c *gin.Context) {
 // @Summary      주문 통계 조회
 // @Description  특정 월의 주문 통계를 조회합니다. (관리자 전용)
 // @Tags         orders
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        month query string true "조회할 월 (YYYY-MM)"
@@ -121,7 +119,6 @@ func (oc *OrderController) GetMonthlyStats(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "통계 정보를 가져올 수 없습니다."})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"month":          month,
 		"total_sales":    totalSales,

@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   request.CreateOrderRequest:
     properties:
@@ -145,17 +144,9 @@ definitions:
       status:
         type: string
     type: object
-host: localhost:3031
 info:
-  contact:
-    email: support@commerce-system.io
-    name: API Support
-  description: A commerce-system service API in Go using Gin framework
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Commerce-System Service API
+  contact: {}
+  title: commerce-system API
   version: "1.0"
 paths:
   /health:
@@ -246,7 +237,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 회원 목록 조회
       tags:
       - members
@@ -304,7 +295,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 회원 탈퇴
       tags:
       - members
@@ -326,7 +317,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 내 정보 조회
       tags:
       - members
@@ -363,7 +354,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 내 정보 수정
       tags:
       - members
@@ -404,7 +395,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 회원 통계 조회
       tags:
       - members
@@ -440,7 +431,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 주문 생성
       tags:
       - orders
@@ -471,7 +462,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 주문 취소
       tags:
       - orders
@@ -496,7 +487,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 내 주문 조회
       tags:
       - orders
@@ -537,7 +528,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 주문 통계 조회
       tags:
       - orders
@@ -610,7 +601,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 상품 생성
       tags:
       - products
@@ -653,7 +644,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 상품 삭제
       tags:
       - products
@@ -702,14 +693,13 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 재고 수정
       tags:
       - products
-schemes:
-- http
 securityDefinitions:
-  BearerAuth:
+  Bearer:
+    description: A commerce-system service API in Go using Gin framework
     in: header
     name: Authorization
     type: apiKey

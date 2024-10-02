@@ -1,24 +1,10 @@
 {
-    "schemes": [
-        "http"
-    ],
     "swagger": "2.0",
     "info": {
-        "description": "A commerce-system service API in Go using Gin framework",
-        "title": "Commerce-System Service API",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "email": "support@commerce-system.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "title": "commerce-system API",
+        "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:3031",
-    "basePath": "/api",
     "paths": {
         "/health": {
             "get": {
@@ -117,7 +103,7 @@
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "모든 회원의 목록을 조회합니다. (관리자 전용)",
@@ -216,7 +202,7 @@
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 정보를 조회합니다.",
@@ -251,7 +237,7 @@
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 정보를 수정합니다.",
@@ -309,7 +295,7 @@
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 계정을 삭제합니다.",
@@ -349,7 +335,7 @@
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 월의 회원 가입 통계를 조회합니다. (관리자 전용)",
@@ -413,7 +399,7 @@
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "새로운 주문을 생성합니다.",
@@ -470,7 +456,7 @@
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 주문 내역을 조회합니다.",
@@ -510,7 +496,7 @@
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 월의 주문 통계를 조회합니다. (관리자 전용)",
@@ -574,7 +560,7 @@
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 주문을 취소합니다.",
@@ -670,7 +656,7 @@
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "새로운 상품을 등록합니다. (관리자 전용)",
@@ -736,7 +722,7 @@
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "상품을 삭제합니다. (관리자 전용)",
@@ -803,7 +789,7 @@
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "상품의 재고 수량을 수정합니다. (관리자 전용)",
@@ -1103,7 +1089,8 @@
         }
     },
     "securityDefinitions": {
-        "BearerAuth": {
+        "Bearer": {
+            "description": "A commerce-system service API in Go using Gin framework",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

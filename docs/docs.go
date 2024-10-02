@@ -9,15 +9,7 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "email": "support@commerce-system.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -120,7 +112,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "모든 회원의 목록을 조회합니다. (관리자 전용)",
@@ -219,7 +211,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 정보를 조회합니다.",
@@ -254,7 +246,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 정보를 수정합니다.",
@@ -312,7 +304,7 @@ const docTemplate = `{
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 계정을 삭제합니다.",
@@ -352,7 +344,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 월의 회원 가입 통계를 조회합니다. (관리자 전용)",
@@ -416,7 +408,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "새로운 주문을 생성합니다.",
@@ -473,7 +465,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 주문 내역을 조회합니다.",
@@ -513,7 +505,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 월의 주문 통계를 조회합니다. (관리자 전용)",
@@ -577,7 +569,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 주문을 취소합니다.",
@@ -673,7 +665,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "새로운 상품을 등록합니다. (관리자 전용)",
@@ -739,7 +731,7 @@ const docTemplate = `{
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "상품을 삭제합니다. (관리자 전용)",
@@ -806,7 +798,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "상품의 재고 수량을 수정합니다. (관리자 전용)",
@@ -1106,7 +1098,8 @@ const docTemplate = `{
         }
     },
     "securityDefinitions": {
-        "BearerAuth": {
+        "Bearer": {
+            "description": "A commerce-system service API in Go using Gin framework",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
@@ -1117,11 +1110,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3031",
-	BasePath:         "/api",
-	Schemes:          []string{"http"},
-	Title:            "Commerce-System Service API",
-	Description:      "A commerce-system service API in Go using Gin framework",
+	Host:             "",
+	BasePath:         "",
+	Schemes:          []string{},
+	Title:            "commerce-system API",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -53,5 +53,6 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		Token: token,
 	}
 
+	c.Header("Authorization", "Bearer "+token)
 	c.JSON(http.StatusOK, loginResponse)
 }

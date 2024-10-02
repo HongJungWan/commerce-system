@@ -42,7 +42,6 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "상품 목록을 가져올 수 없습니다."})
 		return
 	}
-
 	c.JSON(http.StatusOK, productResponses)
 }
 
@@ -50,7 +49,7 @@ func (pc *ProductController) GetProducts(c *gin.Context) {
 // @Summary      상품 생성
 // @Description  새로운 상품을 등록합니다. (관리자 전용)
 // @Tags         products
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        productRequest body request.CreateProductRequest true "상품 정보"
@@ -77,7 +76,6 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusCreated, responseData)
 }
 
@@ -85,7 +83,7 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 // @Summary      재고 수정
 // @Description  상품의 재고 수량을 수정합니다. (관리자 전용)
 // @Tags         products
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        product_number path string true "상품 번호"
@@ -126,7 +124,7 @@ func (pc *ProductController) UpdateStock(c *gin.Context) {
 // @Summary      상품 삭제
 // @Description  상품을 삭제합니다. (관리자 전용)
 // @Tags         products
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        product_number path string true "상품 번호"
