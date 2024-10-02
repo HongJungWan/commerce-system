@@ -452,55 +452,6 @@
                 }
             }
         },
-        "/orders/:id/cancel": {
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "특정 주문을 취소합니다.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "orders"
-                ],
-                "summary": "주문 취소",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "기본키 (primary key)",
-                        "name": "ID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "취소 성공",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "취소 실패",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/orders/me": {
             "get": {
                 "security": [
@@ -595,6 +546,55 @@
                     },
                     "500": {
                         "description": "통계 조회 실패",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{id}/cancel": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "특정 주문을 취소합니다.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "주문 취소",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "기본키 (primary key)",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "취소 성공",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "취소 실패",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -718,7 +718,7 @@
                 }
             }
         },
-        "/products/:id": {
+        "/products/{id}": {
             "delete": {
                 "security": [
                     {
@@ -785,7 +785,7 @@
                 }
             }
         },
-        "/products/:id/stock": {
+        "/products/{id}/stock": {
             "put": {
                 "security": [
                     {
@@ -866,10 +866,10 @@
         "request.CreateMemberRequest": {
             "type": "object",
             "properties": {
-                "email": {
+                "account_id": {
                     "type": "string"
                 },
-                "full_name": {
+                "email": {
                     "type": "string"
                 },
                 "is_admin": {
@@ -878,10 +878,10 @@
                 "is_withdrawn": {
                     "type": "boolean"
                 },
-                "password": {
+                "nick_name": {
                     "type": "string"
                 },
-                "username": {
+                "password": {
                     "type": "string"
                 }
             }
@@ -889,6 +889,9 @@
         "request.CreateOrderRequest": {
             "type": "object",
             "properties": {
+                "price": {
+                    "type": "integer"
+                },
                 "product_number": {
                     "type": "string"
                 },
@@ -917,10 +920,10 @@
         "request.LoginRequest": {
             "type": "object",
             "properties": {
-                "hashed_password": {
+                "account_id": {
                     "type": "string"
                 },
-                "username": {
+                "password": {
                     "type": "string"
                 }
             }
@@ -931,7 +934,7 @@
                 "email": {
                     "type": "string"
                 },
-                "full_name": {
+                "nick_name": {
                     "type": "string"
                 },
                 "password": {

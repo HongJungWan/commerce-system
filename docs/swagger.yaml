@@ -1,21 +1,23 @@
 definitions:
   request.CreateMemberRequest:
     properties:
-      email:
+      account_id:
         type: string
-      full_name:
+      email:
         type: string
       is_admin:
         type: boolean
       is_withdrawn:
         type: boolean
-      password:
+      nick_name:
         type: string
-      username:
+      password:
         type: string
     type: object
   request.CreateOrderRequest:
     properties:
+      price:
+        type: integer
       product_number:
         type: string
       quantity:
@@ -34,16 +36,16 @@ definitions:
     type: object
   request.LoginRequest:
     properties:
-      hashed_password:
+      account_id:
         type: string
-      username:
+      password:
         type: string
     type: object
   request.UpdateMemberRequest:
     properties:
       email:
         type: string
-      full_name:
+      nick_name:
         type: string
       password:
         type: string
@@ -433,7 +435,7 @@ paths:
       summary: 주문 생성
       tags:
       - orders
-  /orders/:id/cancel:
+  /orders/{id}/cancel:
     put:
       consumes:
       - application/json
@@ -603,7 +605,7 @@ paths:
       summary: 상품 생성
       tags:
       - products
-  /products/:id:
+  /products/{id}:
     delete:
       consumes:
       - application/json
@@ -646,7 +648,7 @@ paths:
       summary: 상품 삭제
       tags:
       - products
-  /products/:id/stock:
+  /products/{id}/stock:
     put:
       consumes:
       - application/json
