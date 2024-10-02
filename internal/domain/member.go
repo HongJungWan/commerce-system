@@ -20,19 +20,6 @@ type Member struct {
 	WithdrawnAt    *time.Time `gorm:"index" json:"withdrawn_at,omitempty"`  // 탈퇴일
 }
 
-func NewMember(memberNumber, username, fullName, email string, isAdmin bool) (*Member, error) {
-	member := &Member{
-		MemberNumber: memberNumber,
-		Username:     username,
-		FullName:     fullName,
-		Email:        email,
-		IsAdmin:      isAdmin,
-		IsWithdrawn:  false,
-		CreatedAt:    time.Now(),
-	}
-	return member, nil
-}
-
 func (m *Member) Validate() error {
 	if m.MemberNumber == "" {
 		return errors.New("회원번호가 누락되었습니다.")

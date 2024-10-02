@@ -18,19 +18,6 @@ type Order struct {
 	CanceledAt    *time.Time `json:"canceled_at,omitempty"`               // 취소일
 }
 
-func NewOrder(orderNumber, memberNumber, productNumber string, orderDate time.Time, price, totalAmount int64, quantity int) (*Order, error) {
-	order := &Order{
-		OrderNumber:   orderNumber,
-		MemberNumber:  memberNumber,
-		ProductNumber: productNumber,
-		OrderDate:     orderDate,
-		Price:         price,
-		TotalAmount:   totalAmount,
-		Quantity:      quantity,
-	}
-	return order, nil
-}
-
 func (o *Order) Validate() error {
 	if o.OrderNumber == "" {
 		return errors.New("주문번호가 누락되었습니다.")

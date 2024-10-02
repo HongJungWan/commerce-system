@@ -15,17 +15,6 @@ type Product struct {
 	StockQuantity int    `gorm:"not null" json:"stock_quantity"`                               // 재고수량
 }
 
-func NewProduct(productNumber, productName, category string, price int64, stockQuantity int) (*Product, error) {
-	product := &Product{
-		ProductNumber: productNumber,
-		ProductName:   productName,
-		Category:      category,
-		Price:         price,
-		StockQuantity: stockQuantity,
-	}
-	return product, nil
-}
-
 func (p *Product) Validate() error {
 	if p.ProductNumber == "" {
 		return errors.New("상품번호가 누락되었습니다.")
