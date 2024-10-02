@@ -20,8 +20,8 @@ func NewMemberInteractor(repo repository.MemberRepository, auth *AuthUseCase) *M
 	}
 }
 
-func (mi *MemberInteractor) Register(req *request.RegisterMemberRequest) (*response.RegisterMemberResponse, error) {
-	member, err := req.ToEntity()
+func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*response.RegisterMemberResponse, error) {
+	member, err := req.CreateToEntity()
 	if err != nil {
 		return nil, err
 	}
@@ -59,14 +59,14 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 		return err
 	}
 
-	if req.FullName != "" {
-		member.FullName = req.FullName
+	if req.NickName != "" {
+		member.FullName = req.NickName
 	}
 	if req.Email != "" {
 		member.Email = req.Email
 	}
 	if req.Password != "" {
-		if err := member.SetPassword(req.Password); err != nil {
+		if err := member.AssignPassword(req.Password); err != nil {
 			return err
 		}
 	}

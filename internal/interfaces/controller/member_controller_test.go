@@ -29,12 +29,11 @@ func TestMemberController_Register_Success(t *testing.T) {
 	router := gin.Default()
 	router.POST("/register", memberController.Register)
 
-	newMember := request.RegisterMemberRequest{
-		MemberNumber: "M1234",
-		Username:     "newuser",
-		Password:     "password123",
-		FullName:     "New User",
-		Email:        "newuser@example.com",
+	newMember := request.CreateMemberRequest{
+		AccountId: "newuser",
+		Password:  "password123",
+		NickName:  "New User",
+		Email:     "newuser@example.com",
 	}
 
 	requestBody, _ := json.Marshal(newMember)
@@ -66,7 +65,7 @@ func TestMemberController_Register_Failure_InvalidRequest(t *testing.T) {
 	router.POST("/register", memberController.Register)
 
 	invalidRequest := map[string]interface{}{
-		"username": 0, // 잘못된 타입의 값
+		"account_id": 0, // 잘못된 타입의 값
 	}
 
 	requestBody, _ := json.Marshal(invalidRequest)
@@ -95,7 +94,7 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -156,7 +155,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 		FullName:     "Old Name",
 		Email:        "old@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -166,7 +165,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	})
 
 	updateData := request.UpdateMemberRequest{
-		FullName: "New Name",
+		NickName: "New Name",
 		Email:    "new@example.com",
 	}
 	requestBody, _ := json.Marshal(updateData)
@@ -203,7 +202,7 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	memberRepo.Create(member)
 
 	router := gin.Default()
@@ -213,7 +212,7 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 	})
 
 	invalidRequest := map[string]interface{}{
-		"full_name": 123, // 잘못된 타입
+		"nick_name": 123, // 잘못된 타입
 	}
 	requestBody, _ := json.Marshal(invalidRequest)
 	req, _ := http.NewRequest("PUT", "/me", bytes.NewBuffer(requestBody))
@@ -241,7 +240,7 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()
@@ -282,14 +281,14 @@ func TestMemberController_GetAllMembers_Success(t *testing.T) {
 		FullName:     "User One",
 		Email:        "user1@example.com",
 	}
-	member1.SetPassword("password123")
+	member1.AssignPassword("password123")
 	member2 := &domain.Member{
 		MemberNumber: "M1235",
 		Username:     "user2",
 		FullName:     "User Two",
 		Email:        "user2@example.com",
 	}
-	member2.SetPassword("password123")
+	member2.AssignPassword("password123")
 	_ = memberRepo.Create(member1)
 	_ = memberRepo.Create(member2)
 

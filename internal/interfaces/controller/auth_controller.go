@@ -37,7 +37,7 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	member, err := ctrl.authUseCase.Authenticate(loginRequest.Username, loginRequest.HashedPassword)
+	member, err := ctrl.authUseCase.Authenticate(loginRequest.AccountId, loginRequest.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
@@ -53,5 +53,6 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 		Token: token,
 	}
 
+	c.Header("Authorization", "Bearer "+token)
 	c.JSON(http.StatusOK, loginResponse)
 }

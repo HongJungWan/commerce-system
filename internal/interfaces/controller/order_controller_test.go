@@ -115,12 +115,12 @@ func TestOrderController_CancelOrder_Success(t *testing.T) {
 	_ = orderRepo.Create(order)
 
 	router := gin.Default()
-	router.PUT("/orders/:order_number/cancel", func(c *gin.Context) {
+	router.PUT("/orders/:id/cancel", func(c *gin.Context) {
 		c.Set("member_number", "M12345")
 		orderController.CancelOrder(c)
 	})
 
-	req, _ := http.NewRequest("PUT", "/orders/O12345/cancel", nil)
+	req, _ := http.NewRequest("PUT", "/orders/12345/cancel", nil)
 
 	// When
 	resp := httptest.NewRecorder()

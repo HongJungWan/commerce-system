@@ -22,7 +22,7 @@ func NewProductInteractor(repo repository.ProductRepository, db *gorm.DB) *Produ
 }
 
 func (pi *ProductInteractor) CreateProduct(req *request.CreateProductRequest) (*response.CreateProductResponse, error) {
-	product, err := req.ToEntity()
+	product, err := req.CreateToEntity()
 	if err != nil {
 		return nil, err
 	}

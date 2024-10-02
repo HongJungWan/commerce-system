@@ -79,13 +79,13 @@ func NewRouter(conf configs.Config, db *gorm.DB) *gin.Engine {
 	// 상품 엔드포인트 설정
 	router.GET("/products", productController.GetProducts)
 	router.POST("/products", authMiddleware, productController.CreateProduct)
-	router.PUT("/products/:product_number/stock", authMiddleware, productController.UpdateStock)
-	router.DELETE("/products/:product_number", authMiddleware, productController.DeleteProduct)
+	router.PUT("/products/:id/stock", authMiddleware, productController.UpdateStock)
+	router.DELETE("/products/:id", authMiddleware, productController.DeleteProduct)
 
 	// 주문 엔드포인트 설정
 	router.POST("/orders", authMiddleware, orderController.CreateOrder)
 	router.GET("/orders/me", authMiddleware, orderController.GetMyOrders)
-	router.PUT("/orders/:order_number/cancel", authMiddleware, orderController.CancelOrder)
+	router.PUT("/orders/:id/cancel", authMiddleware, orderController.CancelOrder)
 	router.GET("/orders/stats", authMiddleware, orderController.GetMonthlyStats)
 
 	return service

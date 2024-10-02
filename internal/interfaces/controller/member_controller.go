@@ -26,13 +26,13 @@ func NewMemberController(mi *usecases.MemberInteractor, au *usecases.AuthUseCase
 // @Tags         members
 // @Accept       json
 // @Produce      json
-// @Param        registerRequest body request.RegisterMemberRequest true "회원 가입 정보"
+// @Param        CreateMemberRequest body request.CreateMemberRequest true "회원 가입 정보"
 // @Success      201 {object} response.MemberResponse "가입 성공"
 // @Failure      400 {object} map[string]string "잘못된 요청"
 // @Failure      500 {object} map[string]string "서버 오류"
 // @Router       /members [post]
 func (mc *MemberController) Register(c *gin.Context) {
-	var req request.RegisterMemberRequest
+	var req request.CreateMemberRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
@@ -43,7 +43,6 @@ func (mc *MemberController) Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusCreated, responseData)
 }
 
@@ -51,7 +50,7 @@ func (mc *MemberController) Register(c *gin.Context) {
 // @Summary      내 정보 조회
 // @Description  인증된 사용자의 정보를 조회합니다.
 // @Tags         members
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Success      200 {object} response.MemberResponse "내 정보"
@@ -64,7 +63,6 @@ func (mc *MemberController) GetMyInfo(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "사용자 정보를 가져올 수 없습니다."})
 		return
 	}
-
 	c.JSON(http.StatusOK, responseData)
 }
 
@@ -72,7 +70,7 @@ func (mc *MemberController) GetMyInfo(c *gin.Context) {
 // @Summary      내 정보 수정
 // @Description  인증된 사용자의 정보를 수정합니다.
 // @Tags         members
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        updateRequest body request.UpdateMemberRequest true "수정할 정보"
@@ -99,7 +97,7 @@ func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
 // @Summary      회원 탈퇴
 // @Description  인증된 사용자의 계정을 삭제합니다.
 // @Tags         members
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Success      200 {object} map[string]string "삭제 성공"
@@ -118,7 +116,7 @@ func (mc *MemberController) DeleteMyAccount(c *gin.Context) {
 // @Summary      회원 목록 조회
 // @Description  모든 회원의 목록을 조회합니다. (관리자 전용)
 // @Tags         members
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Success      200 {array} response.MemberResponse "회원 목록"
@@ -136,7 +134,6 @@ func (mc *MemberController) GetAllMembers(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "회원 목록을 가져올 수 없습니다."})
 		return
 	}
-
 	c.JSON(http.StatusOK, responseData)
 }
 
@@ -144,7 +141,7 @@ func (mc *MemberController) GetAllMembers(c *gin.Context) {
 // @Summary      회원 통계 조회
 // @Description  특정 월의 회원 가입 통계를 조회합니다. (관리자 전용)
 // @Tags         members
-// @Security     ApiKeyAuth
+// @Security     Bearer
 // @Accept       json
 // @Produce      json
 // @Param        month query string true "조회할 월 (YYYY-MM)"

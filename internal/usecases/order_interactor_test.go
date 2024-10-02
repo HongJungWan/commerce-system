@@ -29,7 +29,6 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidMember(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	req := &request.CreateOrderRequest{
-		OrderNumber:   "O12345",
 		ProductNumber: "P12345",
 		Quantity:      2,
 	}
@@ -57,11 +56,10 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	req := &request.CreateOrderRequest{
-		OrderNumber:   "O12345",
 		ProductNumber: "",
 		Quantity:      2,
 	}
@@ -89,7 +87,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	product := &domain.Product{
@@ -101,6 +99,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	_ = productRepo.Create(product)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M12345",
@@ -113,7 +112,7 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 	_ = orderRepo.Create(order)
 
 	// When
-	err := interactor.CancelOrder("O12345", "M12345")
+	err := interactor.CancelOrder(12345, "M12345")
 
 	// Then
 	assert.NoError(t, err)
@@ -134,7 +133,7 @@ func TestOrderInteractor_CancelOrder_Failure_OrderNotFound(t *testing.T) {
 	interactor := usecases.NewOrderInteractor(orderRepo, memberRepo, productRepo)
 
 	// When
-	err := interactor.CancelOrder("InvalidOrder", "M12345")
+	err := interactor.CancelOrder(0, "M12345")
 
 	// Then
 	assert.Error(t, err)
@@ -154,10 +153,11 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	order := &domain.Order{
+		ID:            12345,
 		OrderNumber:   "O12345",
 		OrderDate:     time.Now(),
 		MemberNumber:  "M99999",
@@ -170,7 +170,7 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 	_ = orderRepo.Create(order)
 
 	// When
-	err := interactor.CancelOrder("O12345", "M12345")
+	err := interactor.CancelOrder(12345, "M12345")
 
 	// Then
 	assert.Error(t, err)
@@ -191,7 +191,7 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 		FullName:     "Test User",
 		Email:        "testuser@example.com",
 	}
-	member.SetPassword("password123")
+	member.AssignPassword("password123")
 	_ = memberRepo.Create(member)
 
 	order1 := &domain.Order{

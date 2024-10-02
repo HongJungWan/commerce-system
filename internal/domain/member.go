@@ -20,20 +20,6 @@ type Member struct {
 	WithdrawnAt    *time.Time `gorm:"index" json:"withdrawn_at,omitempty"`  // 탈퇴일
 }
 
-func (m *Member) SetPassword(password string) error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	m.HashedPassword = string(hashedPassword)
-	return nil
-}
-
-func (m *Member) CheckPassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(m.HashedPassword), []byte(password))
-	return err == nil
-}
-
 func (m *Member) Validate() error {
 	if m.MemberNumber == "" {
 		return errors.New("회원번호가 누락되었습니다.")
@@ -51,4 +37,18 @@ func (m *Member) Validate() error {
 		return errors.New("이메일이 누락되었습니다.")
 	}
 	return nil
+}
+
+func (m *Member) AssignPassword(password string) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	m.HashedPassword = string(hashedPassword)
+	return nil
+}
+
+func (m *Member) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(m.HashedPassword), []byte(password))
+	return err == nil
 }

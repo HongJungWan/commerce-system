@@ -1,59 +1,77 @@
-basePath: /api
 definitions:
+  request.CreateMemberRequest:
+    properties:
+      account_id:
+        example: hong43ok
+        type: string
+      email:
+        example: hong43ok@gmail.com
+        type: string
+      is_admin:
+        example: true
+        type: boolean
+      is_withdrawn:
+        example: false
+        type: boolean
+      nick_name:
+        example: hongmang
+        type: string
+      password:
+        example: ghdwjddhks
+        type: string
+    type: object
   request.CreateOrderRequest:
     properties:
-      order_number:
-        type: string
+      price:
+        example: 1000
+        type: integer
       product_number:
+        example: Product0fe0dfb2-0a9e-4e47-b670-5d1a761e62b5
         type: string
       quantity:
+        example: 2
         type: integer
     type: object
   request.CreateProductRequest:
     properties:
       category:
+        example: food
         type: string
       price:
+        example: 1000
         type: integer
       product_name:
-        type: string
-      product_number:
+        example: pizza
         type: string
       stock_quantity:
+        example: 100
         type: integer
     type: object
   request.LoginRequest:
     properties:
-      hashed_password:
-        type: string
-      username:
-        type: string
-    type: object
-  request.RegisterMemberRequest:
-    properties:
-      email:
-        type: string
-      full_name:
-        type: string
-      member_number:
+      account_id:
+        example: hong43ok
         type: string
       password:
-        type: string
-      username:
+        example: ghdwjddhks
         type: string
     type: object
   request.UpdateMemberRequest:
     properties:
       email:
+        example: hong43ok@naver.com
         type: string
-      full_name:
+      nick_name:
+        example: hong
         type: string
       password:
+        example: hong
         type: string
     type: object
   request.UpdateStockRequest:
     properties:
       stock_quantity:
+        example: 77
         type: integer
     type: object
   response.LoginResponse:
@@ -145,17 +163,9 @@ definitions:
       status:
         type: string
     type: object
-host: localhost:3031
 info:
-  contact:
-    email: support@commerce-system.io
-    name: API Support
-  description: A commerce-system service API in Go using Gin framework
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Commerce-System Service API
+  contact: {}
+  title: commerce-system API
   version: "1.0"
 paths:
   /health:
@@ -246,7 +256,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 회원 목록 조회
       tags:
       - members
@@ -257,10 +267,10 @@ paths:
       parameters:
       - description: 회원 가입 정보
         in: body
-        name: registerRequest
+        name: CreateMemberRequest
         required: true
         schema:
-          $ref: '#/definitions/request.RegisterMemberRequest'
+          $ref: '#/definitions/request.CreateMemberRequest'
       produces:
       - application/json
       responses:
@@ -304,7 +314,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 회원 탈퇴
       tags:
       - members
@@ -326,7 +336,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 내 정보 조회
       tags:
       - members
@@ -363,7 +373,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 내 정보 수정
       tags:
       - members
@@ -404,7 +414,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 회원 통계 조회
       tags:
       - members
@@ -440,19 +450,19 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 주문 생성
       tags:
       - orders
-  /orders/{order_number}/cancel:
+  /orders/{id}/cancel:
     put:
       consumes:
       - application/json
       description: 특정 주문을 취소합니다.
       parameters:
-      - description: 주문 번호
+      - description: 기본키 (primary key)
         in: path
-        name: order_number
+        name: id
         required: true
         type: string
       produces:
@@ -471,7 +481,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 주문 취소
       tags:
       - orders
@@ -496,7 +506,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 내 주문 조회
       tags:
       - orders
@@ -537,7 +547,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 주문 통계 조회
       tags:
       - orders
@@ -610,21 +620,21 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 상품 생성
       tags:
       - products
-  /products/{product_number}:
+  /products/{id}:
     delete:
       consumes:
       - application/json
       description: 상품을 삭제합니다. (관리자 전용)
       parameters:
-      - description: 상품 번호
+      - description: 기본키 (primary key)
         in: path
-        name: product_number
+        name: id
         required: true
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
@@ -653,21 +663,21 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 상품 삭제
       tags:
       - products
-  /products/{product_number}/stock:
+  /products/{id}/stock:
     put:
       consumes:
       - application/json
       description: 상품의 재고 수량을 수정합니다. (관리자 전용)
       parameters:
-      - description: 상품 번호
+      - description: 기본키 (primary key)
         in: path
-        name: product_number
+        name: id
         required: true
-        type: string
+        type: integer
       - description: 재고 정보
         in: body
         name: stockRequest
@@ -702,14 +712,13 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - Bearer: []
       summary: 재고 수정
       tags:
       - products
-schemes:
-- http
 securityDefinitions:
-  BearerAuth:
+  Bearer:
+    description: A commerce-system service API in Go using Gin framework
     in: header
     name: Authorization
     type: apiKey

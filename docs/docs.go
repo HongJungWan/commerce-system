@@ -9,15 +9,7 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "email": "support@commerce-system.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -120,7 +112,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "모든 회원의 목록을 조회합니다. (관리자 전용)",
@@ -179,11 +171,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "회원 가입 정보",
-                        "name": "registerRequest",
+                        "name": "CreateMemberRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.RegisterMemberRequest"
+                            "$ref": "#/definitions/request.CreateMemberRequest"
                         }
                     }
                 ],
@@ -219,7 +211,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 정보를 조회합니다.",
@@ -254,7 +246,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 정보를 수정합니다.",
@@ -312,7 +304,7 @@ const docTemplate = `{
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 계정을 삭제합니다.",
@@ -352,7 +344,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 월의 회원 가입 통계를 조회합니다. (관리자 전용)",
@@ -416,7 +408,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "새로운 주문을 생성합니다.",
@@ -473,7 +465,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "인증된 사용자의 주문 내역을 조회합니다.",
@@ -513,7 +505,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 월의 주문 통계를 조회합니다. (관리자 전용)",
@@ -573,11 +565,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/orders/{order_number}/cancel": {
+        "/orders/{id}/cancel": {
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "특정 주문을 취소합니다.",
@@ -594,8 +586,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "주문 번호",
-                        "name": "order_number",
+                        "description": "기본키 (primary key)",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -673,7 +665,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "새로운 상품을 등록합니다. (관리자 전용)",
@@ -735,11 +727,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/{product_number}": {
+        "/products/{id}": {
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "상품을 삭제합니다. (관리자 전용)",
@@ -755,9 +747,9 @@ const docTemplate = `{
                 "summary": "상품 삭제",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "상품 번호",
-                        "name": "product_number",
+                        "type": "integer",
+                        "description": "기본키 (primary key)",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -802,11 +794,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/{product_number}/stock": {
+        "/products/{id}/stock": {
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
                 "description": "상품의 재고 수량을 수정합니다. (관리자 전용)",
@@ -822,9 +814,9 @@ const docTemplate = `{
                 "summary": "재고 수정",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "상품 번호",
-                        "name": "product_number",
+                        "type": "integer",
+                        "description": "기본키 (primary key)",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },
@@ -880,17 +872,49 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "request.CreateMemberRequest": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "string",
+                    "example": "hong43ok"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "hong43ok@gmail.com"
+                },
+                "is_admin": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_withdrawn": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "nick_name": {
+                    "type": "string",
+                    "example": "hongmang"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "ghdwjddhks"
+                }
+            }
+        },
         "request.CreateOrderRequest": {
             "type": "object",
             "properties": {
-                "order_number": {
-                    "type": "string"
+                "price": {
+                    "type": "integer",
+                    "example": 1000
                 },
                 "product_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Product0fe0dfb2-0a9e-4e47-b670-5d1a761e62b5"
                 },
                 "quantity": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 2
                 }
             }
         },
@@ -898,50 +922,33 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "category": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "food"
                 },
                 "price": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1000
                 },
                 "product_name": {
-                    "type": "string"
-                },
-                "product_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "pizza"
                 },
                 "stock_quantity": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 100
                 }
             }
         },
         "request.LoginRequest": {
             "type": "object",
             "properties": {
-                "hashed_password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.RegisterMemberRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "member_number": {
-                    "type": "string"
+                "account_id": {
+                    "type": "string",
+                    "example": "hong43ok"
                 },
                 "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ghdwjddhks"
                 }
             }
         },
@@ -949,13 +956,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong43ok@naver.com"
                 },
-                "full_name": {
-                    "type": "string"
+                "nick_name": {
+                    "type": "string",
+                    "example": "hong"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "hong"
                 }
             }
         },
@@ -963,7 +973,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "stock_quantity": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 77
                 }
             }
         },
@@ -1106,7 +1117,8 @@ const docTemplate = `{
         }
     },
     "securityDefinitions": {
-        "BearerAuth": {
+        "Bearer": {
+            "description": "A commerce-system service API in Go using Gin framework",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
@@ -1117,11 +1129,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3031",
-	BasePath:         "/api",
-	Schemes:          []string{"http"},
-	Title:            "Commerce-System Service API",
-	Description:      "A commerce-system service API in Go using Gin framework",
+	Host:             "",
+	BasePath:         "",
+	Schemes:          []string{},
+	Title:            "commerce-system API",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -2,33 +2,41 @@ package request
 
 import (
 	"github.com/HongJungWan/commerce-system/internal/domain"
+	"github.com/google/uuid"
 	"time"
 )
 
-type RegisterMemberRequest struct {
-	MemberNumber string `json:"member_number"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	FullName     string `json:"full_name"`
-	Email        string `json:"email"`
+const (
+	MEMBER = "Member"
+)
+
+type CreateMemberRequest struct {
+	AccountId   string `json:"account_id" example:"hong43ok"`
+	Password    string `json:"password" example:"ghdwjddhks"`
+	NickName    string `json:"nick_name" example:"hongmang"`
+	Email       string `json:"email" example:"hong43ok@gmail.com"`
+	IsAdmin     bool   `json:"is_admin" example:"true"`
+	IsWithdrawn bool   `json:"is_withdrawn" example:"false"`
 }
 
 type UpdateMemberRequest struct {
-	FullName string `json:"full_name,omitempty"`
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
+	NickName string `json:"nick_name,omitempty" example:"hong"`
+	Email    string `json:"email,omitempty" example:"hong43ok@naver.com"`
+	Password string `json:"password,omitempty" example:"hong"`
 }
 
-func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
+func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
-		MemberNumber: req.MemberNumber,
-		Username:     req.Username,
-		FullName:     req.FullName,
+		MemberNumber: MEMBER + uuid.New().String(),
+		Username:     req.AccountId,
+		FullName:     req.NickName,
 		Email:        req.Email,
+		IsAdmin:      req.IsAdmin,
+		IsWithdrawn:  false,
 		CreatedAt:    time.Now(),
 	}
 
-	if err := member.SetPassword(req.Password); err != nil {
+	if err := member.AssignPassword(req.Password); err != nil {
 		return nil, err
 	}
 
@@ -39,18 +47,17 @@ func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
 	return member, nil
 }
 
-func (req *UpdateMemberRequest) ToEntity() (*domain.Member, error) {
+func (req *UpdateMemberRequest) UpdateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
-		FullName: req.FullName,
+		FullName: req.NickName,
 		Email:    req.Email,
 	}
 
 	if req.Password != "" {
-		if err := member.SetPassword(req.Password); err != nil {
+		if err := member.AssignPassword(req.Password); err != nil {
 			return nil, err
 		}
 	}
 
-	// 업데이트의 경우 필드가 선택적이므로 유효성 검사를 생략하거나 필요한 경우 추가
 	return member, nil
 }
