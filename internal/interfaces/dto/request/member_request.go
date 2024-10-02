@@ -11,6 +11,8 @@ type RegisterMemberRequest struct {
 	Password     string `json:"password"`
 	FullName     string `json:"full_name"`
 	Email        string `json:"email"`
+	IsAdmin      bool   `json:"is_admin"`
+	IsWithdrawn  bool   `json:"is_withdrawn"`
 }
 
 type UpdateMemberRequest struct {
@@ -25,6 +27,8 @@ func (req *RegisterMemberRequest) ToEntity() (*domain.Member, error) {
 		Username:     req.Username,
 		FullName:     req.FullName,
 		Email:        req.Email,
+		IsAdmin:      req.IsAdmin,
+		IsWithdrawn:  false,
 		CreatedAt:    time.Now(),
 	}
 
@@ -51,6 +55,5 @@ func (req *UpdateMemberRequest) ToEntity() (*domain.Member, error) {
 		}
 	}
 
-	// 업데이트의 경우 필드가 선택적이므로 유효성 검사를 생략하거나 필요한 경우 추가
 	return member, nil
 }
