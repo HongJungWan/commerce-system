@@ -34,6 +34,10 @@ definitions:
         type: string
       full_name:
         type: string
+      is_admin:
+        type: boolean
+      is_withdrawn:
+        type: boolean
       member_number:
         type: string
       password:
@@ -435,15 +439,15 @@ paths:
       summary: 주문 생성
       tags:
       - orders
-  /orders/{order_number}/cancel:
+  /orders/:id/cancel:
     put:
       consumes:
       - application/json
       description: 특정 주문을 취소합니다.
       parameters:
-      - description: 주문 번호
+      - description: 기본키 (primary key)
         in: path
-        name: order_number
+        name: ID
         required: true
         type: string
       produces:
@@ -605,7 +609,7 @@ paths:
       summary: 상품 생성
       tags:
       - products
-  /products/{product_number}:
+  /products/:id:
     delete:
       consumes:
       - application/json
@@ -613,7 +617,7 @@ paths:
       parameters:
       - description: 기본키 (primary key)
         in: path
-        name: product_number
+        name: ID
         required: true
         type: integer
       produces:
@@ -648,7 +652,7 @@ paths:
       summary: 상품 삭제
       tags:
       - products
-  /products/{product_number}/stock:
+  /products/:id/stock:
     put:
       consumes:
       - application/json
@@ -656,7 +660,7 @@ paths:
       parameters:
       - description: 기본키 (primary key)
         in: path
-        name: product_number
+        name: ID
         required: true
         type: integer
       - description: 재고 정보

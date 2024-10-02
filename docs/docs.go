@@ -461,6 +461,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/orders/:id/cancel": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "특정 주문을 취소합니다.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "주문 취소",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "기본키 (primary key)",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "취소 성공",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "취소 실패",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/orders/me": {
             "get": {
                 "security": [
@@ -555,55 +604,6 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "통계 조회 실패",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/{order_number}/cancel": {
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "특정 주문을 취소합니다.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "orders"
-                ],
-                "summary": "주문 취소",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "주문 번호",
-                        "name": "order_number",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "취소 성공",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "취소 실패",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -727,7 +727,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/{product_number}": {
+        "/products/:id": {
             "delete": {
                 "security": [
                     {
@@ -749,7 +749,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "기본키 (primary key)",
-                        "name": "product_number",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     }
@@ -794,7 +794,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/{product_number}/stock": {
+        "/products/:id/stock": {
             "put": {
                 "security": [
                     {
@@ -816,7 +816,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "기본키 (primary key)",
-                        "name": "product_number",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -925,6 +925,12 @@ const docTemplate = `{
                 },
                 "full_name": {
                     "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "is_withdrawn": {
+                    "type": "boolean"
                 },
                 "member_number": {
                     "type": "string"
