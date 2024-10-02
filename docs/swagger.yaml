@@ -1,3 +1,4 @@
+basePath: /api
 definitions:
   request.CreateOrderRequest:
     properties:
@@ -144,8 +145,18 @@ definitions:
       status:
         type: string
     type: object
+host: localhost:3031
 info:
-  contact: {}
+  contact:
+    email: support@commerce-system.io
+    name: API Support
+  description: A commerce-system service API in Go using Gin framework
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Commerce-System Service API
+  version: "1.0"
 paths:
   /health:
     get:
@@ -695,4 +706,11 @@ paths:
       summary: 재고 수정
       tags:
       - products
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
