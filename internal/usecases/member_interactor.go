@@ -26,7 +26,7 @@ func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*respons
 		return nil, err
 	}
 
-	existingMember, _ := mi.MemberRepository.GetByUserName(member.Username)
+	existingMember, _ := mi.MemberRepository.GetByUserName(member.AccountId)
 	if existingMember != nil {
 		return nil, errors.New("이미 존재하는 사용자 ID입니다.")
 	}
@@ -60,7 +60,7 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 	}
 
 	if req.NickName != "" {
-		member.FullName = req.NickName
+		member.NickName = req.NickName
 	}
 	if req.Email != "" {
 		member.Email = req.Email

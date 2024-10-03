@@ -28,8 +28,8 @@ type UpdateMemberRequest struct {
 func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
 		MemberNumber: MEMBER + uuid.New().String(),
-		Username:     req.AccountId,
-		FullName:     req.NickName,
+		AccountId:    req.AccountId,
+		NickName:     req.NickName,
 		Email:        req.Email,
 		IsAdmin:      req.IsAdmin,
 		IsWithdrawn:  false,
@@ -49,7 +49,7 @@ func (req *CreateMemberRequest) CreateToEntity() (*domain.Member, error) {
 
 func (req *UpdateMemberRequest) UpdateToEntity() (*domain.Member, error) {
 	member := &domain.Member{
-		FullName: req.NickName,
+		NickName: req.NickName,
 		Email:    req.Email,
 	}
 

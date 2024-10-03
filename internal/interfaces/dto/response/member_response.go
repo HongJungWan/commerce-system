@@ -27,8 +27,8 @@ func NewMemberResponse(member *domain.Member) *MemberResponse {
 	return &MemberResponse{
 		ID:           member.ID,
 		MemberNumber: member.MemberNumber,
-		Username:     member.Username,
-		FullName:     member.FullName,
+		Username:     member.AccountId,
+		FullName:     member.NickName,
 		Email:        member.Email,
 		CreatedAt:    member.CreatedAt.Format(time.RFC3339),
 		IsAdmin:      member.IsAdmin,

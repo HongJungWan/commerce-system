@@ -23,7 +23,7 @@ func NewAuthUseCase(secretKey string, memberRepo repository.MemberRepository) *A
 
 func (uc *AuthUseCase) GenerateToken(member *domain.Member) (string, error) {
 	claims := jwt.MapClaims{
-		"username":      member.Username,
+		"account_id":    member.AccountId,
 		"is_admin":      member.IsAdmin == true,
 		"member_number": member.MemberNumber,
 		"exp":           time.Now().Add(time.Hour * 24).Unix(),

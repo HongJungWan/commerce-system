@@ -29,7 +29,7 @@ func (r *MemberRepositoryImpl) GetByID(id uint) (*domain.Member, error) {
 
 func (r *MemberRepositoryImpl) GetByUserName(userName string) (*domain.Member, error) {
 	var member domain.Member
-	if err := r.db.Where("username = ?", userName).First(&member).Error; err != nil {
+	if err := r.db.Where("account_id = ?", userName).First(&member).Error; err != nil {
 		return nil, err
 	}
 	return &member, nil
