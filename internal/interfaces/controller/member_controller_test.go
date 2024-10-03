@@ -90,8 +90,8 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M1234",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -151,8 +151,8 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M1234",
-		Username:     "testuser",
-		FullName:     "Old Name",
+		AccountId:    "testuser",
+		NickName:     "Old Name",
 		Email:        "old@example.com",
 	}
 	member.AssignPassword("password123")
@@ -184,7 +184,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	assert.Equal(t, "정보가 수정되었습니다.", response["message"])
 
 	updatedMember, _ := memberRepo.GetByUserName("testuser")
-	assert.Equal(t, "New Name", updatedMember.FullName)
+	assert.Equal(t, "New Name", updatedMember.NickName)
 	assert.Equal(t, "new@example.com", updatedMember.Email)
 }
 
@@ -198,8 +198,8 @@ func TestMemberController_UpdateMyInfo_Failure_InvalidRequest(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M1234",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -236,8 +236,8 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M1234",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -277,15 +277,15 @@ func TestMemberController_GetAllMembers_Success(t *testing.T) {
 
 	member1 := &domain.Member{
 		MemberNumber: "M1234",
-		Username:     "user1",
-		FullName:     "User One",
+		AccountId:    "user1",
+		NickName:     "User One",
 		Email:        "user1@example.com",
 	}
 	member1.AssignPassword("password123")
 	member2 := &domain.Member{
 		MemberNumber: "M1235",
-		Username:     "user2",
-		FullName:     "User Two",
+		AccountId:    "user2",
+		NickName:     "User Two",
 		Email:        "user2@example.com",
 	}
 	member2.AssignPassword("password123")

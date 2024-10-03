@@ -15,12 +15,12 @@ func TestMemberRepositoryImpl_Create_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "testuser",
+		Password:     "password123",
+		NickName:     "Test User",
+		Email:        "testuser@example.com",
 	}
 
 	// When
@@ -36,20 +36,20 @@ func TestMemberRepositoryImpl_Create_Failure_DuplicateUserID(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member1 := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "duplicateuser",
-		HashedPassword: "password123",
-		FullName:       "User One",
-		Email:          "user1@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "duplicateuser",
+		Password:     "password123",
+		NickName:     "User One",
+		Email:        "user1@example.com",
 	}
 	member2 := &domain.Member{
-		ID:             12346,
-		MemberNumber:   "M12346",
-		Username:       "duplicateuser",
-		HashedPassword: "password123",
-		FullName:       "User Two",
-		Email:          "user2@example.com",
+		ID:           12346,
+		MemberNumber: "M12346",
+		AccountId:    "duplicateuser",
+		Password:     "password123",
+		NickName:     "User Two",
+		Email:        "user2@example.com",
 	}
 	_ = repo.Create(member1)
 
@@ -65,12 +65,12 @@ func TestMemberRepositoryImpl_GetByID_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "testuser",
+		Password:     "password123",
+		NickName:     "Test User",
+		Email:        "testuser@example.com",
 	}
 	_ = repo.Create(member)
 
@@ -79,7 +79,7 @@ func TestMemberRepositoryImpl_GetByID_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	assert.Equal(t, member.Username, retrievedMember.Username)
+	assert.Equal(t, member.AccountId, retrievedMember.AccountId)
 }
 
 func TestMemberRepositoryImpl_GetByID_Failure_NotFound(t *testing.T) {
@@ -100,12 +100,12 @@ func TestMemberRepositoryImpl_GetByUserID_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "testuser",
+		Password:     "password123",
+		NickName:     "Test User",
+		Email:        "testuser@example.com",
 	}
 	_ = repo.Create(member)
 
@@ -135,17 +135,17 @@ func TestMemberRepositoryImpl_Update_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Old Name",
-		Email:          "old@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "testuser",
+		Password:     "password123",
+		NickName:     "Old Name",
+		Email:        "old@example.com",
 	}
 	_ = repo.Create(member)
 
 	// When
-	member.FullName = "New Name"
+	member.NickName = "New Name"
 	err := repo.Update(member)
 
 	// Then
@@ -153,7 +153,7 @@ func TestMemberRepositoryImpl_Update_Success(t *testing.T) {
 
 	// Verify
 	updatedMember, _ := repo.GetByID(member.ID)
-	assert.Equal(t, "New Name", updatedMember.FullName)
+	assert.Equal(t, "New Name", updatedMember.NickName)
 }
 
 func TestMemberRepositoryImpl_Delete_Success(t *testing.T) {
@@ -161,12 +161,12 @@ func TestMemberRepositoryImpl_Delete_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "testuser",
+		Password:     "password123",
+		NickName:     "Test User",
+		Email:        "testuser@example.com",
 	}
 	_ = repo.Create(member)
 
@@ -187,20 +187,20 @@ func TestMemberRepositoryImpl_GetAll_Success(t *testing.T) {
 	db := fixtures.SetupTestDB()
 	repo := repository.NewMemberRepository(db)
 	member1 := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "user1",
-		HashedPassword: "password123",
-		FullName:       "User One",
-		Email:          "user1@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "user1",
+		Password:     "password123",
+		NickName:     "User One",
+		Email:        "user1@example.com",
 	}
 	member2 := &domain.Member{
-		ID:             12346,
-		MemberNumber:   "M12346",
-		Username:       "user2",
-		HashedPassword: "password123",
-		FullName:       "User Two",
-		Email:          "user2@example.com",
+		ID:           12346,
+		MemberNumber: "M12346",
+		AccountId:    "user2",
+		Password:     "password123",
+		NickName:     "User Two",
+		Email:        "user2@example.com",
 	}
 	_ = repo.Create(member1)
 	_ = repo.Create(member2)
@@ -220,31 +220,31 @@ func TestMemberRepositoryImpl_GetStatsByMonth_Success(t *testing.T) {
 
 	// 특정 월에 가입한 회원 생성
 	member1 := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "user1",
-		HashedPassword: "password123",
-		FullName:       "User One",
-		Email:          "user1@example.com",
-		CreatedAt:      time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "user1",
+		Password:     "password123",
+		NickName:     "User One",
+		Email:        "user1@example.com",
+		CreatedAt:    time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
 	}
 	member2 := &domain.Member{
-		ID:             12346,
-		MemberNumber:   "M12346",
-		Username:       "user2",
-		HashedPassword: "password123",
-		FullName:       "User Two",
-		Email:          "user2@example.com",
-		CreatedAt:      time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
+		ID:           12346,
+		MemberNumber: "M12346",
+		AccountId:    "user2",
+		Password:     "password123",
+		NickName:     "User Two",
+		Email:        "user2@example.com",
+		CreatedAt:    time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),
 	}
 	member3 := &domain.Member{
-		ID:             12347,
-		MemberNumber:   "M12347",
-		Username:       "user3",
-		HashedPassword: "password123",
-		FullName:       "User Three",
-		Email:          "user3@example.com",
-		CreatedAt:      time.Date(2024, 8, 20, 0, 0, 0, 0, time.UTC),
+		ID:           12347,
+		MemberNumber: "M12347",
+		AccountId:    "user3",
+		Password:     "password123",
+		NickName:     "User Three",
+		Email:        "user3@example.com",
+		CreatedAt:    time.Date(2024, 8, 20, 0, 0, 0, 0, time.UTC),
 	}
 
 	_ = repo.Create(member1)

@@ -16,7 +16,7 @@ func TestMember_SetPassword_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	assert.NotEmpty(t, member.HashedPassword)
+	assert.NotEmpty(t, member.Password)
 }
 
 func TestMember_CheckPassword_CorrectPassword(t *testing.T) {
@@ -46,12 +46,12 @@ func TestMember_CheckPassword_IncorrectPassword(t *testing.T) {
 func TestMember_Validate_Success(t *testing.T) {
 	// Given
 	member := &domain.Member{
-		ID:             12345,
-		MemberNumber:   "M12345",
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		ID:           12345,
+		MemberNumber: "M12345",
+		AccountId:    "testuser",
+		Password:     "password123",
+		NickName:     "Test User",
+		Email:        "testuser@example.com",
 	}
 
 	// When
