@@ -45,7 +45,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		}
 
 		// Username 추출
-		Username, ok := claims["username"].(string)
+		accountId, ok := claims["account_id"].(string)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "유효하지 않은 토큰입니다."})
 			c.Abort()
@@ -77,7 +77,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		}
 
 		// 컨텍스트에 값 설정
-		c.Set("username", Username)
+		c.Set("account_id", accountId)
 		c.Set("is_admin", isAdmin)
 		c.Set("member_number", memberNumber)
 		c.Next()
