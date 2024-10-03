@@ -33,7 +33,7 @@ func (uc *AuthUseCase) GenerateToken(member *domain.Member) (string, error) {
 }
 
 func (uc *AuthUseCase) Authenticate(userName, password string) (*domain.Member, error) {
-	member, err := uc.MemberRepository.GetByUserName(userName)
+	member, err := uc.MemberRepository.GetByAccountId(userName)
 	if err != nil || member == nil {
 		return nil, errors.New("Invalid credentials")
 	}

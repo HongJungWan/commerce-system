@@ -26,7 +26,7 @@ func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*respons
 		return nil, err
 	}
 
-	existingMember, _ := mi.MemberRepository.GetByUserName(member.AccountId)
+	existingMember, _ := mi.MemberRepository.GetByAccountId(member.AccountId)
 	if existingMember != nil {
 		return nil, errors.New("이미 존재하는 사용자 ID입니다.")
 	}
@@ -44,7 +44,7 @@ func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*respons
 }
 
 func (mi *MemberInteractor) GetMyInfo(username string) (*response.MemberResponse, error) {
-	member, err := mi.MemberRepository.GetByUserName(username)
+	member, err := mi.MemberRepository.GetByAccountId(username)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (mi *MemberInteractor) GetMyInfo(username string) (*response.MemberResponse
 }
 
 func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMemberRequest) error {
-	member, err := mi.MemberRepository.GetByUserName(username)
+	member, err := mi.MemberRepository.GetByAccountId(username)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 }
 
 func (mi *MemberInteractor) DeleteByUserName(username string) error {
-	member, err := mi.MemberRepository.GetByUserName(username)
+	member, err := mi.MemberRepository.GetByAccountId(username)
 	if err != nil {
 		return err
 	}
