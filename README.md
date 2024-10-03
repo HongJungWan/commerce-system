@@ -13,7 +13,7 @@
 
 <img src="readme/image/docker-desktop.png" width="800"/>
 
-<br><br>
+<br><br><br>
 
 ### 테스트 코드 실행 시키기 (Windows Powershell 기준)
 
@@ -42,7 +42,30 @@ go test ./internal/... -json | Select-String -Pattern '"Action":"fail"' | Measur
 
 <img src="readme/image/test_fail.png" width="750"/>
 
-<br><br>
+<br><br><br>
+
+### API Endpoint
+
+| HTTP Method | URI                                   | Description                             | Authentication | Authorization |       ETC           |                                                                          
+|-------------|---------------------------------------|-----------------------------------------|----------------|---------------|---------------|
+| **GET**     | `/api/health`                         | 서비스 상태 확인                            | ❌ (No)         | ❌ (No)        ||
+| **POST**    | `/api/login`                          | 사용자 로그인                              | ❌ (No)         | ❌ (No)        ||
+| **POST**    | `/api/members`                        | 회원 가입                                | ❌ (No)         | ❌ (No)        | |
+| **GET**     | `/api/members/me`                     | 내 정보 조회                              | ✅ (Yes)        | ❌ (No)        | |
+| **PUT**     | `/api/members/me`                     | 내 정보 수정                              | ✅ (Yes)        | ❌ (No)        | |
+| **DELETE**  | `/api/members/me`                     | 회원 탈퇴                                | ✅ (Yes)        | ❌ (No)        | |
+| **GET**     | `/api/members`                        | 회원 목록 조회                            | ✅ (Yes)        | ✅ (Yes)       |권한 변경 후, 재 로그인 필요|
+| **GET**     | `/api/members/stats`                  | 회원 통계 조회                            | ✅ (Yes)        | ✅ (Yes)       | 권한 변경 후, 재 로그인 필요|
+| **GET**     | `/api/products`                       | 상품 목록 조회                            | ✅ (Yes)        | ❌ (No)        | |
+| **POST**    | `/api/products`                       | 상품 생성                                | ✅ (Yes)        | ✅ (Yes)       |권한 변경 후, 재 로그인 필요|
+| **PUT**     | `/api/products/:product_number/stock` | 상품 재고 수정                            | ✅ (Yes)        | ✅ (Yes)       |권한 변경 후, 재 로그인 필요|
+| **DELETE**  | `/api/products/:product_number`       | 상품 삭제                                | ✅ (Yes)        | ✅ (Yes)       |권한 변경 후, 재 로그인 필요 |
+| **POST**    | `/api/orders`                         | 주문 생성                                | ✅ (Yes)        | ❌ (No)        | |
+| **GET**     | `/api/orders/me`                      | 내 주문 조회                              | ✅ (Yes)        | ❌ (No)        | |
+| **PUT**     | `/api/orders/:order_number/cancel`    | 주문 취소                                | ✅ (Yes)        | ❌ (No)        | |
+| **GET**     | `/api/orders/stats`                   | 주문 통계 조회                            | ✅ (Yes)        | ✅ (Yes)       |권한 변경 후, 재 로그인 필요|
+
+<br><br><br>
 
 ### Swagger 테스트
 
@@ -52,32 +75,21 @@ swag init
 go-server 컨테이너 실행 확인 후, `http://localhost:3031/docs/index.html` 접근
 ```
 
-<br>
+<br><br>
 
-#### 예시 1️⃣, ...API
+인증이 필요한 기능을 테스트하기 위해 Swagger 우측 상단 `Authorize 버튼`을 클릭해 로그인 후, 발급받은 토근을 `Bearer Token` 형식으로 입력합니다.
 
-| 실행 전 UI                                               | 실행 후 UI                                               |
-|-------------------------------------------------------|-------------------------------------------------------|
-|  |  |
-
-<br>
-
-#### 예시 2️⃣, ...API
-
-| 실행 전 UI                                               | 실행 후 UI                                               |
-|-------------------------------------------------------|-------------------------------------------------------|
-|  |  |
-
-<br>
-
-#### 예시 3️⃣, ...API
-
-| 실행 전 UI                                               | 실행 후 UI                                               |
-|-------------------------------------------------------|-------------------------------------------------------|
-|  |  |
-
+<img src="readme/image/authentication.png" width="350"/>
 
 <br><br>
+
+<img src="readme/image/swagger1.png" width="700"/>
+
+<br>
+
+<img src="readme/image/swagger2.png" width="700"/>
+
+<br><br><br>
 
 ### Application Server Architecture
 
@@ -85,7 +97,7 @@ go-server 컨테이너 실행 확인 후, `http://localhost:3031/docs/index.html
 
 📌 [참고 Link](https://github.com/bxcodec/go-clean-arch)
 
-<br><br>
+<br><br><br>
 
 ### 폴더 구조
 
@@ -137,42 +149,13 @@ go-server 컨테이너 실행 확인 후, `http://localhost:3031/docs/index.html
 ├── go.mod
 ```
 
-<br><br>
+<br><br><br>
 
 ### ERD(Entity Relationship Diagram)
 
 <img src="readme/image/erd.png" width="400"/>
 
-<br><br>
-
-### API Endpoint
-
-| HTTP Method | URI                                   | Description                             |
-|-------------|---------------------------------------|-----------------------------------------|
-| GET         | `/api/health`                         | 서비스 상태 확인                               |
-|          |                        |                                         |
-|          |                        |                                         |
-| POST        | `/api/login`                          | 사용자 로그인                                 |
-| POST        | `/api/members`                        | 회원 가입                                   |
-| GET         | `/api/members/me`                     | 내 정보 조회, `authentication`               |
-| PUT         | `/api/members/me`                     | 내 정보 수정, `authentication`                                 |
-| DELETE      | `/api/members/me`                     | 회원 탈퇴, `authentication`                                   |
-| GET         | `/api/members`                        | 회원 목록 조회, `authentication/authorization`                              |
-| GET         | `/api/members/stats`                  | 회원 통계 조회, `authentication/authorization` |
-|          |                        |                                         |
-|          |                        |                                         |
-| GET         | `/api/products`                       | 상품 목록 조회, `authentication`                                |
-| POST        | `/api/products`                       | 상품 생성, `authentication/authorization`                                   |
-| PUT         | `/api/products/:product_number/stock` | 상품 재고 수정, `authentication/authorization`                                |
-| DELETE      | `/api/products/:product_number`       | 상품 삭제, `authentication/authorization`                                   |
-|          |                        |                                         |
-|          |                        |                                         |
-| POST        | `/api/orders`                         | 주문 생성, `authentication`                                   |
-| GET         | `/api/orders/me`                      | 내 주문 조회, `authentication`                                 |
-| PUT         | `/api/orders/:order_number/cancel`    | 주문 취소, `authentication`                                   |
-| GET         | `/api/orders/stats`                   | 주문 통계 조회, `authentication/authorization`                                |
-
-<br><br>
+<br><br><br>
 
 ### Git 커밋 메시지 규칙
 
