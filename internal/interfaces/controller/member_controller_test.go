@@ -99,7 +99,7 @@ func TestMemberController_GetMyInfo_Success(t *testing.T) {
 
 	router := gin.Default()
 	router.GET("/me", func(c *gin.Context) {
-		c.Set("username", "testuser")
+		c.Set("account_id", "testuser")
 		memberController.GetMyInfo(c)
 	})
 
@@ -160,7 +160,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 
 	router := gin.Default()
 	router.PUT("/me", func(c *gin.Context) {
-		c.Set("username", "testuser")
+		c.Set("account_id", "testuser")
 		memberController.UpdateMyInfo(c)
 	})
 
@@ -245,7 +245,7 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 
 	router := gin.Default()
 	router.DELETE("/me", func(c *gin.Context) {
-		c.Set("username", "testuser")
+		c.Set("account_id", "testuser")
 		memberController.DeleteMyAccount(c)
 	})
 
