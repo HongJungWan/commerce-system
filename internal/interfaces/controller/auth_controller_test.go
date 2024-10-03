@@ -24,12 +24,12 @@ func TestAuthController_Login_Success(t *testing.T) {
 	authController := controller.NewAuthController(authUseCase)
 
 	member := &domain.Member{
-		Username:       "testuser",
-		HashedPassword: "password123",
-		FullName:       "Test User",
-		Email:          "testuser@example.com",
+		AccountId: "testuser",
+		Password:  "password123",
+		NickName:  "Test User",
+		Email:     "testuser@example.com",
 	}
-	_ = member.AssignPassword(member.HashedPassword)
+	_ = member.AssignPassword(member.Password)
 	_ = memberRepo.Create(member)
 
 	router := gin.Default()

@@ -32,7 +32,7 @@ func TestMemberInteractor_Register_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	assert.Equal(t, "회원 가입이 완료되었습니다.", responseData.Message)
-	retrievedMember, _ := memberRepo.GetByUserName("newuser")
+	retrievedMember, _ := memberRepo.GetByAccountId("newuser")
 	assert.NotNil(t, retrievedMember)
 }
 
@@ -45,8 +45,8 @@ func TestMemberInteractor_Register_Failure_DuplicateUserID(t *testing.T) {
 
 	existingMember := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "duplicateuser",
-		FullName:     "Existing User",
+		AccountId:    "duplicateuser",
+		NickName:     "Existing User",
 		Email:        "existing@example.com",
 	}
 	existingMember.AssignPassword("password123")
@@ -76,8 +76,8 @@ func TestMemberInteractor_GetMyInfo_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -88,7 +88,7 @@ func TestMemberInteractor_GetMyInfo_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	assert.Equal(t, member.FullName, memberResponse.FullName)
+	assert.Equal(t, member.NickName, memberResponse.FullName)
 }
 
 func TestMemberInteractor_GetMyInfo_Failure_NotFound(t *testing.T) {
@@ -115,8 +115,8 @@ func TestMemberInteractor_UpdateMyInfo_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Old Name",
+		AccountId:    "testuser",
+		NickName:     "Old Name",
 		Email:        "old@example.com",
 	}
 	member.AssignPassword("password123")
@@ -132,8 +132,8 @@ func TestMemberInteractor_UpdateMyInfo_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	updatedMember, _ := memberRepo.GetByUserName("testuser")
-	assert.Equal(t, "New Name", updatedMember.FullName)
+	updatedMember, _ := memberRepo.GetByAccountId("testuser")
+	assert.Equal(t, "New Name", updatedMember.NickName)
 	assert.Equal(t, "new@example.com", updatedMember.Email)
 }
 
@@ -165,8 +165,8 @@ func TestMemberInteractor_DeleteByUserName_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -177,7 +177,7 @@ func TestMemberInteractor_DeleteByUserName_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	deletedMember, err := memberRepo.GetByUserName("testuser")
+	deletedMember, err := memberRepo.GetByAccountId("testuser")
 	assert.NoError(t, err)
 	assert.True(t, deletedMember.IsWithdrawn)
 }
@@ -205,15 +205,15 @@ func TestMemberInteractor_GetAllMembers_Success(t *testing.T) {
 
 	member1 := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "user1",
-		FullName:     "User One",
+		AccountId:    "user1",
+		NickName:     "User One",
 		Email:        "user1@example.com",
 	}
 	member1.AssignPassword("password123")
 	member2 := &domain.Member{
 		MemberNumber: "M12346",
-		Username:     "user2",
-		FullName:     "User Two",
+		AccountId:    "user2",
+		NickName:     "User Two",
 		Email:        "user2@example.com",
 	}
 	member2.AssignPassword("password123")
@@ -238,8 +238,8 @@ func TestMemberInteractor_GetMemberStats_Success(t *testing.T) {
 	member1 := &domain.Member{
 		ID:           12345,
 		MemberNumber: "M12345",
-		Username:     "user1",
-		FullName:     "User One",
+		AccountId:    "user1",
+		NickName:     "User One",
 		Email:        "user1@example.com",
 		IsWithdrawn:  false,
 		CreatedAt:    time.Date(2024, 9, 10, 0, 0, 0, 0, time.UTC),
@@ -250,8 +250,8 @@ func TestMemberInteractor_GetMemberStats_Success(t *testing.T) {
 	member2 := &domain.Member{
 		ID:           12346,
 		MemberNumber: "M12346",
-		Username:     "user2",
-		FullName:     "User Two",
+		AccountId:    "user2",
+		NickName:     "User Two",
 		Email:        "user2@example.com",
 		IsWithdrawn:  false,
 		CreatedAt:    time.Date(2024, 9, 15, 0, 0, 0, 0, time.UTC),

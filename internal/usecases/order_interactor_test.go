@@ -52,8 +52,8 @@ func TestOrderInteractor_CreateOrder_Failure_InvalidProduct(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -83,8 +83,8 @@ func TestOrderInteractor_CancelOrder_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -149,8 +149,8 @@ func TestOrderInteractor_CancelOrder_Failure_Unauthorized(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")
@@ -187,8 +187,8 @@ func TestOrderInteractor_GetMyOrders_Success(t *testing.T) {
 
 	member := &domain.Member{
 		MemberNumber: "M12345",
-		Username:     "testuser",
-		FullName:     "Test User",
+		AccountId:    "testuser",
+		NickName:     "Test User",
 		Email:        "testuser@example.com",
 	}
 	member.AssignPassword("password123")

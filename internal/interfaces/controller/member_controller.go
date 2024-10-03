@@ -57,8 +57,8 @@ func (mc *MemberController) Register(c *gin.Context) {
 // @Failure      500 {object} map[string]string "정보 조회 실패"
 // @Router       /members/me [get]
 func (mc *MemberController) GetMyInfo(c *gin.Context) {
-	username := c.GetString("username")
-	responseData, err := mc.memberInteractor.GetMyInfo(username)
+	accountId := c.GetString("account_id")
+	responseData, err := mc.memberInteractor.GetMyInfo(accountId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "사용자 정보를 가져올 수 없습니다."})
 		return
@@ -79,14 +79,14 @@ func (mc *MemberController) GetMyInfo(c *gin.Context) {
 // @Failure      500 {object} map[string]string "수정 실패"
 // @Router       /members/me [put]
 func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
-	username := c.GetString("username")
+	accountId := c.GetString("account_id")
 	var req request.UpdateMemberRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "잘못된 요청입니다."})
 		return
 	}
 
-	if err := mc.memberInteractor.UpdateMyInfo(username, &req); err != nil {
+	if err := mc.memberInteractor.UpdateMyInfo(accountId, &req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "업데이트에 실패했습니다."})
 		return
 	}
@@ -104,8 +104,8 @@ func (mc *MemberController) UpdateMyInfo(c *gin.Context) {
 // @Failure      500 {object} map[string]string "삭제 실패"
 // @Router       /members/me [delete]
 func (mc *MemberController) DeleteMyAccount(c *gin.Context) {
-	username := c.GetString("username")
-	if err := mc.memberInteractor.DeleteByUserName(username); err != nil {
+	accountId := c.GetString("account_id")
+	if err := mc.memberInteractor.DeleteByUserName(accountId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "계정 삭제에 실패했습니다."})
 		return
 	}

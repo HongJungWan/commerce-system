@@ -26,7 +26,7 @@ func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*respons
 		return nil, err
 	}
 
-	existingMember, _ := mi.MemberRepository.GetByUserName(member.Username)
+	existingMember, _ := mi.MemberRepository.GetByAccountId(member.AccountId)
 	if existingMember != nil {
 		return nil, errors.New("이미 존재하는 사용자 ID입니다.")
 	}
@@ -43,8 +43,8 @@ func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*respons
 	}, nil
 }
 
-func (mi *MemberInteractor) GetMyInfo(username string) (*response.MemberResponse, error) {
-	member, err := mi.MemberRepository.GetByUserName(username)
+func (mi *MemberInteractor) GetMyInfo(accountId string) (*response.MemberResponse, error) {
+	member, err := mi.MemberRepository.GetByAccountId(accountId)
 	if err != nil {
 		return nil, err
 	}
@@ -53,14 +53,14 @@ func (mi *MemberInteractor) GetMyInfo(username string) (*response.MemberResponse
 	return memberResponse, nil
 }
 
-func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMemberRequest) error {
-	member, err := mi.MemberRepository.GetByUserName(username)
+func (mi *MemberInteractor) UpdateMyInfo(accountId string, req *request.UpdateMemberRequest) error {
+	member, err := mi.MemberRepository.GetByAccountId(accountId)
 	if err != nil {
 		return err
 	}
 
 	if req.NickName != "" {
-		member.FullName = req.NickName
+		member.NickName = req.NickName
 	}
 	if req.Email != "" {
 		member.Email = req.Email
@@ -74,8 +74,8 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 	return mi.MemberRepository.Update(member)
 }
 
-func (mi *MemberInteractor) DeleteByUserName(username string) error {
-	member, err := mi.MemberRepository.GetByUserName(username)
+func (mi *MemberInteractor) DeleteByUserName(accountId string) error {
+	member, err := mi.MemberRepository.GetByAccountId(accountId)
 	if err != nil {
 		return err
 	}
