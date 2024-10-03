@@ -183,7 +183,7 @@ func TestMemberController_UpdateMyInfo_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "정보가 수정되었습니다.", response["message"])
 
-	updatedMember, _ := memberRepo.GetByUserName("testuser")
+	updatedMember, _ := memberRepo.GetByAccountId("testuser")
 	assert.Equal(t, "New Name", updatedMember.NickName)
 	assert.Equal(t, "new@example.com", updatedMember.Email)
 }
@@ -262,7 +262,7 @@ func TestMemberController_DeleteMyAccount_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "계정이 삭제되었습니다.", response["message"])
 
-	deletedMember, err := memberRepo.GetByUserName("testuser")
+	deletedMember, err := memberRepo.GetByAccountId("testuser")
 	assert.NoError(t, err)
 	assert.True(t, deletedMember.IsWithdrawn)
 }

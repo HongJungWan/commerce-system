@@ -110,7 +110,7 @@ func TestMemberRepositoryImpl_GetByUserID_Success(t *testing.T) {
 	_ = repo.Create(member)
 
 	// When
-	retrievedMember, err := repo.GetByUserName("testuser")
+	retrievedMember, err := repo.GetByAccountId("testuser")
 
 	// Then
 	assert.NoError(t, err)
@@ -123,7 +123,7 @@ func TestMemberRepositoryImpl_GetByUserID_Failure_NotFound(t *testing.T) {
 	repo := repository.NewMemberRepository(db)
 
 	// When
-	retrievedMember, err := repo.GetByUserName("nonexistent")
+	retrievedMember, err := repo.GetByAccountId("nonexistent")
 
 	// Then
 	assert.Error(t, err)

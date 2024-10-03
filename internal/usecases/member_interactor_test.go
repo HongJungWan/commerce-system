@@ -32,7 +32,7 @@ func TestMemberInteractor_Register_Success(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	assert.Equal(t, "회원 가입이 완료되었습니다.", responseData.Message)
-	retrievedMember, _ := memberRepo.GetByUserName("newuser")
+	retrievedMember, _ := memberRepo.GetByAccountId("newuser")
 	assert.NotNil(t, retrievedMember)
 }
 
@@ -132,7 +132,7 @@ func TestMemberInteractor_UpdateMyInfo_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	updatedMember, _ := memberRepo.GetByUserName("testuser")
+	updatedMember, _ := memberRepo.GetByAccountId("testuser")
 	assert.Equal(t, "New Name", updatedMember.NickName)
 	assert.Equal(t, "new@example.com", updatedMember.Email)
 }
@@ -177,7 +177,7 @@ func TestMemberInteractor_DeleteByUserName_Success(t *testing.T) {
 
 	// Then
 	assert.NoError(t, err)
-	deletedMember, err := memberRepo.GetByUserName("testuser")
+	deletedMember, err := memberRepo.GetByAccountId("testuser")
 	assert.NoError(t, err)
 	assert.True(t, deletedMember.IsWithdrawn)
 }
