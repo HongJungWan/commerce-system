@@ -43,8 +43,8 @@ func (mi *MemberInteractor) Register(req *request.CreateMemberRequest) (*respons
 	}, nil
 }
 
-func (mi *MemberInteractor) GetMyInfo(username string) (*response.MemberResponse, error) {
-	member, err := mi.MemberRepository.GetByAccountId(username)
+func (mi *MemberInteractor) GetMyInfo(accountId string) (*response.MemberResponse, error) {
+	member, err := mi.MemberRepository.GetByAccountId(accountId)
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +53,8 @@ func (mi *MemberInteractor) GetMyInfo(username string) (*response.MemberResponse
 	return memberResponse, nil
 }
 
-func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMemberRequest) error {
-	member, err := mi.MemberRepository.GetByAccountId(username)
+func (mi *MemberInteractor) UpdateMyInfo(accountId string, req *request.UpdateMemberRequest) error {
+	member, err := mi.MemberRepository.GetByAccountId(accountId)
 	if err != nil {
 		return err
 	}
@@ -74,8 +74,8 @@ func (mi *MemberInteractor) UpdateMyInfo(username string, req *request.UpdateMem
 	return mi.MemberRepository.Update(member)
 }
 
-func (mi *MemberInteractor) DeleteByUserName(username string) error {
-	member, err := mi.MemberRepository.GetByAccountId(username)
+func (mi *MemberInteractor) DeleteByUserName(accountId string) error {
+	member, err := mi.MemberRepository.GetByAccountId(accountId)
 	if err != nil {
 		return err
 	}
